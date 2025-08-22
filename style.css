@@ -26,17 +26,16 @@ body:not(.login-page) {
    LOGIN PAGE / FULLSCREEN
 ========================= */
 
+/* Tulisan besar di atas container */
 .login-title-outside {
-  font-size: 64px;
+  font-size: 60px;
   font-weight: bold;
   color: #000;
   text-align: center;
-  margin-bottom: 40px; /* jarak ke container */
+  margin-bottom: 25px; /* jarak ke container */
 }
 
-
-
-.login-page body,
+/* Fullscreen background */
 .fullscreen {
   padding-top: 0;
   min-height: 100vh;
@@ -45,15 +44,10 @@ body:not(.login-page) {
   justify-content: center;
   align-items: center;
   background: #FFD600;
+  overflow: hidden; /* mencegah scroll */
 }
 
 /* ===== LOGIN BOX ===== */
-.login-logo {
-  width: 180px;
-  height: auto;
-  margin-bottom: 0;
-}
-
 .login-box {
   background: #fff;
   padding: 25px;
@@ -62,6 +56,12 @@ body:not(.login-page) {
   max-width: 320px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   text-align: center;
+}
+
+.login-logo {
+  width: 180px;
+  height: auto;
+  margin-bottom: 0;
 }
 
 .login-box h2 {
@@ -126,12 +126,14 @@ body:not(.login-page) {
   text-align: center;
 }
 
+/* Footer tetap di bawah */
 .login-footer {
-  margin-top: 10px;
+  margin-top: 20px;
   font-size: 13px;
   color: #333;
   text-align: center;
 }
+
 
 /* =========================
    CLOCK
@@ -591,5 +593,6 @@ select.used {
 #copy-btn:hover {
   background-color: #b71c1c;
 }
+
 
 
