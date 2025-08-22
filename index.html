@@ -11,6 +11,7 @@
 </head>
 
 <body class="login-page">
+
   <!-- =================== LOGIN SCREEN =================== -->
   <main id="login-screen" class="fullscreen active">
     <div class="login-box">
@@ -69,26 +70,27 @@
     <!-- =================== HALAMAN BERANDA =================== -->
     <section id="beranda" class="page active">
       <h2>Dashboard</h2>
+
       <div class="dashboard-item">
-          <span class="label">Saldo Awal</span>
-          <span class="value" id="saldoAwal">Rp0</span>
+        <span class="label">Saldo Awal</span>
+        <span class="value" id="saldoAwal">Rp0</span>
       </div>
 
       <div class="dashboard-item">
-          <span class="label">Pengeluaran</span>
-          <span class="value" id="pengeluaran">Rp0</span>
+        <span class="label">Pengeluaran</span>
+        <span class="value" id="pengeluaran">Rp0</span>
       </div>
 
       <div class="dashboard-item">
-          <span class="label">Kas Harian</span>
-          <span class="value" id="pemasukan">Rp0</span>
+        <span class="label">Kas Harian</span>
+        <span class="value" id="pemasukan">Rp0</span>
       </div>
 
       <!-- Tambahan baru -->
-        <div class="dashboard-item">
+      <div class="dashboard-item">
         <span class="label">Pendapatan</span>
         <span class="value" id="pendapatan">Rp0</span>
-        </div>
+      </div>
 
       <button id="copy-btn">Copy</button>
     </section>
@@ -123,47 +125,41 @@
           <input type="number" id="saldoAwalInput" placeholder="0">
           <button type="button" id="saveSaldoAwal">Simpan</button>
         </div>
-
       </form>
     </section>
 
-<!-- =================== HALAMAN BELANJA =================== -->
-<section id="belanja" class="page">
-  <h2>Pengeluaran</h2>
+    <!-- =================== HALAMAN BELANJA =================== -->
+    <section id="belanja" class="page">
+      <h2>Pengeluaran</h2>
 
+      <form id="belanjaForm">
+        <label>Pengeluaran</label>
+        <input type="number" id="belanjaJumlah" placeholder="0" required>
 
-  <!-- Form Input Pengeluaran -->
-  <form id="belanjaForm">
-    <label>Pengeluaran</label>
-    <input type="number" id="belanjaJumlah" placeholder="0" required>
+        <label>Keterangan</label>
+        <input type="text" id="belanjaKeterangan" placeholder="Catatan..." required>
 
-    <label>Keterangan</label>
-    <input type="text" id="belanjaKeterangan" placeholder="Catatan..." required>
+        <button type="submit">Simpan</button>
+      </form>
 
-    <button type="submit">Simpan</button>
-  </form>
-
-
-  <div id="pengeluaranList">
-    <table>
-      <thead>
-        <tr>
-          <th>Keterangan</th>
-          <th>Jumlah</th>
-          <th>Hapus</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</section>
-
-
+      <div id="pengeluaranList">
+        <table>
+          <thead>
+            <tr>
+              <th>Keterangan</th>
+              <th>Jumlah</th>
+              <th>Hapus</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
 
     <!-- =================== HALAMAN LACI =================== -->
     <section id="laci" class="page">
       <h2>Kas Harian</h2>
-      <form id="laciForm"> <!-- ditambahkan id agar bisa diakses JS -->
+      <form id="laciForm">
         <label>Jumlah (Rp)</label>
         <input type="number" id="laciJumlah" placeholder="0"/>
         <label>Keterangan</label>
@@ -176,6 +172,8 @@
     <section id="stok" class="page">
       <h2>Cek Stok Bahan</h2>
       <div class="stok-container">
+
+
         <!-- Contoh satu bahan, semua option value sudah unik -->
         <div class="stok-row">
           <span class="stok-nama">ROTI BALOK</span>
@@ -603,12 +601,13 @@
     </div>
 
 
-        <!-- Tambahkan bahan lain dengan pola sama, pastikan value unik -->
+        <!-- ===== Lanjutkan semua bahan dengan pola sama ===== -->
+
         <div style="margin-top:20px;"></div>
         <button id="copy-stok">Copy Stok</button>
         <button id="reset-stok" type="button">Refresh Stok</button>
 
-    </div>
+      </div>
     </section>
 
   </div> <!-- END APP WRAPPER -->
