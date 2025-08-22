@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RBLite</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff0000">
+</head>
+
+<body class="login-page">
+  <!-- =================== LOGIN SCREEN =================== -->
+  <main id="login-screen" class="fullscreen active">
+    <div class="login-box">
+      <img src="logo.png" alt="Logo" class="login-logo"/>
+      <h2>Selamat Datang</h2>
+
+      <form id="login-form">
+        <label>Nama Crew</label>
+        <select id="username">
+          <option value="petugas1" selected>CREW 1 - AMRI</option>
+          <option value="petugas2">CREW 2 - ????</option>
+          <option value="petugas3">CREW 3 - ????</option>
+        </select>
+
+        <label>Buka Outlet</label>
+        <label for="photo" class="upload-btn">📷 Ambil Foto</label>
+
+        <button type="submit">Kirim</button>
+
+        <!-- Clock saat login (opsional) -->
+        <span id="login-clock" class="clock"></span>
+      </form>
+    </div>
+
+    <div class="login-footer">
+      <p>© 2025 RBLite | v1.0.0</p>
+    </div>
+  </main>
+
+  <!-- =================== APP WRAPPER (tersembunyi saat belum login) =================== -->
+  <div id="app-wrapper" class="hidden">
+
+    <!-- =================== HEADER =================== -->
+    <header class="app-header hidden" id="main-header">
+      <button class="menu-btn" onclick="toggleMenu()">&#9776;</button>
+      <h1>RBLite</h1>
+    </header>
+
+    <!-- =================== SIDEBAR =================== -->
+    <nav id="sidebar" class="sidebar hidden">
+      <div class="sidebar-header">
+        <img src="logo1.png" alt="Logo" class="sidebar-logo"/>
+        <span class="sidebar-title">RBLite</span>
+        <button class="close-btn" onclick="toggleMenu()">✕</button>
+      </div>
+      <ul>
+        <li onclick="openPage('beranda')">Dashboard</li>
+        <li onclick="openPage('persiapan')">Persiapan</li>
+        <li onclick="openPage('belanja')">Pengeluaran</li>
+        <li onclick="openPage('laci')">Kas Harian</li>
+        <li onclick="openPage('stok')">Stok Bahan</li>
+        <li onclick="logout()">Tutup Resto</li>
+      </ul>
+    </nav>
+
+    <!-- =================== HALAMAN BERANDA =================== -->
+    <section id="beranda" class="page active">
+      <h2>Dashboard</h2>
+      <div class="dashboard-item">
+          <span class="label">Saldo Awal</span>
+          <span class="value" id="saldoAwal">Rp0</span>
+      </div>
+
+      <div class="dashboard-item">
+          <span class="label">Pengeluaran</span>
+          <span class="value" id="pengeluaran">Rp0</span>
+      </div>
+
+      <div class="dashboard-item">
+          <span class="label">Kas Harian</span>
+          <span class="value" id="pemasukan">Rp0</span>
+      </div>
+
+      <!-- Tambahan baru -->
+        <div class="dashboard-item">
+        <span class="label">Pendapatan</span>
+        <span class="value" id="pendapatan">Rp0</span>
+        </div>
+
+      <button id="copy-btn">Copy</button>
+    </section>
+
+    <!-- =================== HALAMAN PERSIAPAN =================== -->
+    <section id="persiapan" class="page">
+      <h2>Persiapan</h2>
+      <form id="persiapanForm">
+        <label>
+          <input type="checkbox" name="alat" value="alat-siap"/>
+          Apakah Alat-alat yang digunakan sudah siap?
+        </label>
+
+        <label>
+          <input type="checkbox" name="dus" value="dus-cukup"/>
+          Apakah Dus Box dan alat makan sudah cukup?
+        </label>
+
+        <label>
+          <input type="checkbox" name="toping" value="toping-cukup"/>
+          Apakah Toping-toping sudah dipenuhi cukup?
+        </label>
+
+        <label>
+          <input type="checkbox" name="es" value="es-ada"/>
+          Apakah Es batu sudah tersedia walaupun 1 bk?
+        </label>
+
+        <!-- Input Saldo Awal -->
+        <div id="saldoAwalWrapper">
+          <label>Saldo Awal</label>
+          <input type="number" id="saldoAwalInput" placeholder="0">
+          <button type="button" id="saveSaldoAwal">Simpan</button>
+        </div>
+
+      </form>
+    </section>
+
+<!-- =================== HALAMAN BELANJA =================== -->
+<section id="belanja" class="page">
+  <h2>Pengeluaran</h2>
+
+
+  <!-- Form Input Pengeluaran -->
+  <form id="belanjaForm">
+    <label>Pengeluaran</label>
+    <input type="number" id="belanjaJumlah" placeholder="0" required>
+
+    <label>Keterangan</label>
+    <input type="text" id="belanjaKeterangan" placeholder="Catatan..." required>
+
+    <button type="submit">Simpan</button>
+  </form>
+
+
+  <div id="pengeluaranList">
+    <table>
+      <thead>
+        <tr>
+          <th>Keterangan</th>
+          <th>Jumlah</th>
+          <th>Hapus</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+
+
+    <!-- =================== HALAMAN LACI =================== -->
+    <section id="laci" class="page">
+      <h2>Kas Harian</h2>
+      <form id="laciForm"> <!-- ditambahkan id agar bisa diakses JS -->
+        <label>Jumlah (Rp)</label>
+        <input type="number" id="laciJumlah" placeholder="0"/>
+        <label>Keterangan</label>
+        <input type="text" id="laciKeterangan" placeholder="Catatan..."/>
+        <button type="submit">Simpan</button>
+      </form>
+    </section>
+
+    <!-- =================== HALAMAN STOK =================== -->
+    <section id="stok" class="page">
+      <h2>Cek Stok Bahan</h2>
+      <div class="stok-container">
+        <!-- Contoh satu bahan, semua option value sudah unik -->
+        <div class="stok-row">
+          <span class="stok-nama">ROTI BALOK</span>
+          <span class="stok-satuan">PCS</span>
+          <select data-bahan="ROTI BALOK">
+            <option value="00">00</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="????" selected>????</option>
+          </select>
+        </div>
+
+        <div class="stok-row">
+          <span class="stok-nama">ROTI 1/2</span>
+          <span class="stok-satuan">PCS</span>
+          <select data-bahan="ROTI 1/2">
+            <option value="00">00</option>
+            <option value="0,5">0,5</option>
+            <option value="????" selected>????</option>
+          </select>
+        </div>
+
+        <div class="stok-row">
+          <span class="stok-nama">MARGARIN</span>
+          <span class="stok-satuan">KG</span>
+          <select data-bahan="MARGARIN">
+            <option value="0,0">0,0</option>
+            <option value="0,2">0,2</option>
+            <option value="0,5">0,5</option>
+            <option value="0,7">0,7</option>
+            <option value="1,0">1,0</option>
+            <option value="1,2">1,2</option>
+            <option value="1,5">1,5</option>
+            <option value="1,7">1,7</option>
+            <option value="????" selected>????</option>
+          </select>
+        </div>
+
+            <div class="stok-row">
+      <span class="stok-nama">SKM</span>
+      <span class="stok-satuan">PCS</span>
+      <select data-bahan="SKM">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">KRIM COKELAT</span>
+      <span class="stok-satuan">BTL</span>
+      <select data-bahan="KRIM COKELAT">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="1,2">1,2</option>
+        <option value="1,5">1,5</option>
+        <option value="1,7">1,7</option>
+        <option value="2,0">2,0</option>
+        <option value="????"selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">KRIM VANILA</span>
+      <span class="stok-satuan">BTL</span>
+      <select data-bahan="KRIM VANILA">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="1,2">1,2</option>
+        <option value="1,5">1,5</option>
+        <option value="1,7">1,7</option>
+        <option value="2,0">2,0</option>
+        <option value="????"selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">KRIM TIRAMISU</span>
+      <span class="stok-satuan">BTL</span>
+      <select data-bahan="KRIM TIRAMISU">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="1,2">1,2</option>
+        <option value="1,5">1,5</option>
+        <option value="1,7">1,7</option>
+        <option value="2,0">2,0</option>
+        <option value="????"selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">KRIM GREENTEA</span>
+      <span class="stok-satuan">BTL</span>
+      <select data-bahan="KRIM GREENTEA">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="1,2">1,2</option>
+        <option value="1,5">1,5</option>
+        <option value="1,7">1,7</option>
+        <option value="2,0">2,0</option>
+        <option value="????"selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">KRIM STROBERI</span>
+      <span class="stok-satuan">BTL</span>
+      <select data-bahan="KRIM STROBERI">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="1,2">1,2</option>
+        <option value="1,5">1,5</option>
+        <option value="1,7">1,7</option>
+        <option value="2,0">2,0</option>
+        <option value="????"selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">CHOCO CRUNCHY</span>
+      <span class="stok-satuan">KG</span>
+      <select data-bahan="CHOCO CRUNCHY">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="1,2">1,2</option>
+        <option value="1,5">1,5</option>
+        <option value="1,7">1,7</option>
+        <option value="2,0">2,0</option>
+        <option value="????"selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">COOKIES</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="COOKIES">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">CARAMEL</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="CARAMEL">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">RED VELVET</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="RED VELVET">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">MATCHA</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="MATCHA">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">BISCUITS</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="BISCUITS">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">DUS BOX</span>
+      <span class="stok-satuan">BOX</span>
+      <select data-bahan="DUS BOX">
+        <option value="<10"><10</option>
+        <option value="<15"><15</option>
+        <option value="<20"><20</option>
+        <option value="<25"><25</option>
+        <option value="<30"><30</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">KERTAS CKLT</span>
+      <span class="stok-satuan">LBR</span>
+      <select data-bahan="KERTAS CKLT">
+        <option value="<10>"><10</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">KRESEK ROTI</span>
+      <span class="stok-satuan">BKS</span>
+      <select data-bahan="KRESEK ROTI">
+        <option value="1>">1</option>
+        <option value="2>">2</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">TISU GARPU</span>
+      <span class="stok-satuan">PCS</span>
+      <select data-bahan="TISU GARPU">
+        <option value="<50>"><50</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">CUP ICE</span>
+      <span class="stok-satuan">PCS</span>
+      <select data-bahan="CUP ICE">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">PWD COKELAT</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="PWD COKELAT">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">PWD MILO</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="PWD MILO">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">PWD TARO</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="PWD TARO">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">PWD RED VEVT</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="PWD RED VEVT">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">PWD GREENTEA</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="PWD GREENTEA">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">PWD LYCHEE</span>
+      <span class="stok-satuan">TOP</span>
+      <select data-bahan="PWD LYCHEE">
+        <option value="0,0">0,0</option>
+        <option value="0,2">0,2</option>
+        <option value="0,5">0,5</option>
+        <option value="0,7">0,7</option>
+        <option value="1,0">1,0</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">KRESEK 1CUP</span>
+      <span class="stok-satuan">BKS</span>
+      <select data-bahan="KRESEK 1CUP">
+        <option value="1>">1</option>
+        <option value="2>">2</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">KRESEK 2CUP</span>
+      <span class="stok-satuan">BKS</span>
+      <select data-bahan="KRESEK 2CUP">
+        <option value="1>">1</option>
+        <option value="2>">2</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+    <div class="stok-row">
+      <span class="stok-nama">SEDOTAN</span>
+      <span class="stok-satuan">PCS</span>
+      <select data-bahan="SEDOTAN">
+        <option value="<20>"><20</option>
+        <option value="????" selected>????</option>
+      </select>
+    </div>
+
+
+        <!-- Tambahkan bahan lain dengan pola sama, pastikan value unik -->
+        <div style="margin-top:20px;"></div>
+        <button id="copy-stok">Copy Stok</button>
+        <button id="reset-stok" type="button">Refresh Stok</button>
+
+    </div>
+    </section>
+
+  </div> <!-- END APP WRAPPER -->
+
+  <!-- =================== SCRIPT =================== -->
+  <script src="script.js"></script>
+
+  <!-- Register Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.log("SW failed:", err));
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,587 @@
+/* ===== Reset dasar ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  background: #fff;
+  color: #111;
+}
+
+/* ===== Body padding untuk halaman konten ===== */
+body:not(.login-page) {
+  padding-top: 0; /* kita atur padding di #app-wrapper, bukan body */
+}
+
+/* ===== Util ===== */
+.hidden { 
+  display: none !important; 
+}
+
+/* ===== Login fullscreen ===== */
+.login-page body,
+.fullscreen {
+  padding-top: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #FFD600;
+}
+
+/* ===== Login Box ===== */
+.login-logo {
+  width: 180px;
+  height: auto;
+  margin-bottom: 0;
+}
+
+.login-box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 320px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-box select,
+.login-box input[type="file"] {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.login-box label {
+  text-align: left;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.login-box button,
+.upload-btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.login-box button {
+  background: #FFD600;
+  color: #111;
+}
+
+.login-box button:hover { 
+  background: #ffcc00; 
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #d6d4c5;
+  color: #111;
+  margin-bottom: 12px;
+  padding: 40px 20px; /* padding vertikal lebih tinggi, horizontal tetap */
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+
+.login-footer {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #333;
+  text-align: center;
+}
+
+/* ===== Clock ===== */
+.clock {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 14px;
+  color: #969191;
+  text-align: center;
+}
+
+/* ===== App Header ===== */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  height: 80px;
+  background: #FFD600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  gap: 15px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 45px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+/* Tombol menu (hamburger) */
+.menu-btn {
+  font-size: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: auto 0;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.menu-btn:hover { 
+  background: rgba(0,0,0,0.05); 
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -200px;
+  width: 200px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+  transition: left 0.3s ease;
+  z-index: 1000;
+  padding-top: 16px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 8px;
+}
+
+.sidebar-logo {
+  width: 50px;
+  height: 50px;
+}
+
+.sidebar-title {
+  font-weight: bold;
+  font-size: 28px;
+  margin-left: 8px;
+  flex-grow: 1;
+  color: #111;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  color: #838383;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  padding: 15px;
+  cursor: pointer;
+  color: #111;
+}
+
+.sidebar ul li:hover { 
+  background: #FFD600; 
+}
+
+/* ===== Konten Halaman ===== */
+#app-wrapper {
+  padding: 100px 15px 20px 15px; /* turun sesuai header 80px + jarak */
+}
+
+/* Halaman */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ===== Form Umum ===== */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+input, select, textarea, button {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+textarea {
+  resize: none;
+  height: 80px;
+  margin-top: 2px;
+}
+
+input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+input[type="checkbox"]:disabled {
+  accent-color: gray;
+  cursor: not-allowed;
+}
+
+button {
+  background: #FFD600;
+  color: #111;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  padding: 20px;
+}
+
+button:hover { 
+  background: #ffe600; 
+}
+
+/* ===== Dashboard Item ===== */
+.dashboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 30px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 20px;   /* sebelumnya 12px, sekarang lebih renggang */
+  font-size: 16px;
+  font-weight: 500;
+  color: #111;
+}
+
+.dashboard-item .value {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Jarak antara judul Dashboard dan item pertama */
+#beranda h2 {
+  margin-bottom: 20px; /* ubah sesuai kebutuhan */
+}
+
+/* ===== Textarea Copy ===== */
+#copy-text {
+  width: 100%;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  color: #333;
+  resize: none;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+}
+
+#beranda button {
+  background: #FFD600;
+  color: #111;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+#beranda button:hover {
+  background: #ffcc00;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* ===== Rincian Container ===== */
+.rincian-container {
+  margin-top: 15px;
+  background: #fff;
+  padding: 12px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.rincian-container h3 {
+  margin-top: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+}
+
+.rincian-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+
+.rincian-container ul li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.rincian-container ul li:last-child { 
+  border-bottom: none; 
+}
+
+.rincian-container p { 
+  text-align: right; 
+  font-weight: 600; 
+  margin-top: 8px; 
+}
+
+/* ===== Stok Container ===== */
+.stok-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.stok-row {
+  display: grid;
+  grid-template-columns: 1fr 70px 100px;
+  align-items: center;
+  padding: 8px 12px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stok-nama { 
+  font-weight: 600; 
+  color: #333; 
+}
+
+.stok-satuan { 
+  text-align: center; 
+  font-size: 14px; 
+  color: #666; 
+}
+
+.stok-row select {
+  padding: 12px 9px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff; /* default putih */
+  transition: background-color 0.3s ease;
+}
+
+/* Saat dropdown sudah dipilih (tidak di option kosong pertama) */
+.stok-row select.used {
+  background-color: #ffd8d8; /* kuning lembut */
+  border-color: #a3a1a1;
+}
+
+
+#pengeluaranList td:nth-child(3),
+#pengeluaranKasList td:nth-child(3) {
+  text-align: center;       /* ubah dari right menjadi center */
+  font-weight: bold;
+  color: #d62828;
+}
+
+
+#pengeluaranList tr:hover,
+#pengeluaranKasList tr:hover { 
+  background: #fdf2f2; 
+}
+
+
+/* Tombol hapus */
+.hapus-btn {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 6px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;     /* inline-flex supaya tidak menambah tinggi sel */
+  align-items: center;
+  justify-content: center;
+}
+
+
+#pengeluaranList td:nth-child(3),
+#pengeluaranKasList td:nth-child(3) {
+  display: flex;
+  align-items: center;      /* vertikal center */
+  justify-content: center;  /* horizontal center */
+  height: 60px;             /* optional, untuk memberi tinggi baris */
+  padding: 0;               /* hilangkan padding agar tombol benar-benar center */
+}
+
+
+.hapus-btn:hover { 
+  background: #c82333; 
+}
+
+/* ===== Tambahan untuk halaman Persiapan ===== */
+/* Jarak antara judul Persiapan dan konten pertama */
+#persiapan h2 {
+  margin-bottom: 20px; /* ubah angkanya sesuai jarak yang diinginkan */
+}
+
+#belanja h2 { margin-bottom: 20px; }
+#laci h2 { margin-bottom: 20px; }
+#stok h2 { margin-bottom: 20px; }
+
+
+
+.reset-btn {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background: #f44336; /* merah */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.reset-btn:hover {
+  background: #d32f2f;
+}
+
+
+select.used {
+  background-color: rgb(0, 0, 0);
+  font-weight: bold;
+}
+
+
+/* ===== Saldo Awal sama persis dengan Pengeluaran ===== */
+#saldoAwalWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* jarak antara input dan tombol */
+  margin-bottom: 20px;
+  margin-top: 15px;
+  font-weight: bold; /* teks menjadi tebal */
+}
+
+#saldoAwalWrapper label {
+  font-weight: 500;
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+#saldoAwalWrapper input {
+  width: 100%;
+  padding: 12px;
+  font-size: 25px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+#saldoAwalWrapper button {
+  width: 100%;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  background: #FFD600;
+  color: #111;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#saldoAwalWrapper button:hover {
+  background: #ffcc00;
+}
+
+
+
+#copy-btn {
+  display: block;              
+  width: 100%;                 
+  padding: 40px 20px;          /* lebih tinggi dari sebelumnya */
+  margin-top: 10px;            
+  font-size: 22px;             /* font sedikit lebih besar */
+  font-weight: bold;
+  color: #fff;
+  background-color: #d62828;   
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+}
+
+#copy-btn:hover {
+  background-color: #b71c1c;  
+}
+
+#copy-btn {
+  padding: 20px 20px !important;
+  font-size: 22px !important;
+}
