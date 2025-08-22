@@ -25,6 +25,16 @@ body:not(.login-page) {
 /* =========================
    LOGIN PAGE / FULLSCREEN
 ========================= */
+
+.login-title {
+  font-size: 48px;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+
 .login-page body,
 .fullscreen {
   padding-top: 0;
@@ -580,3 +590,4 @@ select.used {
 #copy-btn:hover {
   background-color: #b71c1c;
 }
+
