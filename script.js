@@ -267,32 +267,7 @@ function logout() {
 // ======================================
 // DASHBOARD
 // ======================================
-function updateDashboard() {
-  const saldoAwal = parseFloat(localStorage.getItem("saldoAwal")) || 0;
-  const pengeluaranData = JSON.parse(localStorage.getItem("pengeluaranData") || "[]");
-  const pemasukanData   = JSON.parse(localStorage.getItem("pemasukanData") || "[]");
-  const stokData        = JSON.parse(localStorage.getItem("stokData") || "[]");
 
-  const totalPengeluaran = pengeluaranData.reduce((s, i) => s + i.jumlah, 0);
-  const totalPemasukan   = pemasukanData.reduce((s, i) => s + i.jumlah, 0);
-  const saldoAkhir       = saldoAwal + totalPemasukan - totalPengeluaran;
-
-  // Update angka di dashboard
-  if (document.getElementById("saldoAwal")) {
-    document.getElementById("saldoAwal").textContent   = "Rp " + saldoAwal.toLocaleString();
-    document.getElementById("pengeluaran").textContent = "Rp " + totalPengeluaran.toLocaleString();
-    document.getElementById("pemasukan").textContent   = "Rp " + totalPemasukan.toLocaleString();
-  }
-
-  if (document.getElementById("saldoAwalKas")) {
-    document.getElementById("saldoAwalKas").textContent   = "Rp " + saldoAwal.toLocaleString();
-    document.getElementById("pemasukanKas").textContent   = "Rp " + totalPemasukan.toLocaleString();
-    document.getElementById("pengeluaranKas").textContent = "Rp " + totalPengeluaran.toLocaleString();
-    document.getElementById("saldoAkhirKas").textContent  = "Rp " + saldoAkhir.toLocaleString();
-  }
-
-  renderPengeluaranKas();
-}
 
 
 // ======================================
@@ -532,30 +507,52 @@ function updatePendapatan() {
   }
 }
 
-// updateDashboard tetap sama, panggil updatePendapatan di akhir
+// ======================================
+// DASHBOARD FINAL (SINGKRON & REALTIME)
+// ======================================
 function updateDashboard() {
   const saldoAwal = parseFloat(localStorage.getItem("saldoAwal")) || 0;
+
   const pengeluaranData = JSON.parse(localStorage.getItem("pengeluaranData") || "[]");
   const pemasukanData   = JSON.parse(localStorage.getItem("pemasukanData") || "[]");
 
   const totalPengeluaran = pengeluaranData.reduce((s, i) => s + (i.jumlah || 0), 0);
   const totalPemasukan   = pemasukanData.reduce((s, i) => s + (i.jumlah || 0), 0);
   const saldoAkhir       = saldoAwal + totalPemasukan - totalPengeluaran;
+  const pendapatan       = totalPengeluaran + totalPemasukan - saldoAwal;
 
-  if (document.getElementById("saldoAwal")) {
-    document.getElementById("saldoAwal").textContent   = " " + saldoAwal.toLocaleString();
-    document.getElementById("pengeluaran").textContent = " " + totalPengeluaran.toLocaleString();
-    document.getElementById("pemasukan").textContent   = " " + totalPemasukan.toLocaleString();
-  }
+  // ====== Dashboard Utama ======
+  if (document.getElementById("saldoAwal"))
+    document.getElementById("saldoAwal").textContent = "Rp " + saldoAwal.toLocaleString();
 
-  if (document.getElementById("saldoAwalKas")) {
-    document.getElementById("saldoAwalKas").textContent   = "Rp " + saldoAwal.toLocaleString();
-    document.getElementById("pemasukanKas").textContent   = "Rp " + totalPemasukan.toLocaleString();
+  if (document.getElementById("pengeluaran"))
+    document.getElementById("pengeluaran").textContent = "Rp " + totalPengeluaran.toLocaleString();
+
+  if (document.getElementById("pemasukan"))
+    document.getElementById("pemasukan").textContent = "Rp " + totalPemasukan.toLocaleString();
+
+  if (document.getElementById("pendapatan"))
+    document.getElementById("pendapatan").textContent = "Rp " + pendapatan.toLocaleString();
+
+  // ====== Dashboard Kas Harian ======
+  if (document.getElementById("saldoAwalKas"))
+    document.getElementById("saldoAwalKas").textContent = "Rp " + saldoAwal.toLocaleString();
+
+  if (document.getElementById("pemasukanKas"))
+    document.getElementById("pemasukanKas").textContent = "Rp " + totalPemasukan.toLocaleString();
+
+  if (document.getElementById("pengeluaranKas"))
     document.getElementById("pengeluaranKas").textContent = "Rp " + totalPengeluaran.toLocaleString();
-    document.getElementById("saldoAkhirKas").textContent  = "Rp " + saldoAkhir.toLocaleString();
-  }
 
-  renderPengeluaranKas();
+  if (document.getElementById("saldoAkhirKas"))
+    document.getElementById("saldoAkhirKas").textContent = "Rp " + saldoAkhir.toLocaleString();
+
+  // Tabel pengeluaran kas
+  if (typeof renderPengeluaranKas === "function") {
+    renderPengeluaranKas();
+  }
+}
+
 
   // update Pendapatan setelah semua update selesai
   updatePendapatan();
@@ -622,6 +619,7 @@ function resetDaily() {
 
 // Jalankan setiap menit
 setInterval(resetDaily, 60 * 1000); // 60 detik sekali
+
 
 
 
