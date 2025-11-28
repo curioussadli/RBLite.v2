@@ -53,20 +53,6 @@ if (loginForm) {
   });
 }
 
-// AUTO LOGIN 
-document.addEventListener("DOMContentLoaded", () => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-  const username = localStorage.getItem("username");
-
-  if (isLoggedIn === "true" && username) {
-    loginScreen.classList.add("hidden");
-    appWrapper.classList.remove("hidden");
-    appHeader.classList.remove("hidden");
-    sidebar.classList.remove("hidden");
-    openPage("beranda", false);
-  }
-});
-
 
 
   // ===== JAM (REAL-TIME CLOCK) =====
@@ -619,6 +605,7 @@ function resetDaily() {
 
 // Jalankan setiap menit
 setInterval(resetDaily, 60 * 1000); // 60 detik sekali
+
 
 
 
