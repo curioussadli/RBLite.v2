@@ -542,21 +542,29 @@ select.used {
 }
 
 
-#beranda button {
+
+/* Tombol Copy di Dashboard (disamakan dengan tombol Copy Stok) */
+#copy-dashboard {
+  display: block;
+  width: 100%;
   padding: 20px;
-  font-size: 20px;
-  background: #FFD600;
-  color: #111;
+  margin-top: 10px;
+  font-size: 22px;
   font-weight: bold;
+  color: #fff;
+  background-color: #d62828;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: 0.3s;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background 0.3s ease;
 }
 
-#beranda button:hover {
-  background: #ffe600;
+#copy-dashboard:hover {
+  background-color: #b71c1c;
 }
+
 
 
 
@@ -583,6 +591,7 @@ select.used {
 #copy-persediaan:hover {
   background-color: #b71c1c;
 }
+
 
 
 
