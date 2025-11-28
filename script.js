@@ -414,6 +414,44 @@ if (copyBtn) {
 
 
 
+// === COPY PERSEDIAAN ===
+const copyPersediaanBtn = document.getElementById("copy-persediaan");
+
+if (copyPersediaanBtn) {
+  copyPersediaanBtn.addEventListener("click", function () {
+    let laporan = "📦 PERSEDIAAN HARI INI\n\n";
+    let adaData = false;
+
+    document.querySelectorAll("#storage .stok-row").forEach((row) => {
+      const nama   = row.querySelector(".stok-nama").innerText.trim();
+      const satuan = row.querySelector(".stok-satuan").innerText.trim();
+      const select = row.querySelector("select");
+      const nilai  = select.options[select.selectedIndex].text;
+
+      // Nilai default dari attribute selected
+      const defaultOption = select.querySelector("option[selected]");
+      const nilaiDefault  = defaultOption ? defaultOption.text : "";
+
+      // Hanya tampilkan jika ada perbedaan
+      if (nilai !== nilaiDefault) {
+        laporan += `- ${nama} (${satuan}): ${nilai}\n`;
+        adaData = true;
+      }
+    });
+
+    if (!adaData) {
+      alert("Tidak ada perubahan persediaan yang dicatat.");
+      return;
+    }
+
+    navigator.clipboard.writeText(laporan)
+      .then(() => alert("✅ Laporan persediaan berhasil dicopy!"))
+      .catch(err => alert("❌ Gagal menyalin laporan: " + err));
+  });
+}
+
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const saldoAwalInput = document.getElementById("saldoAwalInput");
@@ -584,5 +622,6 @@ function resetDaily() {
 
 // Jalankan setiap menit
 setInterval(resetDaily, 60 * 1000); // 60 detik sekali
+
 
 
