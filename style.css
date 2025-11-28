@@ -560,12 +560,14 @@ select.used {
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
 
-#copy-btn {
+/* Tombol Copy Stok */
+#copy-stok,
+#copy-persediaan {
   display: block;
   width: 100%;
-  padding: 20px !important;
+  padding: 20px;
   margin-top: 10px;
-  font-size: 22px !important;
+  font-size: 22px;
   font-weight: bold;
   color: #fff;
   background-color: #d62828;
@@ -574,12 +576,16 @@ select.used {
   cursor: pointer;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: background 0.3s;
+  transition: background 0.3s ease;
 }
 
-#copy-btn:hover {
+#copy-stok:hover,
+#copy-persediaan:hover {
   background-color: #b71c1c;
 }
+
+
+
 
 
 
