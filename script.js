@@ -277,7 +277,27 @@ const copyDashboardBtn = document.getElementById("copy-dashboard");
 if (copyDashboardBtn) {
   copyDashboardBtn.addEventListener("click", function () {
 
-    let laporan = "📊 LAPORAN KAS HARI INI\n\n";
+    // -------------------------
+    // Buat tanggal otomatis
+    // -------------------------
+    const hariArray = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const bulanArray = [
+      "Januari","Februari","Maret","April","Mei","Juni",
+      "Juli","Agustus","September","Oktober","November","Desember"
+    ];
+
+    const now = new Date();
+    const hari = hariArray[now.getDay()];
+    const tanggal = now.getDate();
+    const bulan = bulanArray[now.getMonth()];
+    const tahun = now.getFullYear();
+
+    const tanggalLengkap = `${hari}, ${tanggal} ${bulan} ${tahun}`;
+
+    // -------------------------
+    // Judul laporan otomatis
+    // -------------------------
+    let laporan = `📊 LAPORAN KAS ${tanggalLengkap}\n\n`;
 
     const map = [
       ["Saldo Awal", "saldoAwal"],
@@ -457,5 +477,6 @@ function updateDashboard() {
     if (el) el.textContent = "Rp " + val.toLocaleString();
   }
 }
+
 
 
