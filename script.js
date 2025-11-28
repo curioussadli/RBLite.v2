@@ -271,6 +271,37 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================
+// COPY DASHBOARD
+// =========================================================
+const copyDashboardBtn = document.getElementById("copy-dashboard");
+if (copyDashboardBtn) {
+  copyDashboardBtn.addEventListener("click", function () {
+
+    let laporan = "📊 LAPORAN KAS HARI INI\n\n";
+
+    const map = [
+      ["Saldo Awal", "saldoAwal"],
+      ["Total Pemasukan", "pemasukanKas"],
+      ["Total Pengeluaran", "pengeluaranKas"],
+      ["Saldo Akhir", "saldoAkhirKas"]
+    ];
+
+    map.forEach(([label, id]) => {
+      const el = document.getElementById(id);
+      if (el && el.textContent.trim() !== "") {
+        laporan += `${label}: ${el.textContent.trim()}\n`;
+      }
+    });
+
+    navigator.clipboard
+      .writeText(laporan)
+      .then(() => alert("Laporan dashboard berhasil dicopy!"))
+      .catch(() => alert("Gagal menyalin teks!"));
+  });
+}
+
+
+  // =========================================================
   // SALDO AWAL
   // =========================================================
   const saldoAwalInput = document.getElementById("saldoAwalInput");
@@ -426,3 +457,4 @@ function updateDashboard() {
     if (el) el.textContent = "Rp " + val.toLocaleString();
   }
 }
+
