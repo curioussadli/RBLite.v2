@@ -234,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // -------------------------
     // Judul laporan otomatis
     // -------------------------
-    let laporan = `📊 STOCK BAHAN ${tanggalLengkap}\n\n`;
+    let laporan = `📊 STOCK BAHAN\n${tanggalLengkap}\n\n`;
       
       let ada = false;
 
@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // -------------------------
     // Judul laporan otomatis
     // -------------------------
-    let laporan = `📊 PERSEDIAAN ${tanggalLengkap}\n\n`;
+    let laporan = `📊 STOCK PERSEDIAAN\${tanggalLengkap}\n\n`;
       
       let ada = false;
 
@@ -341,7 +341,7 @@ if (copyDashboardBtn) {
     // -------------------------
     // Judul laporan otomatis
     // -------------------------
-    let laporan = `📊 LAPORAN KAS ${tanggalLengkap}\n\n`;
+    let laporan = `📊 LAPORAN KAS\${tanggalLengkap}\n\n`;
 
     const map = [
       ["Saldo Awal", "saldoAwal"],
@@ -521,6 +521,7 @@ function updateDashboard() {
     if (el) el.textContent = "Rp " + val.toLocaleString();
   }
 }
+
 
 
 
