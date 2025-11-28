@@ -213,7 +213,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const copyBtn = document.getElementById("copy-stok");
   if (copyBtn) {
     copyBtn.addEventListener("click", function () {
-      let laporan = "📦 STOK HARI INI\n\n";
+
+          // -------------------------
+    // Buat tanggal otomatis
+    // -------------------------
+    const hariArray = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const bulanArray = [
+      "Januari","Februari","Maret","April","Mei","Juni",
+      "Juli","Agustus","September","Oktober","November","Desember"
+    ];
+
+    const now = new Date();
+    const hari = hariArray[now.getDay()];
+    const tanggal = now.getDate();
+    const bulan = bulanArray[now.getMonth()];
+    const tahun = now.getFullYear();
+
+    const tanggalLengkap = `${hari}, ${tanggal} ${bulan} ${tahun}`;
+
+    // -------------------------
+    // Judul laporan otomatis
+    // -------------------------
+    let laporan = `📊 STOCK BAHAN ${tanggalLengkap}\n\n`;
+      
       let ada = false;
 
       document.querySelectorAll("#stok .stok-row").forEach(row => {
@@ -244,7 +266,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const copyPersediaanBtn = document.getElementById("copy-persediaan");
   if (copyPersediaanBtn) {
     copyPersediaanBtn.addEventListener("click", function () {
-      let laporan = "📦 PERSEDIAAN HARI INI\n\n";
+
+          // -------------------------
+    // Buat tanggal otomatis
+    // -------------------------
+    const hariArray = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const bulanArray = [
+      "Januari","Februari","Maret","April","Mei","Juni",
+      "Juli","Agustus","September","Oktober","November","Desember"
+    ];
+
+    const now = new Date();
+    const hari = hariArray[now.getDay()];
+    const tanggal = now.getDate();
+    const bulan = bulanArray[now.getMonth()];
+    const tahun = now.getFullYear();
+
+    const tanggalLengkap = `${hari}, ${tanggal} ${bulan} ${tahun}`;
+
+    // -------------------------
+    // Judul laporan otomatis
+    // -------------------------
+    let laporan = `📊 PERSEDIAAN ${tanggalLengkap}\n\n`;
+      
       let ada = false;
 
       document.querySelectorAll("#storage .stok-row").forEach(row => {
@@ -477,6 +521,7 @@ function updateDashboard() {
     if (el) el.textContent = "Rp " + val.toLocaleString();
   }
 }
+
 
 
 
