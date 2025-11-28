@@ -281,9 +281,9 @@ if (copyDashboardBtn) {
 
     const map = [
       ["Saldo Awal", "saldoAwal"],
-      ["Total Pemasukan", "pemasukanKas"],
-      ["Total Pengeluaran", "pengeluaranKas"],
-      ["Saldo Akhir", "saldoAkhirKas"]
+      ["Pengeluaran", "pengeluaran"],
+      ["Kas Harian", "pemasukan"],
+      ["Pendapatan", "pendapatan"]
     ];
 
     map.forEach(([label, id]) => {
@@ -457,4 +457,5 @@ function updateDashboard() {
     if (el) el.textContent = "Rp " + val.toLocaleString();
   }
 }
+
 
