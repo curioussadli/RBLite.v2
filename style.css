@@ -542,8 +542,25 @@ select.used {
 }
 
 
+#beranda button {
+  padding: 20px;
+  font-size: 20px;
+  background: #FFD600;
+  color: #111;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#beranda button:hover {
+  background: #ffe600;
+}
+
+
+
 /* Tombol Copy Stok */
-#copy-beranda,
 #copy-stok,
 #copy-persediaan {
   display: block;
@@ -562,11 +579,11 @@ select.used {
   transition: background 0.3s ease;
 }
 
-#copy-beranda:hover,
 #copy-stok:hover,
 #copy-persediaan:hover {
   background-color: #b71c1c;
 }
+
 
 
 
