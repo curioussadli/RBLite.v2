@@ -561,6 +561,7 @@ select.used {
 }
 
 /* Tombol Copy Stok */
+#copy-beranda,
 #copy-stok,
 #copy-persediaan {
   display: block;
@@ -579,10 +580,12 @@ select.used {
   transition: background 0.3s ease;
 }
 
+#copy-beranda:hover,
 #copy-stok:hover,
 #copy-persediaan:hover {
   background-color: #b71c1c;
 }
+
 
 
 
