@@ -58,6 +58,7 @@
         <button class="close-btn" onclick="toggleMenu()">✕</button>
       </div>
       <ul>
+        <li onclick="openPage('pointofsales')">POS Kasir ©</li>
         <li onclick="openPage('beranda')">Dashboard</li>
         <li onclick="openPage('persiapan')">Persiapan</li>
         <li onclick="openPage('belanja')">Pengeluaran</li>
@@ -66,7 +67,6 @@
         <li onclick="openPage('storage')">Persediaan</li>
         <li onclick="openPage('sales')">Penjualan</li>
         <li onclick="openPage('staff')">Karyawan</li>
-        <li onclick="openPage('pointofsales')">POS Kasir</li>
         <li onclick="logout()">Tutup Resto</li>
       </ul>
     </nav>
@@ -1488,6 +1488,142 @@
       </div>
     </section>
 
+
+
+    <!-- =================== HALAMAN PENJUALAN (Sales List / Rekap) =================== -->
+<section id="sales" class="page">
+  <h2>Penjualan — Rekap Transaksi</h2>
+
+  <div style="margin-bottom:12px;">
+    <label>Filter Tanggal</label>
+    <input type="date" id="filterDate"/>
+    <button id="filterDateBtn">Terapkan</button>
+    <button id="clearFilterDate">Hapus Filter</button>
+  </div>
+
+  <div id="salesList" class="rincian-container">
+    <p>Belum ada transaksi.</p>
+  </div>
+
+  <div style="margin-top:16px;">
+    <button id="exportSalesCSV">Export CSV</button>
+    <button id="clearAllSales" class="reset-btn">Hapus Semua Penjualan</button>
+  </div>
+</section>
+
+<!-- =================== HALAMAN KARYAWAN (Staff) =================== -->
+<section id="staff" class="page">
+  <h2>Karyawan & Absensi</h2>
+
+  <div class="rincian-container">
+    <h3>Daftar Crew</h3>
+    <div id="staffList"></div>
+
+    <h3 style="margin-top:12px;">Tambah Crew</h3>
+    <input type="text" id="newStaffName" placeholder="Nama crew (contoh: CREW 4 - BUDI)"/>
+    <button id="addStaffBtn">Tambah Crew</button>
+
+    <h3 style="margin-top:12px;">Absensi (klik untuk Check-in / Check-out)</h3>
+    <div id="attendanceList"></div>
+
+    <h3 style="margin-top:12px;">Rekap Penjualan per Crew</h3>
+    <div id="staffSalesSummary"></div>
+  </div>
+</section>
+
+<!-- =================== HALAMAN POS KASIR =================== -->
+<section id="pointofsales" class="page">
+  <h2>POS Kasir</h2>
+
+  <div class="pos-layout">
+
+    <!-- KOLOM KIRI -->
+    <div class="pos-menu">
+      <h3>Menu</h3>
+      <div id="posMenu" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap:10px;"></div>
+    </div>
+
+    <!-- KOLOM KANAN -->
+    <div class="pos-cart">
+
+      <!-- ======================
+           TOTAL
+      ====================== -->
+      <div class="cart-total">
+        Total: Rp <span id="cartTotal">0</span>
+      </div>
+
+      <!-- ======================
+           UANG BAYAR
+      ====================== -->
+      <div class="cart-pay">
+        <label>Uang Bayar</label>
+        <input type="number" id="uangBayarInput" placeholder="Masukkan nominal">
+      </div>
+
+<!-- ====================== DROPDOWN UANG CEPAT ====================== -->
+      <select id="uangBayarSelect" style="padding:12px; font-size:16px; width:100%; margin-top:10px;">
+        <option value="">Pilih nominal</option>
+        <option value="10000">10.000</option>
+        <option value="15000">15.000</option>
+        <option value="20000">20000</option>
+        <option value="25000">25.000</option>
+        <option value="30000">30.000</option>
+        <option value="40000">40.000</option>
+        <option value="50000">50.000</option>
+        <option value="75000">75.000</option>
+        <option value="100000">100.000</option>
+      </select>
+
+
+      <!-- ======================
+           KEMBALIAN
+      ====================== -->
+      <label>Kembalian</label>
+      <div class="cart-change">
+        Rp <span id="kembalian">0</span>
+      </div>
+
+      <!-- ======================
+           TOMBOL TRANSAKSI
+      ====================== -->
+      <div class="cart-checkout">
+        <button id="checkoutBtn">Pesan Sekarang</button>
+        <!-- <button id="clearCartBtn" class="reset-btn" style="margin-top:10px;">Kosongkan</button> -->
+
+      </div>
+
+      <!-- ======================
+           PESANAN
+      ====================== -->
+      <h3 style="margin-top:20px;">Pesanan</h3>
+      <div id="cartList"></div>
+
+
+      <!-- ======================
+           CATATAN
+      ====================== -->
+      <div style="margin-top:15px;">
+        <label>Catatan</label>
+        <input type="text" id="posNote" placeholder="Catatan opsional...">
+      </div>
+
+      <!-- ======================
+           PETUGAS
+      ====================== -->
+      <div class="cart-pay">
+        <label>Petugas</label>
+        <select id="posPetugas"></select>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+
   </div> <!-- END APP WRAPPER -->
 
   <!-- =================== SCRIPT =================== -->
@@ -1504,6 +1640,7 @@
 
 </body>
 </html>
+
 
 
 
