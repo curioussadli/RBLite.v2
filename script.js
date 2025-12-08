@@ -3,6 +3,7 @@
 // ===========================================================
 document.addEventListener("DOMContentLoaded", () => {
 
+
   // =========================================================
   // ELEMENT REFERENSI
   // =========================================================
@@ -523,8 +524,258 @@ function updateDashboard() {
 }
 
 
+/* =====================================================
+   POS — SALES — STAFF (FINAL WORKING VERSION FIXED)
+===================================================== */
+
+(function () {
+
+  /* -----------------------------------------------
+     SAMPLE MENU
+  ------------------------------------------------ */
+  const defaultMenu = [
+    { id: 'r1', name: 'Choco Cheese', price: 15000, img: 'img/chococheese.jpeg' },
+    { id: 'r2', name: 'Cookies n Cream', price: 15000, img: 'img/cookiesncream.jpeg' },
+    { id: 'r3', name: 'Choco Crunchy', price: 15000, img: 'img/chococrunchy.jpeg' },
+    { id: 'r4', name: 'Tiramisu Caramel', price: 15000, img: 'img/tiramisucaramel.jpeg' },
+    { id: 'r5', name: 'Greentea Matcha', price: 15000, img: 'img/greenteamatcha.jpeg' },
+    { id: 'r6', name: 'Red Velvet Cream', price: 15000, img: 'img/redvelvetcream.jpeg' },
+    { id: 'r7', name: 'Choco Caramel', price: 15000, img: 'img/chococaramel.jpeg' },
+    { id: 'r8', name: 'Vanilla Cheese', price: 15000, img: 'img/vanillacheese.jpeg' },
+    { id: 'r9', name: 'Strawberry Cheese', price: 15000, img: 'img/strawberrycheese.jpeg' },
+    { id: 'r10', name: 'Choco Peanuts', price: 15000, img: 'img/chocopeanuts.jpeg' },
+  ];
+
+  let menuData = defaultMenu;
+
+
+  let cart = JSON.parse(localStorage.getItem("cartSession") || "[]");
+
+  /* STAFF */
+  const defaultStaff =
+    JSON.parse(localStorage.getItem("staffList") || "null") || [
+      "CREW 1 - RAMA",
+      "CREW 2 - ????",
+      "CREW 3 - ????",
+    ];
+  localStorage.setItem("staffList", JSON.stringify(defaultStaff));
+
+  /* =====================================================
+        RENDER MENU POS
+  ===================================================== */
+  function renderPOSMenu() {
+  const wrap = document.getElementById("posMenu");
+  if (!wrap) return;
+
+  wrap.innerHTML = "";
+
+  menuData.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "pos-item";
+    card.dataset.id = item.id; // simpan id di div
+
+    card.innerHTML = `
+      <img src="${item.img}" alt="${item.name}">
+      <div class="name">${item.name}</div>
+      <div class="price">Rp ${item.price.toLocaleString()}</div>
+    `;
+
+    wrap.appendChild(card);
+  });
+
+  // 🔥 seluruh card menu bisa diklik
+  wrap.querySelectorAll(".pos-item").forEach((card) => {
+    card.addEventListener("click", () => {
+      const id = card.dataset.id;
+      addToCart(id, 1); // tambah 1 setiap klik
+    });
+  });
+}
+
+
+/* =====================================================
+      ADD TO CART (FIXED)
+===================================================== */
+function addToCart(id, qty = 1) {
+  const item = menuData.find(m => m.id === id);
+  if (!item) return;
+
+  const exist = cart.find(c => c.id === id);
+
+  if (exist) {
+    exist.qty += qty;
+  } else {
+    cart.push({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      qty: qty
+    });
+  }
+
+  localStorage.setItem("cartSession", JSON.stringify(cart));
+  renderCart();
+}
 
 
 
+  /* =====================================================
+        CART FUNCTIONS
+  ===================================================== */
+  function renderCart() {
+  const wrap = document.getElementById("cartList");
+  if (!wrap) return;
+
+  if (cart.length === 0) {
+    wrap.innerHTML = "<p>Keranjang kosong.</p>";
+    updateTotal();
+    return;
+  }
+
+  let html = "";
+
+  cart.forEach((c, i) => {
+    html += `
+      <div class="cart-item">
+        <div class="ci-row">
+          <span class="ci-label">Item</span>
+          <span class="ci-value">${c.name}</span>
+        </div>
+
+        <div class="ci-row">
+          <span class="ci-label">Qty</span>
+          <span class="ci-value">${c.qty}</span>
+        </div>
+
+        <div class="ci-row">
+          <span class="ci-label">Subtotal</span>
+          <span class="ci-value">Rp ${(c.qty * c.price).toLocaleString()}</span>
+        </div>
+
+        <div class="ci-actions">
+          <button class="qty-btn" data-i="${i}" data-act="dec">-</button>
+          <button class="qty-btn" data-i="${i}" data-act="inc">+</button>
+          <button class="delete-btn" data-i="${i}" data-act="rm">x</button>
+        </div>
+      </div>
+    `;
+  });
+
+  wrap.innerHTML = html;
+
+  wrap.querySelectorAll(".qty-btn, .delete-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = Number(btn.dataset.i);
+      const act = btn.dataset.act;
+
+      if (act === "inc") cart[i].qty++;
+      if (act === "dec") {
+        cart[i].qty--;
+        if (cart[i].qty <= 0) cart.splice(i, 1);
+      }
+      if (act === "rm") cart.splice(i, 1);
+
+      localStorage.setItem("cartSession", JSON.stringify(cart));
+      renderCart();
+    });
+  });
+
+  updateTotal();
+}
 
 
+  /* =====================================================
+        TOTAL, BAYAR, KEMBALIAN
+  ===================================================== */
+  function updateTotal() {
+    const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
+
+    const totalEl = document.getElementById("cartTotal");
+    const inputEl = document.getElementById("uangBayarInput");
+    const selectEl = document.getElementById("uangBayarSelect");
+    const kembaliEl = document.getElementById("kembalian");
+
+    if (totalEl) totalEl.textContent = total.toLocaleString();
+
+    let bayar = 0;
+    if (selectEl && selectEl.value !== "") bayar = parseInt(selectEl.value);
+    else if (inputEl && inputEl.value !== "") bayar = parseInt(inputEl.value);
+
+    if (isNaN(bayar)) bayar = 0;
+
+    const kembali = Math.max(0, bayar - total);
+    if (kembaliEl) kembaliEl.textContent = kembali.toLocaleString();
+  }
+
+  /* =====================================================
+        CHECKOUT
+  ===================================================== */
+  function checkout() {
+    if (cart.length === 0) return alert("Keranjang kosong!");
+
+    let bayar = 0;
+    const inputEl = document.getElementById("uangBayarInput");
+    const selectEl = document.getElementById("uangBayarSelect");
+
+    if (selectEl && selectEl.value !== "") bayar = parseInt(selectEl.value);
+    else if (inputEl && inputEl.value !== "") bayar = parseInt(inputEl.value);
+
+    if (isNaN(bayar)) bayar = 0;
+
+    const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
+
+    if (bayar < total) {
+      if (!confirm("Uang kurang. Simpan sebagai piutang?")) return;
+    }
+
+    alert("Transaksi berhasil disimpan!");
+
+    // CLEAR CART
+    cart = [];
+    localStorage.removeItem("cartSession");
+    renderCart();
+
+    // RESET PEMBAYARAN
+    if (inputEl) inputEl.value = "";
+    if (selectEl) selectEl.value = "";
+    document.getElementById("kembalian").textContent = "0";
+  }
+
+  /* =====================================================
+        INITIAL LOAD
+  ===================================================== */
+  document.addEventListener("DOMContentLoaded", () => {
+    renderPOSMenu();
+    renderCart();
+
+    const inputEl = document.getElementById("uangBayarInput");
+    const selectEl = document.getElementById("uangBayarSelect");
+
+    if (inputEl) inputEl.addEventListener("input", updateTotal);
+    if (selectEl) selectEl.addEventListener("change", updateTotal);
+
+    document.getElementById("checkoutBtn")?.addEventListener("click", checkout);
+
+    document.getElementById("clearCartBtn")?.addEventListener("click", () => {
+      if (confirm("Kosongkan keranjang?")) {
+        cart = [];
+        localStorage.removeItem("cartSession");
+        renderCart();
+      }
+    });
+
+    populateStaff();
+  });
+
+  /* =====================================================
+        STAFF SELECT OPTION
+  ===================================================== */
+  function populateStaff() {
+    const sel = document.getElementById("posPetugas");
+    if (!sel) return;
+
+    const arr = JSON.parse(localStorage.getItem("staffList") || "[]");
+    sel.innerHTML = arr.map((n) => `<option value="${n}">${n}</option>`).join("");
+  }
+
+})();
