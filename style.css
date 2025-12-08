@@ -593,6 +593,370 @@ select.used {
 }
 
 
+/* =====================================================
+   POS KASIR — STYLE KHUSUS (Match UI Lama)
+   ===================================================== */
+
+/* Wrapper utama POS: kiri menu, kanan keranjang */
+.pos-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* ============================
+   KOLOM KIRI — MENU ITEM
+============================ */
+.pos-menu {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
+.pos-menu h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.pos-item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.pos-item:active { transform: scale(0.97); }
+
+.pos-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.pos-item .name {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.pos-item .price {
+  font-size: 16px;
+  font-weight: 800;
+  color: #d62828;
+}
+
+/* ============================
+   KOLOM KANAN — KERANJANG
+============================ */
+.pos-cart {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
+.pos-cart h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Daftar pesanan — FIX SELECTOR */
+#cartList table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#cartList td {
+  padding: 8px 4px;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Tombol qty */
+.qty-btn {
+  padding: 6px 10px;
+  background: #FFD600;
+  font-weight: 700;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.qty-btn:hover {
+  background: #ffcc00;
+}
+
+/* TOTAL BELANJA */
+.cart-total {
+  margin-top: 12px;
+  padding: 16px;
+  background: #fff7c2;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* KECILKAN TULISAN TEXT */
+
+.pos-cart label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  display: block;
+  margin-bottom: 2px; /* jarak kecil ke box bawahnya */
+}
+
+/* MEPETKAN BOX */
+
+/* Box pertama: Masukkan nominal */
+.cart-pay input {
+  margin-bottom: 4px; /* bikin nempel */
+}
+
+/* Box kedua: Pilih nominal */
+#uangBayarSelect {
+  margin-top: 0 !important; /* hapus jarak atas */
+}
+
+
+/* INPUT UANG BAYAR */
+
+.cart-pay {
+  margin-top: 6px;
+}
+
+.cart-pay input {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+#uangBayarSelect {
+  margin-top: 0px;   /* atur sesuai selera, bisa 0 juga */
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+
+/* KEMBALIAN */
+
+.cart-change {
+  margin-top: 0px;
+  padding: 12px;
+  background: #e8ffe2;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0a7a00;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Tombol Selesaikan */
+.cart-checkout {
+  margin-top: 14px;
+}
+
+.cart-checkout button {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  background: #FFD600;
+  color: #111;
+}
+
+.cart-checkout button:hover {
+  background: #ffcc00;
+}
+
+/* Mobile 100% nyaman */
+@media (max-width: 480px) {
+  .pos-layout {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+
+
+
+/* ---------- Konsistensi untuk semua input/select di POS ---------- */
+/* pastikan semua input & select pada kolom kanan punya lebar dan style yang sama */
+.pos-cart input[type="text"],
+.pos-cart input[type="number"],
+.pos-cart textarea,
+.pos-cart select,
+.pos-cart .cart-pay input,
+#posNote,
+#posPetugas {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* jika Catatan menggunakan textarea, tetap seragam */
+.pos-cart textarea#posNote {
+  min-height: 42px;      /* buat sedikit tinggi agar mirip input */
+  resize: vertical;
+}
+
+/* hapus style inline yang memaksa ukuran berbeda (jika ada) */
+.pos-cart [style] {
+  /* tidak otomatis menghapus inline style — ini hanya berjaga-jaga */
+}
+
+/* spacing rapi antar elemen */
+.pos-cart label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #444;
+}
+
+/* jika ada tombol kecil/inline di sebelah select, pastikan select tetap full width */
+.pos-cart .select-wrapper {
+  width: 100%;
+}
+
+/* contoh: jika posPetugas diletakkan di dalam .cart-pay, jarak seragam */
+.cart-pay { margin-top: 8px; }
+
+
+.ci-actions {
+  display: flex;
+  justify-content: space-between; /* kiri dan kanan */
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* tombol - dan + */
+.ci-actions .qty-btn {
+  background: #ffd600;
+  border: none;
+  padding: 8px 16px;        /* tombol lebar */
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* jarak antara - dan + */
+.ci-actions .qty-btn:first-child {
+  margin-right: 10px;       /* jarak - & + */
+}
+
+/* tombol x di kanan */
+.ci-actions .delete-btn {
+  margin-left: auto;        /* dorong x ke paling kanan */
+  background: #ff9bb3;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;        /* tombol lebih lebar */
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.ci-actions .delete-btn:hover {
+  background: #ff7f9c;
+}
+
+
+
+
+/* =============================
+   CART ITEM — NEW VERTICAL STYLE
+============================= */
+
+.cart-item {
+  background: #fff;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* setiap baris label + value */
+.ci-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+/* label kiri */
+.ci-label {
+  font-weight: 600;
+  color: #444;
+  font-size: 14px;
+}
+
+/* value kanan */
+.ci-value {
+  font-weight: 700;
+  color: #111;
+  font-size: 15px;
+  text-align: right;
+}
+
+/* tombol aksi (- + x) */
+.ci-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ci-actions .qty-btn {
+  background: #ffd600;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: #ff9bb3;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #ff7f9c;
+}
+
 
 
 
