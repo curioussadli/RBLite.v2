@@ -847,50 +847,6 @@ select.used {
 /* contoh: jika posPetugas diletakkan di dalam .cart-pay, jarak seragam */
 .cart-pay { margin-top: 8px; }
 
-
-.ci-actions {
-  display: flex;
-  justify-content: space-between; /* kiri dan kanan */
-  align-items: center;
-  margin-top: 10px;
-}
-
-/* tombol - dan + */
-.ci-actions .qty-btn {
-  background: #ffd600;
-  border: none;
-  padding: 8px 16px;        /* tombol lebar */
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* jarak antara - dan + */
-.ci-actions .qty-btn:first-child {
-  margin-right: 10px;       /* jarak - & + */
-}
-
-/* tombol x di kanan */
-.ci-actions .delete-btn {
-  margin-left: auto;        /* dorong x ke paling kanan */
-  background: #ff9bb3;
-  color: #fff;
-  border: none;
-  padding: 8px 20px;        /* tombol lebih lebar */
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.ci-actions .delete-btn:hover {
-  background: #ff7f9c;
-}
-
-
-
-
 /* =============================
    CART ITEM — NEW VERTICAL STYLE
 ============================= */
@@ -956,6 +912,7 @@ select.used {
 .delete-btn:hover {
   background: #ff7f9c;
 }
+
 
 
 
