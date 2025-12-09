@@ -471,7 +471,7 @@ function renderPengeluaran() {
     html += `
       <tr>
         <td>${item.keterangan}</td>
-        <td style="text-align:right; font-weight:bold; color:#d62828">Rp ${item.jumlah.toLocaleString()}</td>
+        <td style="text-align:right; font-weight:bold; color:#d62828"> ${item.jumlah.toLocaleString()}</td>
         <td><button class="hapus-btn" data-index="${index}">❌</button></td>
       </tr>
     `;
@@ -519,7 +519,7 @@ function updateDashboard() {
 
   for (const [id, val] of Object.entries(ids)) {
     const el = document.getElementById(id);
-    if (el) el.textContent = "Rp " + val.toLocaleString();
+    if (el) el.textContent = " " + val.toLocaleString();
   }
 }
 
@@ -577,7 +577,7 @@ function updateDashboard() {
     card.innerHTML = `
       <img src="${item.img}" alt="${item.name}">
       <div class="name">${item.name}</div>
-      <div class="price">Rp ${item.price.toLocaleString()}</div>
+      <div class="price"> ${item.price.toLocaleString()}</div>
     `;
 
     wrap.appendChild(card);
@@ -652,7 +652,7 @@ function addToCart(id, qty = 1) {
 
         <div class="ci-row">
           <span class="ci-label">Subtotal</span>
-          <span class="ci-value">Rp ${(c.qty * c.price).toLocaleString()}</span>
+          <span class="ci-value"> ${(c.qty * c.price).toLocaleString()}</span>
         </div>
 
         <div class="ci-actions">
@@ -725,7 +725,7 @@ function renderCartPage() {
     html += `
       <div class="cart-item">
         ${c.name} (${c.qty})
-        <br>Rp ${(c.qty * c.price).toLocaleString()}
+        <br> ${(c.qty * c.price).toLocaleString()}
       </div>
     `;
   });
@@ -900,6 +900,27 @@ function updateFloatingCart(count, total) {
 }
 
 
+  /* KE HALAMAN PENJUALAN  */
+document.getElementById("goToHistoryBtn").addEventListener("click", function () {
+  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+  document.getElementById("sales").style.display = "block";
+});
+
+
+document.getElementById("backToMenuBtn").addEventListener("click", function () {
+  document.getElementById("cartPage").style.display = "none";
+  document.getElementById("menuPage").style.display = "block";
+});
+
+document.getElementById("checkoutBtn").addEventListener("click", function () {
+  // Sembunyikan halaman Detail Pesanan
+  document.getElementById("cartPage").style.display = "none";
+
+  // Tampilkan halaman Penjualan
+  document.getElementById("sales").style.display = "block";
+});
+
+
 
 
   /* =====================================================
@@ -918,7 +939,7 @@ function renderSalesHistory() {
       <tr>
         <td>${r.date}</td>
         <td>${itemList}</td>
-        <td>Rp ${r.total.toLocaleString()}</td>
+        <td> ${r.total.toLocaleString()}</td>
         <td>${r.petugas}</td>
       </tr>
     `;
