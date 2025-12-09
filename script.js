@@ -615,7 +615,10 @@ function addToCart(id, qty = 1) {
 
   localStorage.setItem("cartSession", JSON.stringify(cart));
   renderCart();
+  updateBottomBar();
+
 }
+
 
 
 
@@ -684,6 +687,57 @@ function addToCart(id, qty = 1) {
 }
 
 
+/* EDIT JS UNTUK MENDUKUNG NAVIGASI HALAMAN */
+
+function updateBottomBar() {
+  const bar = document.getElementById("cartBottomBar");
+  const count = document.getElementById("cartCount");
+  const total = document.getElementById("cartBottomTotal");
+
+  const isEmpty = cart.length === 0;
+
+  bar.style.display = isEmpty ? "none" : "flex";
+  if (isEmpty) return;
+
+  const qtyTotal = cart.reduce((s, i) => s + i.qty, 0);
+  const hargaTotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+  count.textContent = qtyTotal + " Menu";
+  total.textContent = hargaTotal.toLocaleString();
+}
+
+
+  /* KLIK BOTTOM BAR → MASUK HALAMAN PESANAN */
+  document.getElementById("cartBottomBar").addEventListener("click", () => {
+  document.getElementById("menuPage").style.display = "none";
+  document.getElementById("cartPage").style.display = "block";
+  renderCartPage();
+});
+
+
+/* RENDER HALAMAN PESANAN */
+
+function renderCartPage() {
+  const wrap = document.getElementById("cartPageList");
+  let html = "";
+
+  cart.forEach(c => {
+    html += `
+      <div class="cart-item">
+        ${c.name} (${c.qty})
+        <br>Rp ${(c.qty * c.price).toLocaleString()}
+      </div>
+    `;
+  });
+
+  wrap.innerHTML = html;
+
+  const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
+  document.getElementById("cartPageTotal").textContent = total.toLocaleString();
+}
+
+
+
   /* =====================================================
         TOTAL, BAYAR, KEMBALIAN
   ===================================================== */
@@ -728,7 +782,31 @@ function addToCart(id, qty = 1) {
       if (!confirm("Uang kurang. Simpan sebagai piutang?")) return;
     }
 
+    // -----------------------------------------
+    // SIMPAN TRANSAKSI KE HISTORY
+    // -----------------------------------------
+    const record = {
+      id: "TRX" + Date.now(),
+      date: new Date().toLocaleString("id-ID"),
+      items: JSON.parse(JSON.stringify(cart)),
+      total: total,
+      bayar: bayar,
+      kembalian: Math.max(0, bayar - total),
+      petugas: document.getElementById("posPetugas").value || "-",
+      catatan: document.getElementById("posNote").value || ""
+    };
+
+    let history = JSON.parse(localStorage.getItem("salesHistory") || "[]");
+    history.push(record);
+
+    // simpan ulang
+    localStorage.setItem("salesHistory", JSON.stringify(history));
+
     alert("Transaksi berhasil disimpan!");
+
+    renderSalesHistory();
+
+
 
     // CLEAR CART
     cart = [];
@@ -777,5 +855,77 @@ function addToCart(id, qty = 1) {
     const arr = JSON.parse(localStorage.getItem("staffList") || "[]");
     sel.innerHTML = arr.map((n) => `<option value="${n}">${n}</option>`).join("");
   }
+
+
+  const backBtn = document.getElementById("backToMenuBtn");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      const menuPage = document.getElementById("menuPage");
+      const cartPage = document.getElementById("cartPage");
+
+      if (cartPage) cartPage.style.display = "none";
+      if (menuPage) menuPage.style.display = "block";
+
+      updateBottomBar();
+    });
+  }
+
+
+
+// === PINDAH HALAMAN ===
+const menuPage = document.getElementById("menuPage");
+const cartPage = document.getElementById("cartPage");
+const openCartBtn = document.getElementById("openCartBtn");
+const backToMenuBtn = document.getElementById("backToMenuBtn");
+
+// Klik Floating Cart → buka halaman keranjang
+openCartBtn.addEventListener("click", () => {
+  menuPage.style.display = "none";
+  cartPage.style.display = "block";
+});
+
+// Tombol kembali → kembali ke menu
+backToMenuBtn.addEventListener("click", () => {
+  cartPage.style.display = "none";
+  menuPage.style.display = "block";
+});
+
+// === TAMPILKAN FLOATING CART JIKA ADA ITEM ===
+function updateFloatingCart(count, total) {
+  const fc = document.getElementById("floatingCart");
+  document.getElementById("fcCount").textContent = count + " item";
+  document.getElementById("fcTotal").textContent = total.toLocaleString();
+
+  fc.style.display = count > 0 ? "flex" : "none";
+}
+
+
+
+
+  /* =====================================================
+        SALES HISTORY
+  ===================================================== */
+function renderSalesHistory() {
+  const tbody = document.querySelector("#salesTable tbody");
+  if (!tbody) return;
+
+  let history = JSON.parse(localStorage.getItem("salesHistory") || "[]");
+
+  tbody.innerHTML = history.map(r => {
+    let itemList = r.items.map(i => `${i.name} (${i.qty})`).join(", ");
+
+    return `
+      <tr>
+        <td>${r.date}</td>
+        <td>${itemList}</td>
+        <td>Rp ${r.total.toLocaleString()}</td>
+        <td>${r.petugas}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+renderSalesHistory();
+
 
 })();
