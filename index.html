@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RBLeon</title>
+  <title>RBLite</title>
   <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
   <link rel="manifest" href="manifest.json">
@@ -37,7 +37,7 @@
     </div>
 
     <div class="login-footer">
-      <p>© 2025 RBLeon | v1.0.0</p>
+      <p>© 2025 RBLite | v1.0.0</p>
     </div>
   </main>
 
@@ -47,14 +47,14 @@
     <!-- =================== HEADER =================== -->
     <header class="app-header hidden" id="main-header">
       <button class="menu-btn" onclick="toggleMenu()">&#9776;</button>
-      <h1>RBLeon</h1>
+      <h1>RBLite</h1>
     </header>
 
     <!-- =================== SIDEBAR =================== -->
     <nav id="sidebar" class="sidebar hidden">
       <div class="sidebar-header">
         <img src="logo1.png" alt="Logo" class="sidebar-logo"/>
-        <span class="sidebar-title">RBLeon</span>
+        <span class="sidebar-title">RBLite</span>
         <button class="close-btn" onclick="toggleMenu()">✕</button>
       </div>
       <ul>
@@ -1491,25 +1491,47 @@
 
 
     <!-- =================== HALAMAN PENJUALAN (Sales List / Rekap) =================== -->
-<section id="sales" class="page">
-  <h2>Penjualan — Rekap Transaksi</h2>
+    <!-- =================== HALAMAN PENJUALAN =================== -->
+    <section id="sales" class="page">
+      <h2>Penjualan — Rekap Transaksi</h2>
 
-  <div style="margin-bottom:12px;">
-    <label>Filter Tanggal</label>
-    <input type="date" id="filterDate"/>
-    <button id="filterDateBtn">Terapkan</button>
-    <button id="clearFilterDate">Hapus Filter</button>
-  </div>
 
-  <div id="salesList" class="rincian-container">
-    <p>Belum ada transaksi.</p>
-  </div>
+      <!-- FILTER -->
+      <div class="sales-filter">
+        <label>Filter Tanggal</label>
+        <input type="date" id="filterDate"/>
+        <div class="sales-filter-btns">
+          <button id="filterDateBtn" class="btn-primary">Terapkan</button>
+          <button id="clearFilterDate" class="btn-secondary">Hapus</button>
+        </div>
+      </div>
 
-  <div style="margin-top:16px;">
-    <button id="exportSalesCSV">Export CSV</button>
-    <button id="clearAllSales" class="reset-btn">Hapus Semua Penjualan</button>
-  </div>
-</section>
+      <!-- LIST TRANSAKSI -->
+      <div id="salesList" class="sales-container">
+        <p>Belum ada transaksi.</p>
+      </div>
+
+      
+
+      <table id="salesTable">
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Item</th>
+            <th>Total</th>
+            <th>Petugas</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <!-- EXPORT & CLEAR -->
+      <div class="sales-bottom-btns">
+        <button id="exportSalesCSV" class="btn-primary">Export CSV</button>
+        <button id="clearAllSales" class="reset-btn">Hapus Semua Penjualan</button>
+      </div>
+    </section>
+
 
 <!-- =================== HALAMAN KARYAWAN (Staff) =================== -->
 <section id="staff" class="page">
@@ -1533,98 +1555,81 @@
 
 <!-- =================== HALAMAN POS KASIR =================== -->
 <section id="pointofsales" class="page">
-  <h2>POS Kasir</h2>
 
-  <div class="pos-layout">
+  <!-- =============== HALAMAN MENU =============== -->
+  <div id="menuPage" style="display:block;">
 
-    <!-- KOLOM KIRI -->
+    <!-- GRID MENU -->
     <div class="pos-menu">
-      <h3>Menu</h3>
-      <div id="posMenu" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap:10px;"></div>
+      <div id="posMenu" class="menu-grid"></div>
     </div>
 
-    <!-- KOLOM KANAN -->
-    <div class="pos-cart">
+    <!-- BOTTOM CART BAR -->
+    <div id="cartBottomBar" class="cart-bottom-bar" style="display:none;">
+      <span id="cartCount">0 Menu</span>
+      <span class="total">Rp <span id="cartBottomTotal">0</span></span>
+    </div>
 
-      <!-- ======================
-           TOTAL
-      ====================== -->
-      <div class="cart-total">
-        Rp <span id="cartTotal">0</span>
-      </div>
-
-      <!-- ======================
-           UANG BAYAR
-      ====================== -->
-      <div class="cart-pay">
-        <label>Uang Bayar</label>
-        <input type="number" id="uangBayarInput" placeholder="Masukkan nominal">
-      </div>
-
-<!-- ====================== DROPDOWN UANG CEPAT ====================== -->
-      <select id="uangBayarSelect" style="padding:12px; font-size:16px; width:100%; margin-top:10px;">
-        <option value="">Pilih nominal</option>
-        <option value="10000">10.000</option>
-        <option value="15000">15.000</option>
-        <option value="20000">20000</option>
-        <option value="25000">25.000</option>
-        <option value="30000">30.000</option>
-        <option value="40000">40.000</option>
-        <option value="50000">50.000</option>
-        <option value="75000">75.000</option>
-        <option value="100000">100.000</option>
-      </select>
+  </div>
+  <!-- END MENU PAGE -->
 
 
-      <!-- ======================
-           KEMBALIAN
-      ====================== -->
+  <!-- =============== HALAMAN DETAIL PESANAN =============== -->
+  <div id="cartPage" class="pos-cart" style="display:none;">
+
+    <h2>Detail Pesanan</h2>
+
+    <div class="cart-total">
+      <label>Total:</label>
+      Rp <span id="cartTotal">0</span>
+    </div>
+
+    <div class="cart-pay">
+      <input type="number" id="uangBayarInput" placeholder="Bayar (Masukkan nominal)">
+    </div>
+
+    <select id="uangBayarSelect">
+      <option value="">Bayar (Pilih nominal)</option>
+      <option value="10000">10.000</option>
+      <option value="15000">15.000</option>
+      <option value="20000">20.000</option>
+      <option value="25000">25.000</option>
+      <option value="30000">30.000</option>
+      <option value="40000">40.000</option>
+      <option value="50000">50.000</option>
+      <option value="75000">75.000</option>
+      <option value="100000">100.000</option>
+    </select>
+
+    <div class="cart-change">
       <label>Kembalian</label>
-      <div class="cart-change">
-        Rp <span id="kembalian">0</span>
-      </div>
-
-      <!-- ======================
-           TOMBOL TRANSAKSI
-      ====================== -->
-      <div class="cart-checkout">
-        <button id="checkoutBtn">Pesan Sekarang</button>
-        <!-- <button id="clearCartBtn" class="reset-btn" style="margin-top:10px;">Kosongkan</button> -->
-
-      </div>
-
-      <!-- ======================
-           PESANAN
-      ====================== -->
-      <h3 style="margin-top:20px;">Pesanan</h3>
-      <div id="cartList"></div>
-
-
-      <!-- ======================
-           CATATAN
-      ====================== -->
-      <div style="margin-top:15px;">
-        <label>Catatan</label>
-        <input type="text" id="posNote" placeholder="Catatan opsional...">
-      </div>
-
-      <!-- ======================
-           PETUGAS
-      ====================== -->
-      <div class="cart-pay">
-        <label>Petugas</label>
-        <select id="posPetugas"></select>
-      </div>
-
+      Rp <span id="kembalian">0</span>
     </div>
+
+    <div class="cart-checkout">
+      <button id="checkoutBtn">Pesan</button>
+
+      <!-- Tombol kembali -->
+      <button id="backToMenuBtn" class="btn-secondary">
+        Kembali
+      </button>
+    </div>
+
+    <h3 style="margin-top:20px;">Pesanan</h3>
+    <div id="cartList"></div>
+
+    <div style="margin-top:15px;">
+      <input type="text" id="posNote" placeholder="Catatan opsional...">
+    </div>
+
+    <div class="cart-pay">
+      <label>Petugas</label>
+      <select id="posPetugas"></select>
+    </div>
+
   </div>
 </section>
 
-
-
-
-
-  </div> <!-- END APP WRAPPER -->
 
   <!-- =================== SCRIPT =================== -->
   <script src="script.js"></script>
@@ -1640,7 +1645,6 @@
 
 </body>
 </html>
-
 
 
 
