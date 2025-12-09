@@ -1488,6 +1488,27 @@
       </div>
     </section>
 
+    
+<!-- =================== HALAMAN KARYAWAN (Staff) =================== -->
+<section id="staff" class="page">
+  <h2>Karyawan & Absensi</h2>
+
+  <div class="rincian-container">
+    <h3>Daftar Crew</h3>
+    <div id="staffList"></div>
+
+    <h3 style="margin-top:12px;">Tambah Crew</h3>
+    <input type="text" id="newStaffName" placeholder="Nama crew (contoh: CREW 4 - BUDI)"/>
+    <button id="addStaffBtn">Tambah Crew</button>
+
+    <h3 style="margin-top:12px;">Absensi (klik untuk Check-in / Check-out)</h3>
+    <div id="attendanceList"></div>
+
+    <h3 style="margin-top:12px;">Rekap Penjualan per Crew</h3>
+    <div id="staffSalesSummary"></div>
+  </div>
+</section>
+
 
 
     <!-- =================== HALAMAN PENJUALAN (Sales List / Rekap) =================== -->
@@ -1533,25 +1554,6 @@
     </section>
 
 
-<!-- =================== HALAMAN KARYAWAN (Staff) =================== -->
-<section id="staff" class="page">
-  <h2>Karyawan & Absensi</h2>
-
-  <div class="rincian-container">
-    <h3>Daftar Crew</h3>
-    <div id="staffList"></div>
-
-    <h3 style="margin-top:12px;">Tambah Crew</h3>
-    <input type="text" id="newStaffName" placeholder="Nama crew (contoh: CREW 4 - BUDI)"/>
-    <button id="addStaffBtn">Tambah Crew</button>
-
-    <h3 style="margin-top:12px;">Absensi (klik untuk Check-in / Check-out)</h3>
-    <div id="attendanceList"></div>
-
-    <h3 style="margin-top:12px;">Rekap Penjualan per Crew</h3>
-    <div id="staffSalesSummary"></div>
-  </div>
-</section>
 
 <!-- =================== HALAMAN POS KASIR =================== -->
 <section id="pointofsales" class="page">
@@ -1567,7 +1569,7 @@
     <!-- BOTTOM CART BAR -->
     <div id="cartBottomBar" class="cart-bottom-bar" style="display:none;">
       <span id="cartCount">0 Menu</span>
-      <span class="total">Rp <span id="cartBottomTotal">0</span></span>
+      <span class="total"> <span id="cartBottomTotal">0</span></span>
     </div>
 
   </div>
@@ -1577,16 +1579,24 @@
   <!-- =============== HALAMAN DETAIL PESANAN =============== -->
   <div id="cartPage" class="pos-cart" style="display:none;">
 
+  <div class="cart-header">
+    <button id="backToMenuBtn" class="back-btn">←</button>
     <h2>Detail Pesanan</h2>
+  </div>
 
     <div class="cart-total">
       <label>Total:</label>
-      Rp <span id="cartTotal">0</span>
+      <span id="cartTotal">0</span>
     </div>
 
-    <div class="cart-pay">
+
+    <h3 style="margin-top:20px;"></h3>
+    <div id="cartList"></div>
+
+
+    <!--<div class="cart-pay">
       <input type="number" id="uangBayarInput" placeholder="Bayar (Masukkan nominal)">
-    </div>
+    </div> -->
 
     <select id="uangBayarSelect">
       <option value="">Bayar (Pilih nominal)</option>
@@ -1602,30 +1612,24 @@
     </select>
 
     <div class="cart-change">
-      <label>Kembalian</label>
-      Rp <span id="kembalian">0</span>
+      <label>Kembalian:</label>
+      <span id="kembalian">0</span>
     </div>
-
-    <div class="cart-checkout">
-      <button id="checkoutBtn">Pesan</button>
-
-      <!-- Tombol kembali -->
-      <button id="backToMenuBtn" class="btn-secondary">
-        Kembali
-      </button>
-    </div>
-
-    <h3 style="margin-top:20px;">Pesanan</h3>
-    <div id="cartList"></div>
 
     <div style="margin-top:15px;">
       <input type="text" id="posNote" placeholder="Catatan opsional...">
     </div>
 
     <div class="cart-pay">
-      <label>Petugas</label>
       <select id="posPetugas"></select>
     </div>
+
+    <!-- Floating Pesan Button -->
+<div id="floatingCheckout" class="cart-bottom-bar">
+  <button id="checkoutBtn">Pesan</button>
+</div>
+
+
 
   </div>
 </section>
