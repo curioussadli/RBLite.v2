@@ -1055,4 +1055,74 @@ select.used {
 }
 
 
+/* ======================
+   RIWAYAT TRANSAKSI
+====================== */
+
+#transaksi {
+  padding: 10px;
+}
+
+#transactionList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.history-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  border-left: 5px solid #ffd900;
+  width: 100%;
+}
+
+.tx-date {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.tx-items {
+  margin-bottom: 12px;
+}
+
+/* ==== BARIS ITEM TRANSAKSI ==== */
+.tx-item {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  margin-bottom: 6px;
+}
+
+/* ==== KOLOM QTY ==== */
+.tx-qty {
+  display: table-cell;
+  width: 70px;              /* 🔥 kolom tetap */
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  text-align: left;         /* rata kiri */
+  vertical-align: top;
+}
+
+/* ==== KOLOM NAMA ITEM ==== */
+.tx-name {
+  display: table-cell;
+  padding-left: 3px;       /* jarak dari qty */
+  font-size: 16px;
+  color: #333;
+
+  vertical-align: top;
+  white-space: nowrap;      /* 🔥 tidak turun */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.tx-total {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: right;
+}
 
