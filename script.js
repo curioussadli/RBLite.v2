@@ -761,58 +761,64 @@ function renderCartPage() {
       CHECKOUT (VERSI FIX — SUDAH MENYIMPAN TRANSAKSI)
 ===================================================== */
 function checkout() {
-  if (cart.length === 0) return alert("Keranjang kosong!");
+  if (cart.length === 0) {
+    alert("Keranjang kosong!");
+    return;
+  }
 
+  // BAYAR OPSIONAL
   let bayar = 0;
   const inputEl = document.getElementById("uangBayarInput");
   const selectEl = document.getElementById("uangBayarSelect");
 
-  if (selectEl && selectEl.value !== "") bayar = parseInt(selectEl.value);
-  else if (inputEl && inputEl.value !== "") bayar = parseInt(inputEl.value);
-
+  if (selectEl && selectEl.value) bayar = parseInt(selectEl.value);
+  else if (inputEl && inputEl.value) bayar = parseInt(inputEl.value);
   if (isNaN(bayar)) bayar = 0;
 
-  const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const now = new Date();
 
-  if (bayar < total) {
-    if (!confirm("Uang kurang. Simpan sebagai piutang?")) return;
-  }
-
-  // -----------------------------------------
-  // BUAT RECORD TRANSAKSI
-  // -----------------------------------------
   const record = {
     id: "TRX" + Date.now(),
-    date: new Date().toISOString().slice(0, 10), // format YYYY-MM-DD
+    date: now.toISOString().slice(0, 10),
+    time: now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
     items: JSON.parse(JSON.stringify(cart)),
-    total: total,
-    bayar: bayar,
-    kembalian: Math.max(0, bayar - total),
+    total,
+    bayar,
+    kembalian: 0,
     petugas: document.getElementById("posPetugas")?.value || "-",
     catatan: document.getElementById("posNote")?.value || ""
   };
 
-  // -----------------------------------------
-  // SIMPAN KE LOCAL STORAGE
-  // -----------------------------------------
-  let sales = JSON.parse(localStorage.getItem("salesData")) || [];
+  // ✅ SIMPAN TRANSAKSI
+  const sales = JSON.parse(localStorage.getItem("salesData")) || [];
   sales.push(record);
   localStorage.setItem("salesData", JSON.stringify(sales));
 
-  // -----------------------------------------
-  // CLEAR CART
-  // -----------------------------------------
+  // ✅ RESET CART DATA
   cart = [];
   localStorage.removeItem("cartSession");
-  renderCart();
 
-  // RESET PEMBAYARAN
+  // ✅ RESET UI DETAIL PESANAN
+  document.getElementById("cartList").innerHTML = "<p>Keranjang kosong.</p>";
+  document.getElementById("cartTotal").textContent = "0";
+  document.getElementById("kembalian").textContent = "0";
   if (inputEl) inputEl.value = "";
   if (selectEl) selectEl.value = "";
-  document.getElementById("kembalian").textContent = "0";
 
-  alert("Transaksi berhasil!");
+  // ✅ TUTUP HALAMAN DETAIL PESANAN
+  document.getElementById("cartPage").style.display = "none";
+  document.getElementById("menuPage").style.display = "block";
+
+  updateBottomBar(); // sembunyikan bottom bar
+
+  // ✅ PINDAH KE HALAMAN TRANSAKSI
+  openPage("transaksi");
+  if (typeof renderTransactionHistory === "function") {
+    renderTransactionHistory();
+  }
 }
+
 
 
   /* =====================================================
@@ -839,6 +845,8 @@ function checkout() {
     });
 
     populateStaff();
+    renderTransactionHistory();
+
   });
 
 document.getElementById("floatingBackBtn").addEventListener("click", function() {
@@ -893,5 +901,68 @@ openCartBtn.addEventListener("click", () => {
 
 
 
+/* BARU */
+
+function renderTransactionHistory() {
+  const wrap = document.getElementById("transactionList");
+  if (!wrap) return;
+
+  const data = JSON.parse(localStorage.getItem("salesData")) || [];
+  wrap.innerHTML = "";
+
+  if (data.length === 0) {
+    wrap.innerHTML = "<p>Belum ada transaksi.</p>";
+    return;
+  }
+
+  // tampilkan terbaru di atas
+  data.slice().reverse().forEach(tx => {
+    const card = document.createElement("div");
+    card.className = "history-item";
+
+    const itemsHTML = tx.items.map(i => `
+      <div class="tx-item">
+        <span class="tx-qty">${i.qty}x</span>
+        <span class="tx-name">${i.name}</span>
+      </div>
+    `).join("");
+
+    card.innerHTML = `
+      <div class="tx-date">
+        ${tx.date} • ${tx.time || "--:--"}
+      </div>
+
+      <div class="tx-items">
+        ${itemsHTML}
+      </div>
+
+      <div class="tx-total">
+        Rp ${tx.total.toLocaleString()}
+      </div>
+    `;
+
+    wrap.appendChild(card);
+  });
+}
+
+
 
 })();
+
+  window.bukaTransaksi = function () {
+  document.getElementById("menuPage").style.display = "none";
+  document.getElementById("cartPage").style.display = "none";
+  document.getElementById("transaksi").style.display = "block";
+
+  renderTransactionHistory();
+};
+
+window.kembaliKePOS = function () {
+  document.getElementById("transaksi").style.display = "none";
+  document.getElementById("menuPage").style.display = "block";
+};
+
+
+
+
+
