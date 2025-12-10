@@ -547,8 +547,6 @@ function updateDashboard() {
   ];
 
   let menuData = defaultMenu;
-
-
   let cart = JSON.parse(localStorage.getItem("cartSession") || "[]");
 
   /* STAFF */
@@ -559,6 +557,7 @@ function updateDashboard() {
       "CREW 3 - ????",
     ];
   localStorage.setItem("staffList", JSON.stringify(defaultStaff));
+
 
   /* =====================================================
         RENDER MENU POS
@@ -618,8 +617,6 @@ function addToCart(id, qty = 1) {
   updateBottomBar();
 
 }
-
-
 
 
   /* =====================================================
@@ -737,7 +734,6 @@ function renderCartPage() {
 }
 
 
-
   /* =====================================================
         TOTAL, BAYAR, KEMBALIAN
   ===================================================== */
@@ -761,63 +757,63 @@ function renderCartPage() {
     if (kembaliEl) kembaliEl.textContent = kembali.toLocaleString();
   }
 
-  /* =====================================================
-        CHECKOUT
-  ===================================================== */
-  function checkout() {
-    if (cart.length === 0) return alert("Keranjang kosong!");
+/* =====================================================
+      CHECKOUT (VERSI FIX — SUDAH MENYIMPAN TRANSAKSI)
+===================================================== */
+function checkout() {
+  if (cart.length === 0) return alert("Keranjang kosong!");
 
-    let bayar = 0;
-    const inputEl = document.getElementById("uangBayarInput");
-    const selectEl = document.getElementById("uangBayarSelect");
+  let bayar = 0;
+  const inputEl = document.getElementById("uangBayarInput");
+  const selectEl = document.getElementById("uangBayarSelect");
 
-    if (selectEl && selectEl.value !== "") bayar = parseInt(selectEl.value);
-    else if (inputEl && inputEl.value !== "") bayar = parseInt(inputEl.value);
+  if (selectEl && selectEl.value !== "") bayar = parseInt(selectEl.value);
+  else if (inputEl && inputEl.value !== "") bayar = parseInt(inputEl.value);
 
-    if (isNaN(bayar)) bayar = 0;
+  if (isNaN(bayar)) bayar = 0;
 
-    const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
+  const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
 
-    if (bayar < total) {
-      if (!confirm("Uang kurang. Simpan sebagai piutang?")) return;
-    }
-
-    // -----------------------------------------
-    // SIMPAN TRANSAKSI KE HISTORY
-    // -----------------------------------------
-    const record = {
-      id: "TRX" + Date.now(),
-      date: new Date().toLocaleString("id-ID"),
-      items: JSON.parse(JSON.stringify(cart)),
-      total: total,
-      bayar: bayar,
-      kembalian: Math.max(0, bayar - total),
-      petugas: document.getElementById("posPetugas").value || "-",
-      catatan: document.getElementById("posNote").value || ""
-    };
-
-    let history = JSON.parse(localStorage.getItem("salesHistory") || "[]");
-    history.push(record);
-
-    // simpan ulang
-    localStorage.setItem("salesHistory", JSON.stringify(history));
-
-    alert("Transaksi berhasil disimpan!");
-
-    renderSalesHistory();
-
-
-
-    // CLEAR CART
-    cart = [];
-    localStorage.removeItem("cartSession");
-    renderCart();
-
-    // RESET PEMBAYARAN
-    if (inputEl) inputEl.value = "";
-    if (selectEl) selectEl.value = "";
-    document.getElementById("kembalian").textContent = "0";
+  if (bayar < total) {
+    if (!confirm("Uang kurang. Simpan sebagai piutang?")) return;
   }
+
+  // -----------------------------------------
+  // BUAT RECORD TRANSAKSI
+  // -----------------------------------------
+  const record = {
+    id: "TRX" + Date.now(),
+    date: new Date().toISOString().slice(0, 10), // format YYYY-MM-DD
+    items: JSON.parse(JSON.stringify(cart)),
+    total: total,
+    bayar: bayar,
+    kembalian: Math.max(0, bayar - total),
+    petugas: document.getElementById("posPetugas")?.value || "-",
+    catatan: document.getElementById("posNote")?.value || ""
+  };
+
+  // -----------------------------------------
+  // SIMPAN KE LOCAL STORAGE
+  // -----------------------------------------
+  let sales = JSON.parse(localStorage.getItem("salesData")) || [];
+  sales.push(record);
+  localStorage.setItem("salesData", JSON.stringify(sales));
+
+  // -----------------------------------------
+  // CLEAR CART
+  // -----------------------------------------
+  cart = [];
+  localStorage.removeItem("cartSession");
+  renderCart();
+
+  // RESET PEMBAYARAN
+  if (inputEl) inputEl.value = "";
+  if (selectEl) selectEl.value = "";
+  document.getElementById("kembalian").textContent = "0";
+
+  alert("Transaksi berhasil!");
+}
+
 
   /* =====================================================
         INITIAL LOAD
@@ -845,6 +841,18 @@ function renderCartPage() {
     populateStaff();
   });
 
+document.getElementById("floatingBackBtn").addEventListener("click", function() {
+  // sembunyikan halaman Detail Pesanan
+  document.getElementById("cartPage").style.display = "none";
+
+  // tampilkan halaman Menu
+  document.getElementById("menuPage").style.display = "block";
+
+  // update floating cart jika ada
+  updateBottomBar();
+});
+
+
   /* =====================================================
         STAFF SELECT OPTION
   ===================================================== */
@@ -855,7 +863,6 @@ function renderCartPage() {
     const arr = JSON.parse(localStorage.getItem("staffList") || "[]");
     sel.innerHTML = arr.map((n) => `<option value="${n}">${n}</option>`).join("");
   }
-
 
   const backBtn = document.getElementById("backToMenuBtn");
   if (backBtn) {
@@ -876,7 +883,6 @@ function renderCartPage() {
 const menuPage = document.getElementById("menuPage");
 const cartPage = document.getElementById("cartPage");
 const openCartBtn = document.getElementById("openCartBtn");
-const backToMenuBtn = document.getElementById("backToMenuBtn");
 
 // Klik Floating Cart → buka halaman keranjang
 openCartBtn.addEventListener("click", () => {
@@ -884,69 +890,8 @@ openCartBtn.addEventListener("click", () => {
   cartPage.style.display = "block";
 });
 
-// Tombol kembali → kembali ke menu
-backToMenuBtn.addEventListener("click", () => {
-  cartPage.style.display = "none";
-  menuPage.style.display = "block";
-});
-
-// === TAMPILKAN FLOATING CART JIKA ADA ITEM ===
-function updateFloatingCart(count, total) {
-  const fc = document.getElementById("floatingCart");
-  document.getElementById("fcCount").textContent = count + " item";
-  document.getElementById("fcTotal").textContent = total.toLocaleString();
-
-  fc.style.display = count > 0 ? "flex" : "none";
-}
 
 
-  /* KE HALAMAN PENJUALAN  */
-document.getElementById("goToHistoryBtn").addEventListener("click", function () {
-  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
-  document.getElementById("sales").style.display = "block";
-});
-
-
-document.getElementById("backToMenuBtn").addEventListener("click", function () {
-  document.getElementById("cartPage").style.display = "none";
-  document.getElementById("menuPage").style.display = "block";
-});
-
-document.getElementById("checkoutBtn").addEventListener("click", function () {
-  // Sembunyikan halaman Detail Pesanan
-  document.getElementById("cartPage").style.display = "none";
-
-  // Tampilkan halaman Penjualan
-  document.getElementById("sales").style.display = "block";
-});
-
-
-
-
-  /* =====================================================
-        SALES HISTORY
-  ===================================================== */
-function renderSalesHistory() {
-  const tbody = document.querySelector("#salesTable tbody");
-  if (!tbody) return;
-
-  let history = JSON.parse(localStorage.getItem("salesHistory") || "[]");
-
-  tbody.innerHTML = history.map(r => {
-    let itemList = r.items.map(i => `${i.name} (${i.qty})`).join(", ");
-
-    return `
-      <tr>
-        <td>${r.date}</td>
-        <td>${itemList}</td>
-        <td> ${r.total.toLocaleString()}</td>
-        <td>${r.petugas}</td>
-      </tr>
-    `;
-  }).join("");
-}
-
-renderSalesHistory();
 
 
 })();
