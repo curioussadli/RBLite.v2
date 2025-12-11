@@ -708,30 +708,8 @@ function updateBottomBar() {
   document.getElementById("cartBottomBar").addEventListener("click", () => {
   document.getElementById("menuPage").style.display = "none";
   document.getElementById("cartPage").style.display = "block";
-  renderCartPage();
 });
 
-
-/* RENDER HALAMAN PESANAN */
-
-function renderCartPage() {
-  const wrap = document.getElementById("cartPageList");
-  let html = "";
-
-  cart.forEach(c => {
-    html += `
-      <div class="cart-item">
-        ${c.name} (${c.qty})
-        <br> ${(c.qty * c.price).toLocaleString()}
-      </div>
-    `;
-  });
-
-  wrap.innerHTML = html;
-
-  const total = cart.reduce((s, i) => s + i.qty * i.price, 0);
-  document.getElementById("cartPageTotal").textContent = total.toLocaleString();
-}
 
 
   /* =====================================================
@@ -766,58 +744,35 @@ function checkout() {
     return;
   }
 
-  // BAYAR OPSIONAL
-  let bayar = 0;
-  const inputEl = document.getElementById("uangBayarInput");
-  const selectEl = document.getElementById("uangBayarSelect");
-
-  if (selectEl && selectEl.value) bayar = parseInt(selectEl.value);
-  else if (inputEl && inputEl.value) bayar = parseInt(inputEl.value);
-  if (isNaN(bayar)) bayar = 0;
-
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const now = new Date();
 
   const record = {
-    id: "TRX" + Date.now(),
-    date: now.toISOString().slice(0, 10),
-    time: now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
+    id: Date.now(),  // 👈 TAMBAHKAN INI
+    code: getTodayOrderNumber(),
+    name: document.getElementById("custName")?.value || "Leonardo",
+    gen: document.getElementById("custGen")?.value || "Gen Z",
     items: JSON.parse(JSON.stringify(cart)),
-    total,
-    bayar,
-    kembalian: 0,
-    petugas: document.getElementById("posPetugas")?.value || "-",
-    catatan: document.getElementById("posNote")?.value || ""
+    total: cart.reduce((a, b) => a + (b.qty * b.price), 0),
+    bayar: document.getElementById("custPay")?.value || 0,
+    date: now.toISOString(),   // 🔥 supaya formatTanggal() bekerja sempurna
+    time: now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
   };
 
-  // ✅ SIMPAN TRANSAKSI
-  const sales = JSON.parse(localStorage.getItem("salesData")) || [];
+  // simpan ke storage
+  let sales = JSON.parse(localStorage.getItem("salesData")) || [];
   sales.push(record);
   localStorage.setItem("salesData", JSON.stringify(sales));
 
-  // ✅ RESET CART DATA
+  // kosongkan cart
   cart = [];
   localStorage.removeItem("cartSession");
+  renderCart();
 
-  // ✅ RESET UI DETAIL PESANAN
-  document.getElementById("cartList").innerHTML = "<p>Keranjang kosong.</p>";
-  document.getElementById("cartTotal").textContent = "0";
-  document.getElementById("kembalian").textContent = "0";
-  if (inputEl) inputEl.value = "";
-  if (selectEl) selectEl.value = "";
-
-  // ✅ TUTUP HALAMAN DETAIL PESANAN
-  document.getElementById("cartPage").style.display = "none";
-  document.getElementById("menuPage").style.display = "block";
-
-  updateBottomBar(); // sembunyikan bottom bar
-
-  // ✅ PINDAH KE HALAMAN TRANSAKSI
+  // pindah ke halaman transaksi
   openPage("transaksi");
-  if (typeof renderTransactionHistory === "function") {
-    renderTransactionHistory();
-  }
+  renderTransactionHistory();
 }
+
 
 
 
@@ -887,25 +842,50 @@ document.getElementById("floatingBackBtn").addEventListener("click", function() 
 
 
 
-// === PINDAH HALAMAN ===
-const menuPage = document.getElementById("menuPage");
-const cartPage = document.getElementById("cartPage");
-const openCartBtn = document.getElementById("openCartBtn");
-
-// Klik Floating Cart → buka halaman keranjang
-openCartBtn.addEventListener("click", () => {
-  menuPage.style.display = "none";
-  cartPage.style.display = "block";
-});
-
-
-
-
 /* BARU */
 
+// ====== AUTO NUMBER RB ======
+function getTodayOrderNumber() {
+  const today = new Date().toISOString().slice(0,10);
+  const key = "orderCounter_" + today;
+
+  let num = parseInt(localStorage.getItem(key) || "0") + 1;
+  localStorage.setItem(key, num);
+
+  return "RB " + String(num).padStart(3, "0");
+}
+
+
+// ====== FORMAT TANGGAL ======
+function formatTanggal(tglISO) {
+  const d = new Date(tglISO);
+  const hari = String(d.getDate()).padStart(2, "0");
+  const bulan = String(d.getMonth() + 1).padStart(2, "0");
+  const tahun = d.getFullYear();
+  return `${hari}.${bulan}.${tahun}`;
+}
+
+
+function togglePayment(btn, tx, data) {
+  const current = btn.dataset.method;
+  const next = current === "Tunai" ? "QRIS" : "Tunai";
+
+  btn.dataset.method = next;
+  btn.textContent = next;
+
+  btn.classList.toggle("pay-tunai", next === "Tunai");
+  btn.classList.toggle("pay-qris", next === "QRIS");
+
+  tx.payMethod = next;
+  localStorage.setItem("salesData", JSON.stringify(data));
+}
+
+// ====== RENDER TRANSAKSI ======
 function renderTransactionHistory() {
   const wrap = document.getElementById("transactionList");
-  if (!wrap) return;
+  const template = document.getElementById("txCardTemplate");
+
+  if (!wrap || !template) return;
 
   const data = JSON.parse(localStorage.getItem("salesData")) || [];
   wrap.innerHTML = "";
@@ -915,34 +895,82 @@ function renderTransactionHistory() {
     return;
   }
 
-  // tampilkan terbaru di atas
   data.slice().reverse().forEach(tx => {
-    const card = document.createElement("div");
-    card.className = "history-item";
 
-    const itemsHTML = tx.items.map(i => `
+    const card = template.content.cloneNode(true);
+
+    // Isi data header
+    card.querySelector(".tx-code").textContent = tx.code;
+    card.querySelector(".tx-name").textContent = tx.name;
+    card.querySelector(".tx-gen").textContent = tx.gen;
+
+    // Items
+    const itemsContainer = card.querySelector(".tx-items");
+    itemsContainer.innerHTML = tx.items.map(i => `
       <div class="tx-item">
-        <span class="tx-qty">${i.qty}x</span>
-        <span class="tx-name">${i.name}</span>
+        <div class="tx-qty">${i.qty}x</div>
+        <div class="tx-name-item">${i.name}</div>
+        <div class="tx-price">${(i.qty * i.price).toLocaleString()}</div>
       </div>
     `).join("");
 
-    card.innerHTML = `
-      <div class="tx-date">
-        ${tx.date} • ${tx.time || "--:--"}
-      </div>
+    // Total
+    card.querySelector(".tx-total").textContent =
+      tx.total.toLocaleString();
 
-      <div class="tx-items">
-        ${itemsHTML}
-      </div>
+    // Tanggal
+    card.querySelector(".tx-date").textContent =
+      `${formatTanggal(tx.date)} • ${tx.time || "--:--"}`;
 
-      <div class="tx-total">
-        ${tx.total.toLocaleString()}
-      </div>
-    `;
+    // ============================
+    //   🔥 PAYMENT TOGGLE BUTTON
+    // ============================
+    const btn = card.querySelector(".payToggleBtn");
 
+    // Default method = Tunai jika belum disimpan
+    const method = tx.payMethod || "Tunai";
+
+    // Set nilai awal
+    btn.dataset.method = method;
+    btn.textContent = method;
+
+    // Set warna awal
+    btn.classList.add(method === "Tunai" ? "pay-tunai" : "pay-qris");
+
+    // Klik untuk toggle
+    btn.addEventListener("click", () => togglePayment(btn, tx, data));
+
+
+    // Tombol hapus transaksi
+    const deleteBtn = card.querySelector(".deleteTxBtn");
+
+    deleteBtn.addEventListener("click", () => {
+      const ok = confirm(`Hapus transaksi ${tx.code}?`);
+      if (!ok) return;
+
+      deleteTransaction(tx.id);
+    });
+
+
+    // Masukkan kartu ke list
     wrap.appendChild(card);
   });
+}
+
+function openPage(pageId) {
+  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+  document.getElementById(pageId).style.display = "block";
+}
+
+
+function deleteTransaction(id) {
+  const data = JSON.parse(localStorage.getItem("salesData")) || [];
+
+  const filtered = data.filter(tx => tx.id !== id);
+
+  localStorage.setItem("salesData", JSON.stringify(filtered));
+
+  renderTransactionHistory(); // refresh tampilan
 }
 
 
@@ -953,6 +981,8 @@ function renderTransactionHistory() {
   document.getElementById("menuPage").style.display = "none";
   document.getElementById("cartPage").style.display = "none";
   document.getElementById("transaksi").style.display = "block";
+  
+  document.getElementById("cartBottomBar").style.display = "none";
 
   renderTransactionHistory();
 };
