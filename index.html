@@ -1536,9 +1536,22 @@
 
 
     <div class="cart-total">
-      <label>Total:</label>
+      <label>Total</label>
       <span id="cartTotal">0</span>
     </div>
+
+    <select id="custName">
+      <option>Leonardo</option>
+      <option>Leonesta</option>
+    </select>
+
+    <select id="custGen">
+      <option>Gen Z</option>
+      <option>Milenial</option>
+      <option>Gen Y</option>
+      <option>Gen X</option>
+      <option>Alpha</option>
+    </select>
 
 
     <h3 style="margin-top:10px;"></h3>
@@ -1567,14 +1580,13 @@
       <span id="kembalian">0</span>
     </div>
 
-<!-- 
     <div style="margin-top:15px;">
       <input type="text" id="posNote" placeholder="Catatan opsional...">
     </div>
 
     <div class="cart-pay">
       <select id="posPetugas"></select>
-    </div> --> 
+    </div> 
 
 
 
@@ -1594,11 +1606,42 @@
 
 
 
-
-
 <!-- ================= HALAMAN TRANSAKSI ================= -->
 <section id="transaksi" class="page">
+
+  <!-- TEMPLATE KARTU TRANSAKSI -->
+  <template id="txCardTemplate">
+    <div class="history-item">
+
+      <div class="tx-header">
+        <div class="tx-code"></div>
+        <div class="tx-customer">
+          <div class="tx-name"></div>
+          <div class="tx-gen"></div>
+        </div>
+      </div>
+
+      <div class="tx-items"></div>
+
+      <div class="tx-total"></div>
+
+      <div class="tx-date"></div>
+
+      <div class="tx-pay">
+        <button class="payToggleBtn" data-method="Tunai">Tunai</button>
+          <button class="deleteTxBtn">✕</button>
+      </div>
+
+    </div>
+  </template>
+
+  <!-- LIST TRANSAKSI -->
   <div id="transactionList"></div>
+      <!--  <button id="goPosBtn" class="floating-btn" onclick="openPage('pointofsales')">
+  Kembali > Menu -->
+  </button> 
+
+
 </section>
 
 
