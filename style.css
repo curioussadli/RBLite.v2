@@ -1098,7 +1098,7 @@ select.used {
 /* ==== KOLOM QTY ==== */
 .tx-qty {
   display: table-cell;
-  width: 70px;              /* 🔥 kolom tetap */
+  width: 30px;              /* 🔥 kolom tetap */
   font-size: 16px;
   font-weight: 700;
   color: #111;
@@ -1109,7 +1109,7 @@ select.used {
 /* ==== KOLOM NAMA ITEM ==== */
 .tx-name {
   display: table-cell;
-  padding-left: 3px;       /* jarak dari qty */
+  padding-left: 0px;       /* jarak dari qty */
   font-size: 16px;
   color: #333;
 
@@ -1121,7 +1121,7 @@ select.used {
 
 
 .tx-total {
-  font-size: 18px;
+  font-size: 25px;
   font-weight: 700;
   text-align: right;
 }
