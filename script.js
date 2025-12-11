@@ -937,7 +937,7 @@ function renderTransactionHistory() {
       </div>
 
       <div class="tx-total">
-        Rp ${tx.total.toLocaleString()}
+        ${tx.total.toLocaleString()}
       </div>
     `;
 
