@@ -652,12 +652,6 @@ select.used {
   transition: transform 0.1s ease;
 }
 
-.pos-item .name {
-  font-size: 14px;
-  font-weight: 700;
-  margin-top: 6px;
-}
-
 .pos-item .price {
   font-size: 16px;
   font-weight: 800;
@@ -724,15 +718,6 @@ select.used {
   color: #111;
   text-align: right;
 }
-
-
-.cart-header h2 {
-  font-size: 40px;    /* atur sesuai keinginan */
-  font-weight: bold;  /* tebal */
-  margin: 0;          /* hapus margin default h2 */
-}
-
-
 
 
 
@@ -849,23 +834,6 @@ select.used {
 }
 
 
-/* Tombol Checkout */
-.cart-checkout button {
-  margin-top: 25px; /* atur sesuai selera */
-  width: 100%;
-  padding: 16px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 10px;
-  background: #FFD600;
-  color: #111;
-  border: none;
-  cursor: pointer;
-}
-
-.cart-checkout button:hover {
-  background: #ffcc00;
-}
 
 /* MOBILE RESPONSIVE */
 @media (max-width: 480px) {
@@ -990,7 +958,8 @@ select.used {
   border-radius: 8px;
   border: 1px solid #ddd;
   box-sizing: border-box;  /* penting agar width 100% benar */
-  margin-top: 8px;         /* beri jarak atas agar tidak menempel */
+  margin-top: 12px;         /* beri jarak atas agar tidak menempel */
+  margin-bottom: 150px;
 }
 
 #posNote {
@@ -1014,115 +983,279 @@ select.used {
   margin-bottom: 150px; /* jarak ekstra supaya scroll ke atas maksimal */
 }
 
+/* =======================
+   DROPDOWN CUSTOMER & GEN
+======================= */
 
-/* ================= HALAMAN PENJUALAN ================= */
-.sales-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
-.sales-item {
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 10px;
-  background: #f9f9f9;
-}
-
-.sales-item table {
+#custName,
+#custGen {
   width: 100%;
-  border-collapse: collapse;
+  padding: 14px 16px;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+
+  background: #fff;
+  color: #111;
+
+  border: 2px solid #ddd;
+  border-radius: 12px;
+
+  outline: none;
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  transition: 0.2s ease;
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
 }
 
-.sales-item th,
-.sales-item td {
-  padding: 6px 8px;
-  text-align: left;
+/* Jarak antara Leonardo → Gen Z diperkecil */
+#custName {
+  margin-top: 14px;   /* jarak dari elemen atas */
+  margin-bottom: 6px; /* 🔥 jarak kecil saja, lebih mepet */
 }
 
-.sales-item th {
-  background: #ffd600;
-  font-weight: bold;
+/* Gen Z mepet ke atas */
+#custGen {
+  margin-top: 0;      /* 🔥 benar-benar mepet ke dropdown atas */
+  margin-bottom: 14px; /* jarak ke elemen berikutnya */
 }
 
-.sales-item select.payment-select {
-  width: 100%;
-  padding: 4px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+/* Hover */
+#custName:hover,
+#custGen:hover {
+  border-color: #bbb;
 }
+
+/* Focus */
+#custName:focus,
+#custGen:focus {
+  border-color: #ffd900;
+  box-shadow: 0 0 5px rgba(255, 217, 0, 0.4);
+}
+
+
+
+
+/* Tambahan icon dropdown */
+#custName,
+#custGen {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px;
+}
+
+
+/* ===== LIST ITEM ===== */
+.tx-items {
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+/* grid: qty | item | harga */
+.tx-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 80px;
+  font-size: 16px;
+  padding: 4px 0;
+}
+
+.tx-qty {
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.tx-name-item {
+  padding-left: 6px;
+}
+
+.tx-price {
+  text-align: right;
+  color: #444;
+}
+
+/* TOTAL */
+.tx-total {
+  text-align: right;
+  font-size: 26px;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 0px;
+}
+
+
 
 
 /* ======================
-   RIWAYAT TRANSAKSI
+   HALAMAN TRANSAKSI
 ====================== */
-
 #transaksi {
-  padding: 10px;
+  padding: 18px;
 }
 
 #transactionList {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
 }
 
+/* Kartu transaksi */
 .history-item {
   background: #fff;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* Nomor Pesanan + Nama + Gen */
+.tx-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.tx-code {
+  background: #FFD600;
+  padding: 12px 22px;
   border-radius: 12px;
-  padding: 10px;
-  border-left: 5px solid #ffd900;
-  width: 100%;
+  font-size: 26px;
+  font-weight: 800;
+  color: #111;
 }
 
-.tx-date {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 10px;
+.tx-customer {
+  text-align: right;
 }
 
-.tx-items {
+.tx-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0A84FF;
+}
+
+.tx-gen {
+  font-size: 15px;
+  color: #999;
+}
+
+/* ====== ROW: Tanggal + Payment ====== */
+.tx-date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
 }
 
-/* ==== BARIS ITEM TRANSAKSI ==== */
-.tx-item {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-  margin-bottom: 6px;
+.tx-date {
+  font-size: 12px;
+  font-weight: 500;
+  color: #444;
 }
 
-/* ==== KOLOM QTY ==== */
-.tx-qty {
-  display: table-cell;
-  width: 30px;              /* 🔥 kolom tetap */
+.tx-pay {
+  font-size: 12px;
+  font-weight: 600;
+  color: #222;
+  text-align: right;      /* 🔥 RATA KANAN */
+  display: flex;
+  justify-content: flex-end; /* 🔥 Select jadi rata kanan */
+  background: none !important;   /* 🔥 tidak ada bg */
+  padding: 0 !important;         /* buang padding abu-abu */
+}
+
+
+.payToggleBtn {
+  width: 100px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* Tunai = hijau */
+.pay-tunai {
+  background: #28a745;
+}
+
+/* QRIS = biru */
+.pay-qris {
+  background: #007bff;
+}
+
+
+.deleteTxBtn {
+  margin-left: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+
+  background: #FF3B30;  /* merah aman */
+  color: #fff;
+
   font-size: 16px;
   font-weight: 700;
-  color: #111;
-  text-align: left;         /* rata kiri */
-  vertical-align: top;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.2s ease;
 }
 
-/* ==== KOLOM NAMA ITEM ==== */
-.tx-name {
-  display: table-cell;
-  padding-left: 0px;       /* jarak dari qty */
-  font-size: 16px;
-  color: #333;
-
-  vertical-align: top;
-  white-space: nowrap;      /* 🔥 tidak turun */
-  overflow: hidden;
-  text-overflow: ellipsis;
+.deleteTxBtn:hover {
+  background: #D92C22;
+  transform: scale(1.1);
 }
 
 
-.tx-total {
-  font-size: 25px;
+
+  /* mengikuti lebar kontainer transaksi */
+.floating-btn {
+  position: fixed;
+  bottom: 20px;
+
+  /* mengikuti lebar kontainer transaksi */
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: calc(100% - 40px);   /* 🔥 sama seperti box transaksi (padding 20px kiri-kanan) */
+  max-width: 500px;           /* 🔥 batas agar tampak rapi di layar besar */
+
+  padding: 18px 20px;
+  background: #FF3B30;
+  color: white;
+  border: none;
+
+  border-radius: 14px;        /* sama seperti history-item */
+  font-size: 20px;
   font-weight: 700;
-  text-align: right;
+  font-family: "Poppins", sans-serif;
+
+  text-align: center;
+  cursor: pointer;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  z-index: 9999;
+  transition: 0.2s ease;
+}
+
+.floating-btn:hover {
+  background: #D92C22;
+  transform: translateX(-50%) scale(1.03);
 }
 
