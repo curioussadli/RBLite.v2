@@ -842,8 +842,10 @@ document.getElementById("floatingBackBtn").addEventListener("click", function() 
 
 
 
-/* BARU */
 
+
+
+/* ====================== HALAMAN TRANSAKSI ====================== */
 // ====== AUTO NUMBER RB ======
 function getTodayOrderNumber() {
   const today = new Date().toISOString().slice(0,10);
@@ -866,25 +868,70 @@ function formatTanggal(tglISO) {
 }
 
 
-function togglePayment(btn, tx, data) {
-  const current = btn.dataset.method;
+
+// =========================================================
+// 🔥 FIXED togglePayment()
+// =========================================================
+// ====== togglePayment (langsung update UI + simpan) ======
+function togglePayment(btn, tx, data, card) {
+
+  const current = btn.dataset.method || tx.payMethod || "Tunai";
   const next = current === "Tunai" ? "QRIS" : "Tunai";
 
+  // Update UI button
   btn.dataset.method = next;
   btn.textContent = next;
-
   btn.classList.toggle("pay-tunai", next === "Tunai");
   btn.classList.toggle("pay-qris", next === "QRIS");
 
   tx.payMethod = next;
+
+  // Elemen dropdown
+  const paySelect = card.querySelector(".tx-pay-select");
+  const kembaliEl = card.querySelector(".tx-kembalian");
+  const totalEl = card.querySelector(".tx-total");
+
+  // === QRIS → sembunyikan dropdown + hitung diskon langsung ===
+  if (next === "QRIS") {
+    if (paySelect) paySelect.style.display = "none";   // sembunyikan dropdown
+    if (kembaliEl) kembaliEl.textContent = "";         // reset kembalian
+    tx.payBayar = 0;
+
+    // Hitung total setelah diskon QRIS
+    let totalSetelahDiskon = tx.total;
+    if (tx.total >= 20000) totalSetelahDiskon -= 2000;
+
+    tx.totalSetelahDiskon = totalSetelahDiskon;
+    if (totalEl) totalEl.textContent = totalSetelahDiskon.toLocaleString();
+  }
+
+  // === Tunai → tampilkan dropdown lagi, total kembali normal ===
+  else {
+    if (paySelect) {
+      paySelect.style.display = "inline-block";
+      paySelect.value = "";
+    }
+    tx.payBayar = 0;
+
+    if (kembaliEl) kembaliEl.textContent = "";
+
+    tx.totalSetelahDiskon = tx.total;
+    if (totalEl) totalEl.textContent = tx.total.toLocaleString();
+  }
+
+  // Simpan permanen
   localStorage.setItem("salesData", JSON.stringify(data));
 }
 
-// ====== RENDER TRANSAKSI ======
+
+
+
+
+
+// ====== renderTransactionHistory (satu fungsi lengkap, pastikan ini yang dipakai) ======
 function renderTransactionHistory() {
   const wrap = document.getElementById("transactionList");
   const template = document.getElementById("txCardTemplate");
-
   if (!wrap || !template) return;
 
   const data = JSON.parse(localStorage.getItem("salesData")) || [];
@@ -895,11 +942,11 @@ function renderTransactionHistory() {
     return;
   }
 
+  // tampilkan terbaru di atas
   data.slice().reverse().forEach(tx => {
-
     const card = template.content.cloneNode(true);
 
-    // Isi data header
+    // Header
     card.querySelector(".tx-code").textContent = tx.code;
     card.querySelector(".tx-name").textContent = tx.name;
     card.querySelector(".tx-gen").textContent = tx.gen;
@@ -914,48 +961,78 @@ function renderTransactionHistory() {
       </div>
     `).join("");
 
-    // Total
-    card.querySelector(".tx-total").textContent =
-      tx.total.toLocaleString();
+    // Hitung total awal (perhatikan diskon QRIS jika sudah tersimpan)
+    let totalSetelahDiskon = tx.total;
+    if (tx.payMethod === "QRIS" && tx.total >= 20000) totalSetelahDiskon = tx.total - 2000;
+    tx.totalSetelahDiskon = totalSetelahDiskon;
+
+    // Tampilkan total
+    card.querySelector(".tx-total").textContent = totalSetelahDiskon.toLocaleString();
 
     // Tanggal
     card.querySelector(".tx-date").textContent =
       `${formatTanggal(tx.date)} • ${tx.time || "--:--"}`;
 
-    // ============================
-    //   🔥 PAYMENT TOGGLE BUTTON
-    // ============================
+    // ===== tombol payment (toggle) =====
     const btn = card.querySelector(".payToggleBtn");
-
-    // Default method = Tunai jika belum disimpan
     const method = tx.payMethod || "Tunai";
-
-    // Set nilai awal
     btn.dataset.method = method;
     btn.textContent = method;
-
-    // Set warna awal
     btn.classList.add(method === "Tunai" ? "pay-tunai" : "pay-qris");
 
-    // Klik untuk toggle
-    btn.addEventListener("click", () => togglePayment(btn, tx, data));
+    // Pasang event: pass card supaya kita bisa update DOM langsung
+    btn.addEventListener("click", () => togglePayment(btn, tx, data, card));
 
-
-    // Tombol hapus transaksi
+    // ===== tombol delete =====
     const deleteBtn = card.querySelector(".deleteTxBtn");
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", () => {
+        const ok = confirm(`Hapus transaksi ${tx.code}?`);
+        if (ok) deleteTransaction(tx.id);
+      });
+    }
 
-    deleteBtn.addEventListener("click", () => {
-      const ok = confirm(`Hapus transaksi ${tx.code}?`);
-      if (!ok) return;
+    // ===== dropdown Bayar & kembalian =====
+    const paySelect = card.querySelector(".tx-pay-select");
+    const kembaliEl = card.querySelector(".tx-kembalian");
 
-      deleteTransaction(tx.id);
-    });
+    // inisialisasi dropdown jika pernah disimpan
+    if (paySelect) {
+      if (tx.payBayar) paySelect.value = tx.payBayar;
+      else paySelect.value = "";
 
+      // update kembalian fungsi
+      const updateKembalian = () => {
+        const totalNow = tx.totalSetelahDiskon ?? tx.total;
+        const bayar = parseInt(paySelect.value || 0);
+        const kembali = bayar - totalNow;
+        kembaliEl.textContent = kembali > 0 ? `Kembalian: ${kembali.toLocaleString()}` : "";
+      };
 
-    // Masukkan kartu ke list
+      // event change: simpan dan hitung
+      paySelect.addEventListener("change", () => {
+        tx.payBayar = parseInt(paySelect.value) || 0;
+        // simpan ke localStorage supaya tahan refresh
+        localStorage.setItem("salesData", JSON.stringify(data));
+        updateKembalian();
+      });
+
+      // hitung tampilan awal
+      updateKembalian();
+    }
+
+    // append kartu
     wrap.appendChild(card);
   });
 }
+
+
+
+
+
+
+
+
 
 function openPage(pageId) {
   document.querySelectorAll(".page").forEach(p => p.style.display = "none");
@@ -963,36 +1040,18 @@ function openPage(pageId) {
 }
 
 
+
 function deleteTransaction(id) {
   const data = JSON.parse(localStorage.getItem("salesData")) || [];
-
   const filtered = data.filter(tx => tx.id !== id);
 
   localStorage.setItem("salesData", JSON.stringify(filtered));
 
-  renderTransactionHistory(); // refresh tampilan
+  renderTransactionHistory();
 }
 
 
 
 })();
-
-  window.bukaTransaksi = function () {
-  document.getElementById("menuPage").style.display = "none";
-  document.getElementById("cartPage").style.display = "none";
-  document.getElementById("transaksi").style.display = "block";
-  
-  document.getElementById("cartBottomBar").style.display = "none";
-
-  renderTransactionHistory();
-};
-
-window.kembaliKePOS = function () {
-  document.getElementById("transaksi").style.display = "none";
-  document.getElementById("menuPage").style.display = "block";
-};
-
-
-
 
 
