@@ -944,7 +944,8 @@ function renderTransactionHistory() {
 
   // tampilkan terbaru di atas
   data.slice().reverse().forEach(tx => {
-    const card = template.content.cloneNode(true);
+    const cardFragment = template.content.cloneNode(true);
+    const card = cardFragment.querySelector(".history-item");
 
     // Header
     card.querySelector(".tx-code").textContent = tx.code;
@@ -1053,5 +1054,6 @@ function deleteTransaction(id) {
 
 
 })();
+
 
 
