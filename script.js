@@ -957,6 +957,17 @@ function renderTransactionHistory() {
     card.querySelector(".tx-name").textContent = tx.name;
     card.querySelector(".tx-gen").textContent = tx.gen;
 
+    // === Warna nama berdasarkan nama ===
+    const nameEl = card.querySelector(".tx-name");
+
+    if (tx.name.toLowerCase() === "leonesta") {
+      nameEl.style.color = "#FF2E8A";   // pink pekat
+    }
+
+    if (tx.name.toLowerCase() === "leonardo") {
+      nameEl.style.color = "#0066FF";   // biru pekat
+    }
+
     // Items
     const itemsContainer = card.querySelector(".tx-items");
     itemsContainer.innerHTML = tx.items.map(i => `
@@ -1075,5 +1086,6 @@ function deleteTransaction(id) {
 
 
 })();
+
 
 
