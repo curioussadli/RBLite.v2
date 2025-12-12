@@ -1606,10 +1606,13 @@
 
 
 
+
+
+
+
 <!-- ================= HALAMAN TRANSAKSI ================= -->
 <section id="transaksi" class="page">
 
-  <!-- TEMPLATE KARTU TRANSAKSI -->
   <template id="txCardTemplate">
     <div class="history-item">
 
@@ -1625,24 +1628,48 @@
 
       <div class="tx-total"></div>
 
-      <div class="tx-date"></div>
 
-      <div class="tx-pay">
-        <button class="payToggleBtn" data-method="Tunai">Tunai</button>
+      <!-- ================= PAYMENT ROW ================= -->
+      <div class="tx-pay-row">
+
+        <!-- ROW ATAS -->
+        <div class="tx-pay-top">
+
+          <div class="tx-left">
+            <select class="tx-pay-select">
+              <option value="">Bayar</option>
+              <option value="10000">10.000</option>
+              <option value="20000">20.000</option>
+              <option value="50000">50.000</option>
+              <option value="100000">100.000</option>
+            </select>
+
+            <button class="payToggleBtn" data-method="Tunai">Tunai</button>
+          </div>
+
           <button class="deleteTxBtn">✕</button>
+
+        </div>
+
+        <!-- ROW BAWAH -->
+        <div class="tx-pay-bottom">
+          <div class="tx-kembalian"></div>
+          <div class="tx-date"></div>
+        </div>
+
       </div>
+      <!-- END PAYMENT ROW -->
 
     </div>
   </template>
 
-  <!-- LIST TRANSAKSI -->
   <div id="transactionList"></div>
-      <!--  <button id="goPosBtn" class="floating-btn" onclick="openPage('pointofsales')">
-  Kembali > Menu -->
-  </button> 
-
 
 </section>
+
+
+
+
 
 
   <!-- =================== SCRIPT =================== -->
