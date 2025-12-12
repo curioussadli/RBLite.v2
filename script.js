@@ -105,24 +105,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================================================
-  // FORM PEMASUKAN
-  // =========================================================
-  const laciForm = document.querySelector("#laci form");
-  if (laciForm) {
-    laciForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const jumlah = Number(laciForm.querySelector('input[type="number"]').value) || 0;
-      const keterangan = laciForm.querySelector('input[type="text"]').value || "";
 
-      let data = JSON.parse(localStorage.getItem("pemasukanData") || "[]");
-      data.push({ jumlah, keterangan, tanggal: new Date().toISOString() });
 
-      localStorage.setItem("pemasukanData", JSON.stringify(data));
-      laciForm.reset();
-      updateDashboard();
-    });
-  }
+
+
+
+
+
 
   // =========================================================
   // FORM STOK
@@ -346,9 +335,11 @@ if (copyDashboardBtn) {
 
     const map = [
       ["Saldo Awal", "saldoAwal"],
+      ["Pemasukan", "pemasukan"],
       ["Pengeluaran", "pengeluaran"],
-      ["Kas Harian", "pemasukan"],
-      ["Pendapatan", "pendapatan"]
+      ["Saldo Akhir", "saldoAkhir"],
+      ["Pendapatan", "pendapatan"],
+      ["Selisih (+/-)", "selisih"]
     ];
 
     map.forEach(([label, id]) => {
@@ -395,6 +386,47 @@ if (copyDashboardBtn) {
       alert("Saldo Awal disimpan!");
     });
   }
+
+
+  // =========================================================
+// SALDO AKHIR
+// =========================================================
+const saldoAkhirInput = document.getElementById("saldoAkhirInput");
+const saveSaldoAkhirBtn = document.getElementById("saveSaldoAkhir");
+const dashboardSaldoAkhirEl =
+  document.getElementById("saldoAkhir") ||
+  document.getElementById("dashboardSaldoAkhir");
+
+// Ambil saldo akhir yang tersimpan
+const savedSaldoAkhir = localStorage.getItem("saldoAkhir");
+
+if (savedSaldoAkhir !== null && saldoAkhirInput) {
+  saldoAkhirInput.value = savedSaldoAkhir;
+
+  if (dashboardSaldoAkhirEl) {
+    dashboardSaldoAkhirEl.textContent =
+      " " + Number(savedSaldoAkhir).toLocaleString("id-ID");
+  }
+}
+
+// Simpan saldo akhir
+if (saveSaldoAkhirBtn) {
+  saveSaldoAkhirBtn.addEventListener("click", () => {
+    const val = saldoAkhirInput.value.trim();
+    const num = val === "" ? 0 : Number(val);
+
+    localStorage.setItem("saldoAkhir", String(num));
+
+    if (dashboardSaldoAkhirEl) {
+      dashboardSaldoAkhirEl.textContent = 
+        " " + num.toLocaleString("id-ID");
+    }
+
+    updateDashboard();
+    alert("Saldo Akhir disimpan!");
+  });
+}
+
 
   // =========================================================
   // INIT
@@ -497,31 +529,46 @@ function renderPengeluaran() {
 //  DASHBOARD FINAL
 // ===========================================================
 function updateDashboard() {
-  const saldoAwal = parseFloat(localStorage.getItem("saldoAwal")) || 0;
+  const saldoAwal = Number(localStorage.getItem("saldoAwal")) || 0;
+  const saldoAkhir = Number(localStorage.getItem("saldoAkhir")) || 0;
+
   const pengeluaranData = JSON.parse(localStorage.getItem("pengeluaranData") || "[]");
-  const pemasukanData = JSON.parse(localStorage.getItem("pemasukanData") || "[]");
+  const salesData = JSON.parse(localStorage.getItem("salesData") || "[]");
 
+  // 1. Hitung total pengeluaran
   const totalPengeluaran = pengeluaranData.reduce((s, i) => s + (i.jumlah || 0), 0);
-  const totalPemasukan   = pemasukanData.reduce((s, i) => s + (i.jumlah || 0), 0);
-  const saldoAkhir = saldoAwal + totalPemasukan - totalPengeluaran;
-  const pendapatan = totalPengeluaran + totalPemasukan - saldoAwal;
 
+  // 2. Hitung pemasukan (Tunai saja)
+  let totalPemasukan = 0;
+  salesData.forEach(tx => {
+    if (tx.payMethod === "Tunai") {
+      const total = tx.totalSetelahDiskon || tx.total;
+      totalPemasukan += total;
+    }
+  });
+
+  // 3. Pendapatan = saldo akhir - saldo awal + pengeluaran
+  const pendapatan = saldoAkhir - saldoAwal + totalPengeluaran;
+
+  // 4. Selisih = pemasukan - pendapatan
+  const selisih = totalPemasukan - pendapatan;
+
+  // UPDATE UI
   const ids = {
     saldoAwal: saldoAwal,
-    pengeluaran: totalPengeluaran,
     pemasukan: totalPemasukan,
+    pengeluaran: totalPengeluaran,
+    saldoAkhir: saldoAkhir,
     pendapatan: pendapatan,
-    saldoAwalKas: saldoAwal,
-    pemasukanKas: totalPemasukan,
-    pengeluaranKas: totalPengeluaran,
-    saldoAkhirKas: saldoAkhir
+    selisih: selisih
   };
 
   for (const [id, val] of Object.entries(ids)) {
     const el = document.getElementById(id);
-    if (el) el.textContent = " " + val.toLocaleString();
+    if (el) el.textContent = " " + val.toLocaleString("id-ID");
   }
 }
+
 
 
 /* =====================================================
@@ -746,22 +793,34 @@ function checkout() {
 
   const now = new Date();
 
-  const record = {
-    id: Date.now(),  // 👈 TAMBAHKAN INI
-    code: getTodayOrderNumber(),
-    name: document.getElementById("custName")?.value || "Leonesta",
-    gen: document.getElementById("custGen")?.value || "Gen Z",
-    items: JSON.parse(JSON.stringify(cart)),
-    total: cart.reduce((a, b) => a + (b.qty * b.price), 0),
-    bayar: document.getElementById("custPay")?.value || 0,
-    date: now.toISOString(),   // 🔥 supaya formatTanggal() bekerja sempurna
-    time: now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
-  };
+const record = {
+  id: Date.now(),
+  code: getTodayOrderNumber(),
+  name: document.getElementById("custName")?.value || "Leonesta",
+  gen: document.getElementById("custGen")?.value || "Gen Z",
+  items: JSON.parse(JSON.stringify(cart)),
+
+  total: cart.reduce((a, b) => a + (b.qty * b.price), 0),
+
+  // ⭐ WAJIB DITAMBAHKAN
+  payMethod: "Tunai",            // default
+  payBayar: 0,                   // belum bayar
+  totalSetelahDiskon: cart.reduce((a, b) => a + (b.qty * b.price), 0),
+
+  date: now.toISOString(),
+  time: now.toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit"
+  })
+};
+
 
   // simpan ke storage
   let sales = JSON.parse(localStorage.getItem("salesData")) || [];
   sales.push(record);
   localStorage.setItem("salesData", JSON.stringify(sales));
+  updateDashboard();
+
 
   // kosongkan cart
   cart = [];
@@ -923,6 +982,8 @@ function togglePayment(btn, tx, data, card) {
 
   // --- Simpan permanen & langsung render ulang untuk konsistensi ---
   localStorage.setItem("salesData", JSON.stringify(data));
+  updateDashboard();
+
 
   // render ulang supaya semua kartu mencerminkan state terbaru
   renderTransactionHistory();
@@ -967,6 +1028,7 @@ function renderTransactionHistory() {
     if (tx.name.toLowerCase() === "leonardo") {
       nameEl.style.color = "#0066FF";   // biru pekat
     }
+
 
     // Items
     const itemsContainer = card.querySelector(".tx-items");
@@ -1047,6 +1109,8 @@ function renderTransactionHistory() {
         tx.payBayar = parseInt(paySelect.value) || 0;
         // simpan perubahan
         localStorage.setItem("salesData", JSON.stringify(data));
+        updateDashboard();
+
         updateKembalian();
       });
     }
@@ -1079,6 +1143,8 @@ function deleteTransaction(id) {
   const filtered = data.filter(tx => tx.id !== id);
 
   localStorage.setItem("salesData", JSON.stringify(filtered));
+  updateDashboard();
+
 
   renderTransactionHistory();
 }
@@ -1086,6 +1152,5 @@ function deleteTransaction(id) {
 
 
 })();
-
 
 
