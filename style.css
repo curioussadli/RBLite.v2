@@ -315,11 +315,11 @@ button:hover {
   justify-content: space-between;
   align-items: center;
   background: #fff;
-  padding: 30px 15px;
+  padding: 18px 15px;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   margin-bottom: 20px;
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 500;
   color: #111;
 }
@@ -482,48 +482,128 @@ select.used {
   font-weight: bold;
 }
 
-/* =========================
-   SALDO AWAL
-========================= */
+/* ============================
+   SALDO AWAL — FINAL STYLING
+============================ */
+
 #saldoAwalWrapper {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin: 15px 0 20px 0;
-  font-weight: bold;
 }
 
 #saldoAwalWrapper label {
-  font-weight: 500;
-  font-size: 20px;
-  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 4px;
+  font-family: "Poppins", sans-serif;
 }
 
 #saldoAwalWrapper input {
   width: 100%;
-  padding: 12px;
-  font-size: 25px;
+  padding: 14px;
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 12px;
   box-sizing: border-box;
+
+  outline: none;
+  transition: 0.2s;
 }
 
+#saldoAwalWrapper input:focus {
+  border-color: #ffd600;
+  box-shadow: 0 0 5px rgba(255, 214, 0, 0.5);
+}
+
+/* Tombol Simpan */
 #saldoAwalWrapper button {
   width: 100%;
   padding: 20px;
-  font-size: 16px;
-  font-weight: bold;
+
+  font-size: 20px;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+
   border: none;
-  border-radius: 8px;
+  border-radius: 14px;
+
   background: #FFD600;
   color: #111;
+
   cursor: pointer;
-  transition: background 0.3s;
+  transition: 0.2s ease;
 }
 
 #saldoAwalWrapper button:hover {
   background: #ffcc00;
 }
+
+/* ============================
+   SALDO AKHIR — FINAL STYLING
+============================ */
+
+#saldoAkhirWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 15px 0 20px 0;
+}
+
+#saldoAkhirWrapper label {
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 4px;
+  font-family: "Poppins", sans-serif;
+}
+
+#saldoAkhirWrapper input {
+  width: 100%;
+  padding: 14px;
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-sizing: border-box;
+
+  outline: none;
+  transition: 0.2s;
+}
+
+#saldoAkhirWrapper input:focus {
+  border-color: #ffd600;
+  box-shadow: 0 0 5px rgba(255, 214, 0, 0.5);
+}
+
+/* Tombol Simpan */
+#saldoAkhirWrapper button {
+  width: 100%;
+  padding: 20px;
+
+  font-size: 20px;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+
+  border: none;
+  border-radius: 14px;
+
+  background: #FFD600;
+  color: #111;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#saldoAkhirWrapper button:hover {
+  background: #ffcc00;
+}
+
+
+
 
 /* =========================
    COPY TEXT BUTTON
