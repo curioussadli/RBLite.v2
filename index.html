@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#ffD600">
+  <meta name="theme-color" content="#FFD600">
 </head>
 
 <body class="login-page">
@@ -60,10 +60,9 @@
       <ul>
         <li onclick="openPage('beranda')">Dashboard</li>
         <li onclick="openPage('persiapan')">Persiapan</li>
-        <li onclick="openPage('belanja')">Pengeluaran</li>
+        <li onclick="openPage('belanja')">Cash Flow</li>
         <li onclick="openPage('pointofsales')">POS Kasir ©</li>
-        <li onclick="openPage('transaksi')">Penjualan</li>
-        <li onclick="openPage('laci')">Kas Harian</li>
+        <li onclick="openPage('transaksi')">Transaksi </li>
         <li onclick="openPage('staff')">Karyawan</li>
         <li onclick="openPage('stok')">Stok Bahan</li>
         <li onclick="openPage('storage')">Persediaan</li>
@@ -73,27 +72,37 @@
 
     <!-- =================== HALAMAN BERANDA =================== -->
     <section id="beranda" class="page active">
-      <h2>Dashboard</h2>
+      <!-- <h2>Dashboard</h2> -->
 
       <div class="dashboard-item">
         <span class="label">Saldo Awal</span>
-        <span class="value" id="saldoAwal">Rp0</span>
+        <span class="value" id="saldoAwal">0</span>
+      </div>
+      
+      <div class="dashboard-item">
+        <span class="label">Pemasukan</span>
+        <span class="value" id="pemasukan">0</span>
       </div>
 
       <div class="dashboard-item">
         <span class="label">Pengeluaran</span>
-        <span class="value" id="pengeluaran">Rp0</span>
+        <span class="value" id="pengeluaran">0</span>
       </div>
 
       <div class="dashboard-item">
-        <span class="label">Kas Harian</span>
-        <span class="value" id="pemasukan">Rp0</span>
+        <span class="label">Saldo Akhir</span>
+        <span class="value" id="saldoAkhir">0</span>
       </div>
 
       <!-- Tambahan baru -->
       <div class="dashboard-item">
         <span class="label">Pendapatan</span>
-        <span class="value" id="pendapatan">Rp0</span>
+        <span class="value" id="pendapatan">0</span>
+      </div>
+
+      <div class="dashboard-item">
+        <span class="label">Selisih (+/-)</span>
+        <span class="value" id="selisih">0</span>
       </div>
 
       <button id="copy-dashboard">Copy</button>
@@ -123,18 +132,26 @@
           Apakah Es batu sudah tersedia walaupun 1 bk?
         </label>
 
+
+      </form>
+    </section>
+
+    <!-- =================== HALAMAN BELANJA =================== -->
+    <section id="belanja" class="page">
+
         <!-- Input Saldo Awal -->
         <div id="saldoAwalWrapper">
           <label>Saldo Awal</label>
           <input type="number" id="saldoAwalInput" placeholder="0">
           <button type="button" id="saveSaldoAwal">Simpan</button>
         </div>
-      </form>
-    </section>
 
-    <!-- =================== HALAMAN BELANJA =================== -->
-    <section id="belanja" class="page">
-      <h2>Pengeluaran</h2>
+        
+        <div id="saldoAkhirWrapper">
+          <label>Saldo Akhir</label>
+          <input type="number" id="saldoAkhirInput" placeholder="0">
+          <button type="button" id="saveSaldoAkhir">Simpan</button>
+        </div>
 
       <form id="belanjaForm">
         <label>Pengeluaran</label>
@@ -158,16 +175,6 @@
           <tbody></tbody>
         </table>
       </div>
-    </section>
-
-    <!-- =================== HALAMAN LACI =================== -->
-    <section id="laci" class="page">
-      <h2>Kas Harian</h2>
-      <form id="laciForm">
-        <label>Jumlah (Rp)</label>
-        <input type="number" id="laciJumlah" placeholder="0"/>
-        <button type="submit">Simpan</button>
-      </form>
     </section>
 
     <!-- =================== HALAMAN STOK =================== -->
@@ -1688,7 +1695,6 @@
 
 </body>
 </html>
-
 
 
 
