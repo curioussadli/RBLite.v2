@@ -685,6 +685,7 @@ select.used {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  overflow-y: auto;
   padding-bottom: 100px; /* memberi ruang ekstra di bawah menu */
   box-sizing: border-box;
 }
