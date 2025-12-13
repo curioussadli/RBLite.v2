@@ -591,6 +591,16 @@ function updateDashboard() {
     { id: 'r8', name: 'Vanilla Cheese', price: 15000, img: 'img/vanillacheese.jpeg' },
     { id: 'r9', name: 'Strawberry Cheese', price: 15000, img: 'img/strawberrycheese.jpeg' },
     { id: 'r10', name: 'Choco Peanuts', price: 15000, img: 'img/chocopeanuts.jpeg' },
+    { id: 'r11', name: 'Ice Chocolate', price: 10000, img: 'img/icechocolate.jpeg' },
+    { id: 'r12', name: 'Ice Milo', price: 10000, img: 'img/icemilo.jpeg' },
+    { id: 'r13', name: 'Ice Vanilla Latte', price: 10000, img: 'img/icevanillalatte.jpeg' },
+    { id: 'r14', name: 'Ice Red Velvet', price: 10000, img: 'img/iceredvelvet.jpeg' },
+    { id: 'r15', name: 'Ice Taro', price: 10000, img: 'img/icetaro.jpeg' },
+    { id: 'r16', name: 'Ice Green Tea', price: 10000, img: 'img/icegreentea.jpeg' },
+    { id: 'r17', name: 'Ice Lychee Tea', price: 10000, img: 'img/icelycheetea.jpeg' },
+    { id: 'r18', name: 'Ice Blackcurrant', price: 10000, img: 'img/iceblackcurrant.jpeg' },
+    { id: 'r19', name: 'Ice Lemon Tea', price: 8000, img: 'img/icelemontea.jpeg' },
+    { id: 'r20', name: 'Ice Americano', price: 8000, img: 'img/iceamericano.jpeg' },
   ];
 
   let menuData = defaultMenu;
