@@ -1,3 +1,45 @@
+/* ================================
+   FIXED MOBILE ELEMENT (GLOBAL)
+================================ */
+.fixed-mobile {
+  position: fixed;
+  width: 100%;
+  max-width: 390px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
+
+
+/* ================================
+   GLOBAL / MOBILE WRAPPER
+================================ */
+
+body {
+  margin: 0;
+  background: #111;
+  font-family: 'Poppins', sans-serif;
+}
+
+.app-container {
+  max-width: 390px;       /* ukuran layar HP */
+  min-height: 100vh;
+  margin: 0 auto;
+  background: #fff;
+  overflow-x: hidden;
+  position: relative;
+}
+
+
+
+/* ================================
+   APP WRAPPER (KONTEN UTAMA)
+================================ */
+#app-wrapper {
+  padding: var(--content-padding) var(--content-padding) 90px;
+}
+
+
 /* =========================
    RESET & DASAR
 ========================= */
@@ -172,8 +214,12 @@ body:not(.login-page) {
 .app-header {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+
+  width: 100%;
+  max-width: 390px;
+
+  left: 50%;
+  transform: translateX(-50%);
 
   height: 76px;
   background: #fff;
@@ -185,6 +231,7 @@ body:not(.login-page) {
   box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
   z-index: 999;
 }
+
 
 /* =========================
    NAV BUTTON
@@ -217,8 +264,8 @@ body:not(.login-page) {
 ========================= */
 /* Ukuran icon default di nav */
 .nav-btn img {
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   display: block;
 }
 
@@ -240,8 +287,8 @@ body:not(.login-page) {
 ========================= */
 /* Icon & label khusus menu POS */
 .nav-main img {
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
 }
 
 .nav-main span {
@@ -253,12 +300,12 @@ body:not(.login-page) {
 ========================= */
 /* Tombol aktif (page sedang dibuka) */
 .nav-btn.active {
-  background: rgba(0,0,0,0.12);
+  background: #ffD600;
 }
 
 /* Icon aktif sedikit membesar */
 .nav-btn.active img {
-  transform: scale(1.1);
+  transform: scale(1.5);
 }
 
 /* Khusus tombol MENU / POS saat aktif */
@@ -1186,21 +1233,27 @@ html, body {
 
 
 /* =====================================================
-   FLOATING ACTION BUTTONS — SIDE BY SIDE
+   FLOATING ACTION BUTTONS — SIDE BY SIDE (MOBILE SAFE)
 ===================================================== */
-
 #cartActions {
   position: fixed;
-  bottom: 90px;                 /* ⬅️ sama dengan cart bar */
-  left: 15px;
-  right: 15px;
+
+  /* 🔒 kunci lebar mobile */
+  width: 100%;
+  max-width: 390px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  bottom: 90px;               /* sama dengan cart bar */
+  padding: 0 15px;            /* jarak kiri–kanan */
 
   display: grid;
-  grid-template-columns: 1fr 1fr; /* kiri - kanan */
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 
   z-index: 2000;
 }
+
 
 /* =========================
    PESAN SEKARANG (KIRI)
@@ -1268,31 +1321,48 @@ html, body {
 
 
 /* =====================================================
-   FLOATING CART BAR (GLOBAL)
+   FLOATING CART BAR — MATCH ACTION BUTTONS
 ===================================================== */
 .cart-bottom-bar {
   position: fixed;
-  bottom: 90px;                 /* 🔥 NAIK DI ATAS NAV/HEADER */
-  left: 15px;
-  right: 15px;
+
+    left: var(--content-padding);
+  right: var(--content-padding);
+
+  width: 100%;
+  max-width: 390px;
+  left: 50%;
+  right: 12px;          /* 🔥 SAMA dengan padding menu */
+  transform: translateX(-50%);
+
+  bottom: 90px;
+  height: 64px;
+
   background: #3daa0b;
-  color: white;
-  padding: 22px 20px;
+  color: #fff;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 25px;
+
+  padding: 0 16px;
+  font-size: 22px;
   font-weight: bold;
+  line-height: 1;
+
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 
-  z-index: 2000;               /* 🔥 PALING ATAS */
-  height: 64px;
   box-sizing: border-box;
-
+  z-index: 2000;
   cursor: pointer;
-  pointer-events: auto;         /* 🔥 PASTI BISA DIKLIK */
 }
+
+
+
+
+
+
 
 
 /* =====================================================
