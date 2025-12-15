@@ -7,10 +7,14 @@
   <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#fff">
+  <meta name="theme-color" content="#FFD600">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 
 <body class="login-page">
+
+    <!-- ⭐ WRAPPER MOBILE -->
+  <div class="app-container">
 
   <!-- =================== LOGIN SCREEN =================== -->
   <main id="login-screen" class="fullscreen active">   
@@ -1543,15 +1547,13 @@
 
   <!-- =============== FLOATING ACTIONS (KHUSUS CART) =============== -->
   <div id="cartActions">
+    <div id="floatingCheckout">
+      <button id="checkoutBtn">Pesan</button>
+    </div>
 
     <div id="floatingBack">
       <button id="floatingBackBtn">Kembali</button>
     </div>
-    
-    <div id="floatingCheckout">
-      <button id="checkoutBtn">Pesan</button>
-    </div>
-    
   </div>
 
 
@@ -1641,8 +1643,6 @@
 
 </body>
 </html>
-
-
 
 
 
