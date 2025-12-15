@@ -45,30 +45,53 @@
   <div id="app-wrapper" class="hidden">
 
     <!-- =================== HEADER =================== -->
-    <header class="app-header hidden" id="main-header">
-      <button class="menu-btn" onclick="toggleMenu()">&#9776;</button>
-      <h1>RBLite</h1>
-    </header>
+<header class="app-header hidden" id="main-header">
+  <button class="nav-btn" data-page="beranda" onclick="openPage('beranda')">
+    <img src="icon-beranda.svg">
+    <span>Beranda</span>
+  </button>
+
+  <button class="nav-btn" data-page="stok" onclick="openPage('stok')">
+    <img src="icon-stok.svg">
+    <span>Bahan</span>
+  </button>
+
+  <button class="nav-btn nav-main" data-page="pointofsales" onclick="openPage('pointofsales')">
+    <img src="icon-menu.svg">
+    <span>Menu</span>
+  </button>
+
+  <button class="nav-btn" data-page="transaksi" onclick="openPage('transaksi')">
+    <img src="icon-transaksi.svg">
+    <span>Order</span>
+  </button>
+
+  <button class="nav-btn" onclick="toggleMenu()">
+    <img src="icon-more.svg">
+    <span>Lainnya</span>
+  </button>
+</header>
+
+
 
     <!-- =================== SIDEBAR =================== -->
-    <nav id="sidebar" class="sidebar hidden">
+    <nav id="sidebar" class="sidebar">
       <div class="sidebar-header">
         <img src="logo1.png" alt="Logo" class="sidebar-logo"/>
         <span class="sidebar-title">RBLite</span>
         <button class="close-btn" onclick="toggleMenu()">✕</button>
       </div>
       <ul>
-        <li onclick="openPage('beranda')">Dashboard</li>
         <li onclick="openPage('persiapan')">Persiapan</li>
         <li onclick="openPage('belanja')">Cash Flow</li>
-        <li onclick="openPage('pointofsales')">POS Kasir ©</li>
-        <li onclick="openPage('transaksi')">Transaksi </li>
         <li onclick="openPage('staff')">Karyawan</li>
-        <li onclick="openPage('stok')">Stok Bahan</li>
         <li onclick="openPage('storage')">Persediaan</li>
-        <li onclick="logout()">Tutup Resto</li>
+        <li onclick="logout()">Keluar ->></li>
       </ul>
     </nav>
+
+
+    
 
     <!-- =================== HALAMAN BERANDA =================== -->
     <section id="beranda" class="page active">
@@ -179,7 +202,6 @@
 
     <!-- =================== HALAMAN STOK =================== -->
     <section id="stok" class="page">
-      <h2>Cek Stok Bahan</h2>
       <div class="stok-container">
 
 
@@ -858,9 +880,9 @@
       <div class="storage-container">
     
     <div class="stok-row">
-      <span class="stok-nama">MINYAK SUNCO</span>
+      <span class="stok-nama">MINYAK CRUNCHY</span>
       <span class="stok-satuan">VOL</span>
-      <select data-bahan="MINYAK SUNCO">
+      <select data-bahan="MINYAK CRUNCHY">
         <option value="00%">00%</option>
         <option value="10%">10%</option>
         <option value="10%">20%</option>
@@ -1452,86 +1474,85 @@
     </div>
 
     <!-- BOTTOM CART BAR -->
-    <div id="cartBottomBar" class="cart-bottom-bar" style="display:none;">
+    <div id="cartBottomBar" class="cart-bottom-bar">
       <span id="cartCount">0 Menu</span>
-      <span class="total"> <span id="cartBottomTotal">0</span></span>
+      <span id="cartBottomTotal">0</span>
     </div>
+
 
   </div>
   <!-- END MENU PAGE -->
 
-
-  <!-- =============== HALAMAN DETAIL PESANAN =============== -->
-  <div id="cartPage" class="pos-cart" style="display:none;">
-
-
-    <div class="cart-total">
-      <label>Total</label>
-      <span id="cartTotal">0</span>
-    </div>
-
-    <select id="custName">
-      <option>Leonesta</option>
-      <option>Leonardo</option>
-    </select>
-
-    <select id="custGen">
-      <option>Gen Z</option>
-      <option>Milenial</option>
-      <option>Gen Y</option>
-      <option>Gen X</option>
-      <option>Alpha</option>
-    </select>
-
-
-    <h3 style="margin-top:10px;"></h3>
-    <div id="cartList"></div>
-
-
-    <div class="cart-pay">
-      <input type="number" id="uangBayarInput" placeholder="Bayar (Masukkan nominal)">
-    </div>
-
-    <select id="uangBayarSelect">
-      <option value="">Bayar (Pilih nominal)</option>
-      <option value="10000">10.000</option>
-      <option value="15000">15.000</option>
-      <option value="20000">20.000</option>
-      <option value="25000">25.000</option>
-      <option value="30000">30.000</option>
-      <option value="40000">40.000</option>
-      <option value="50000">50.000</option>
-      <option value="75000">75.000</option>
-      <option value="100000">100.000</option>
-    </select>
-
-    <div class="cart-change">
-      <label>Kembalian:</label>
-      <span id="kembalian">0</span>
-    </div>
-
-    <div style="margin-top:15px;">
-      <input type="text" id="posNote" placeholder="Catatan opsional...">
-    </div>
-
-    <div class="cart-pay">
-      <select id="posPetugas"></select>
-    </div> 
+</section>
 
 
 
 
-<!-- Tombol Pesan Floating -->
-<div id="floatingCheckout" class="cart-bottom-bar">
-  <button id="checkoutBtn">Pesan Sekarang</button>
-</div>
+<!-- =============== HALAMAN DETAIL PESANAN =============== -->
+<section id="cart" class="page pos-cart">
 
-<!-- Tombol Kembali Floating -->
-<div id="floatingBack">
-  <button id="floatingBackBtn">Kembali > Menu</button>
-</div>
-
+  <div class="cart-total">
+    <label>Total</label>
+    <span id="cartTotal">0</span>
   </div>
+
+  <select id="custName">
+    <option>Leonesta</option>
+    <option>Leonardo</option>
+  </select>
+
+  <select id="custGen">
+    <option>Gen Z</option>
+    <option>Milenial</option>
+    <option>Gen Y</option>
+    <option>Gen X</option>
+    <option>Alpha</option>
+  </select>
+
+  <div id="cartList"></div>
+
+  <div class="cart-pay">
+    <input type="number" id="uangBayarInput" placeholder="Bayar (Masukkan nominal)">
+  </div>
+
+  <select id="uangBayarSelect">
+    <option value="">Bayar (Pilih nominal)</option>
+    <option value="10000">10.000</option>
+    <option value="15000">15.000</option>
+    <option value="20000">20.000</option>
+    <option value="25000">25.000</option>
+    <option value="30000">30.000</option>
+    <option value="40000">40.000</option>
+    <option value="50000">50.000</option>
+    <option value="75000">75.000</option>
+    <option value="100000">100.000</option>
+  </select>
+
+  <div class="cart-change">
+    <label>Kembalian:</label>
+    <span id="kembalian">0</span>
+  </div>
+
+  <div style="margin-top:15px;">
+    <input type="text" id="posNote" placeholder="Catatan opsional...">
+  </div>
+
+  <div class="cart-pay">
+    <select id="posPetugas"></select>
+  </div>
+
+  <!-- =============== FLOATING ACTIONS (KHUSUS CART) =============== -->
+  <div id="cartActions">
+    <div id="floatingCheckout">
+      <button id="checkoutBtn">Pesan</button>
+    </div>
+
+    <div id="floatingBack">
+      <button id="floatingBackBtn">Kembali</button>
+    </div>
+  </div>
+
+
 </section>
 
 
@@ -1618,7 +1639,6 @@
 
 </body>
 </html>
-
 
 
 
