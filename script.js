@@ -13,9 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const appHeader   = document.getElementById("main-header");
   const sidebar     = document.getElementById("sidebar");
 
-  // Sidebar default tertutup
-  if (sidebar) sidebar.style.left = "-240px";
-
   // =========================================================
   // CEK STATUS LOGIN
   // =========================================================
@@ -27,7 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
     appWrapper.classList.remove("hidden");
     appHeader.classList.remove("hidden");
     sidebar.classList.remove("hidden");
-    openPage(lastPage, false);
+    openPage(lastPage);
+    setActiveNav(lastPage); // 🔥 TAMBAHKAN INI
+
   } else {
     loginScreen.classList.add("active");
     appWrapper.classList.add("hidden");
@@ -68,47 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(() => updateClock("login-clock"), 1000);
   updateClock("clock");
   updateClock("login-clock");
-
-  // =========================================================
-  // AUTO CLOSE SIDEBAR
-  // =========================================================
-  document.addEventListener("click", (event) => {
-    const menuBtn = document.querySelector(".menu-btn");
-    if (!sidebar || !menuBtn) return;
-
-    if (
-      sidebar.style.left === "0px" &&
-      !sidebar.contains(event.target) &&
-      !menuBtn.contains(event.target)
-    ) {
-      sidebar.style.left = "-240px";
-    }
-  });
-
-  // =========================================================
-  // FORM PENGELUARAN
-  // =========================================================
-  const belanjaForm = document.querySelector("#belanja form");
-  if (belanjaForm) {
-    belanjaForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const jumlah = Number(belanjaForm.querySelector('input[type="number"]').value) || 0;
-      const keterangan = belanjaForm.querySelector('input[type="text"]').value || "";
-
-      let data = JSON.parse(localStorage.getItem("pengeluaranData") || "[]");
-      data.push({ jumlah, keterangan });
-
-      localStorage.setItem("pengeluaranData", JSON.stringify(data));
-      belanjaForm.reset();
-      updateDashboard();
-      renderPengeluaran();
-    });
-  }
-
-
-
-
-
 
 
 
@@ -304,57 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================================================
-// COPY DASHBOARD
-// =========================================================
-const copyDashboardBtn = document.getElementById("copy-dashboard");
-if (copyDashboardBtn) {
-  copyDashboardBtn.addEventListener("click", function () {
 
-    // -------------------------
-    // Buat tanggal otomatis
-    // -------------------------
-    const hariArray = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-    const bulanArray = [
-      "Januari","Februari","Maret","April","Mei","Juni",
-      "Juli","Agustus","September","Oktober","November","Desember"
-    ];
-
-    const now = new Date();
-    const hari = hariArray[now.getDay()];
-    const tanggal = now.getDate();
-    const bulan = bulanArray[now.getMonth()];
-    const tahun = now.getFullYear();
-
-    const tanggalLengkap = `${hari}, ${tanggal} ${bulan} ${tahun}`;
-
-    // -------------------------
-    // Judul laporan otomatis
-    // -------------------------
-    let laporan = `📊 LAPORAN KAS\n🗓️ ${tanggalLengkap}\n\n`;
-
-    const map = [
-      ["Saldo Awal", "saldoAwal"],
-      ["Pemasukan", "pemasukan"],
-      ["Pengeluaran", "pengeluaran"],
-      ["Saldo Akhir", "saldoAkhir"],
-      ["Pendapatan", "pendapatan"],
-      ["Selisih (+/-)", "selisih"]
-    ];
-
-    map.forEach(([label, id]) => {
-      const el = document.getElementById(id);
-      if (el && el.textContent.trim() !== "") {
-        laporan += `${label}: ${el.textContent.trim()}\n`;
-      }
-    });
-
-    navigator.clipboard
-      .writeText(laporan)
-      .then(() => alert("Laporan dashboard berhasil dicopy!"))
-      .catch(() => alert("Gagal menyalin teks!"));
-  });
-}
 
 
   // =========================================================
@@ -438,45 +346,26 @@ if (saveSaldoAkhirBtn) {
 
 
 
-// ===========================================================
-//  NAVIGASI
-// ===========================================================
-function openPage(pageId, closeSidebar = true) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(pageId);
 
-  if (target) {
-    target.classList.add('active');
-    localStorage.setItem("lastPage", pageId);
+  // =========================================================
+  // FORM PENGELUARAN
+  // =========================================================
+  const belanjaForm = document.querySelector("#belanja form");
+  if (belanjaForm) {
+    belanjaForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const jumlah = Number(belanjaForm.querySelector('input[type="number"]').value) || 0;
+      const keterangan = belanjaForm.querySelector('input[type="text"]').value || "";
+
+      let data = JSON.parse(localStorage.getItem("pengeluaranData") || "[]");
+      data.push({ jumlah, keterangan });
+
+      localStorage.setItem("pengeluaranData", JSON.stringify(data));
+      belanjaForm.reset();
+      updateDashboard();
+      renderPengeluaran();
+    });
   }
-
-  if (closeSidebar) toggleMenu();
-}
-
-function toggleMenu() {
-  const sidebar = document.getElementById('sidebar');
-  if (!sidebar) return;
-  sidebar.style.left = (sidebar.style.left === "0px") ? "-240px" : "0px";
-}
-
-function logout() {
-  localStorage.removeItem("isLoggedIn");
-  localStorage.removeItem("lastPage");
-  localStorage.removeItem("username");
-
-  const loginScreen = document.getElementById("login-screen");
-  const appWrapper  = document.getElementById("app-wrapper");
-  const appHeader   = document.getElementById("main-header");
-  const sidebar     = document.getElementById("sidebar");
-
-  loginScreen.classList.remove("hidden");
-  appWrapper.classList.add("hidden");
-  appHeader.classList.add("hidden");
-  sidebar.classList.add("hidden");
-
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById("beranda")?.classList.add("active");
-}
 
 
 
@@ -525,6 +414,91 @@ function renderPengeluaran() {
 
 
 
+
+
+
+// ===========================================================
+//  NAVIGASI (FINAL — SIDEBAR KANAN)
+// ===========================================================
+
+function openPage(pageId) {
+  // reset state UI
+  document.body.classList.remove("sidebar-open");
+
+  const sidebar = document.getElementById("sidebar");
+  if (sidebar) sidebar.style.right = "-260px";
+
+  // ganti halaman
+  document.querySelectorAll(".page").forEach(p =>
+    p.classList.remove("active")
+  );
+
+  const target = document.getElementById(pageId);
+  if (target) {
+    target.classList.add("active");
+    localStorage.setItem("lastPage", pageId);
+  }
+
+  // set icon aktif
+  setActiveNav(pageId);
+
+  // ===============================
+  // 🔥 KHUSUS HALAMAN MENU (POS)
+  // ===============================
+  if (pageId === "pointofsales" || pageId === "transaksi") {
+    // selalu scroll ke atas
+    target.scrollTop = 0;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (typeof updateCartBottomBar === "function")
+
+    // tampilkan cart jika ada item
+    updateCartBottomBar();
+  }
+}
+
+
+
+function toggleMenu(forceClose = false) {
+  const sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+
+  const isOpen = sidebar.style.right === "24px";
+
+  if (forceClose || isOpen) {
+    sidebar.style.right = "-260px";
+    document.body.classList.remove("sidebar-open");
+  } else {
+    sidebar.style.right = "24px";
+    document.body.classList.add("sidebar-open");
+  }
+}
+
+document.getElementById("sidebar-overlay")
+  ?.addEventListener("click", () => toggleMenu(true));
+
+
+function setActiveNav(pageId) {
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  const activeBtn = document.querySelector(
+    `.nav-btn[data-page="${pageId}"]`
+  );
+
+  if (activeBtn) activeBtn.classList.add("active");
+}
+
+
+
+
+
+
+
+
+
+
 // ===========================================================
 //  DASHBOARD FINAL
 // ===========================================================
@@ -569,10 +543,64 @@ function updateDashboard() {
   }
 }
 
+// =========================================================
+// COPY DASHBOARD
+// =========================================================
+const copyDashboardBtn = document.getElementById("copy-dashboard");
+if (copyDashboardBtn) {
+  copyDashboardBtn.addEventListener("click", function () {
+
+    // -------------------------
+    // Buat tanggal otomatis
+    // -------------------------
+    const hariArray = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const bulanArray = [
+      "Januari","Februari","Maret","April","Mei","Juni",
+      "Juli","Agustus","September","Oktober","November","Desember"
+    ];
+
+    const now = new Date();
+    const hari = hariArray[now.getDay()];
+    const tanggal = now.getDate();
+    const bulan = bulanArray[now.getMonth()];
+    const tahun = now.getFullYear();
+
+    const tanggalLengkap = `${hari}, ${tanggal} ${bulan} ${tahun}`;
+
+    // -------------------------
+    // Judul laporan otomatis
+    // -------------------------
+    let laporan = `📊 LAPORAN KAS\n🗓️ ${tanggalLengkap}\n\n`;
+
+    const map = [
+      ["Saldo Awal", "saldoAwal"],
+      ["Pemasukan", "pemasukan"],
+      ["Pengeluaran", "pengeluaran"],
+      ["Saldo Akhir", "saldoAkhir"],
+      ["Pendapatan", "pendapatan"],
+      ["Selisih (+/-)", "selisih"]
+    ];
+
+    map.forEach(([label, id]) => {
+      const el = document.getElementById(id);
+      if (el && el.textContent.trim() !== "") {
+        laporan += `${label}: ${el.textContent.trim()}\n`;
+      }
+    });
+
+    navigator.clipboard
+      .writeText(laporan)
+      .then(() => alert("Laporan dashboard berhasil dicopy!"))
+      .catch(() => alert("Gagal menyalin teks!"));
+  });
+}
+
+
+
 
 
 /* =====================================================
-   POS — SALES — STAFF (FINAL WORKING VERSION FIXED)
+   POS — SALES — STAFF (FINAL STABLE)
 ===================================================== */
 
 (function () {
@@ -620,72 +648,96 @@ function updateDashboard() {
         RENDER MENU POS
   ===================================================== */
   function renderPOSMenu() {
-  const wrap = document.getElementById("posMenu");
-  if (!wrap) return;
+    const wrap = document.getElementById("posMenu");
+    if (!wrap) return;
 
-  wrap.innerHTML = "";
+    wrap.innerHTML = "";
 
-  menuData.forEach((item) => {
-    const card = document.createElement("div");
-    card.className = "pos-item";
-    card.dataset.id = item.id; // simpan id di div
+    menuData.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "pos-item";
+      card.dataset.id = item.id;
 
-    card.innerHTML = `
-      <img src="${item.img}" alt="${item.name}">
-      <div class="name">${item.name}</div>
-      <div class="price"> ${item.price.toLocaleString()}</div>
-    `;
+      card.innerHTML = `
+        <img src="${item.img}" alt="${item.name}">
+        <div class="name">${item.name}</div>
+        <div class="price">${item.price.toLocaleString()}</div>
+      `;
 
-    wrap.appendChild(card);
-  });
-
-  // 🔥 seluruh card menu bisa diklik
-  wrap.querySelectorAll(".pos-item").forEach((card) => {
-    card.addEventListener("click", () => {
-      const id = card.dataset.id;
-      addToCart(id, 1); // tambah 1 setiap klik
-    });
-  });
-}
-
-
-/* =====================================================
-      ADD TO CART (FIXED)
-===================================================== */
-function addToCart(id, qty = 1) {
-  const item = menuData.find(m => m.id === id);
-  if (!item) return;
-
-  const exist = cart.find(c => c.id === id);
-
-  if (exist) {
-    exist.qty += qty;
-  } else {
-    cart.push({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      qty: qty
+      card.addEventListener("click", () => addToCart(item.id, 1));
+      wrap.appendChild(card);
     });
   }
 
-  localStorage.setItem("cartSession", JSON.stringify(cart));
-  renderCart();
-  updateBottomBar();
-
-}
-
 
   /* =====================================================
-        CART FUNCTIONS
+        ADD / REMOVE / UPDATE CART
   ===================================================== */
-  function renderCart() {
+  function addToCart(id, qty = 1) {
+    const item = menuData.find(m => m.id === id);
+    if (!item) return;
+
+    const exist = cart.find(c => c.id === id);
+
+    if (exist) {
+      exist.qty += qty;
+    } else {
+      cart.push({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        qty
+      });
+    }
+
+    localStorage.setItem("cartSession", JSON.stringify(cart));
+    renderCart();
+    updateCartBottomBar();
+  }
+
+
+  function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    localStorage.setItem("cartSession", JSON.stringify(cart));
+    renderCart();
+    updateCartBottomBar();
+  }
+
+  function updateQty(id, qty) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+
+    item.qty = qty;
+    if (item.qty <= 0) {
+      cart = cart.filter(i => i.id !== id);
+    }
+
+    localStorage.setItem("cartSession", JSON.stringify(cart));
+    renderCart();
+    updateCartBottomBar();
+  }
+
+
+  
+
+/* =====================================================
+   CART FUNCTIONS — FINAL STABLE (NO BEHAVIOR CHANGE)
+===================================================== */
+
+// asumsi cart GLOBAL sudah ada
+// let cart = JSON.parse(localStorage.getItem("cartSession")) || [];
+
+/* =========================
+   RENDER CART
+========================= */
+function renderCart() {
   const wrap = document.getElementById("cartList");
   if (!wrap) return;
 
   if (cart.length === 0) {
     wrap.innerHTML = "<p>Keranjang kosong.</p>";
     updateTotal();
+    updateCartBottomBar();
     return;
   }
 
@@ -706,7 +758,7 @@ function addToCart(id, qty = 1) {
 
         <div class="ci-row">
           <span class="ci-label">Subtotal</span>
-          <span class="ci-value"> ${(c.qty * c.price).toLocaleString()}</span>
+          <span class="ci-value">${(c.qty * c.price).toLocaleString()}</span>
         </div>
 
         <div class="ci-actions">
@@ -725,6 +777,8 @@ function addToCart(id, qty = 1) {
       const i = Number(btn.dataset.i);
       const act = btn.dataset.act;
 
+      if (!cart[i]) return;
+
       if (act === "inc") cart[i].qty++;
       if (act === "dec") {
         cart[i].qty--;
@@ -738,34 +792,62 @@ function addToCart(id, qty = 1) {
   });
 
   updateTotal();
+  updateCartBottomBar();
 }
 
-
-/* EDIT JS UNTUK MENDUKUNG NAVIGASI HALAMAN */
-
-function updateBottomBar() {
-  const bar = document.getElementById("cartBottomBar");
+/* =========================
+   CART BOTTOM BAR
+========================= */
+function updateCartBottomBar() {
+  const bar   = document.getElementById("cartBottomBar");
   const count = document.getElementById("cartCount");
   const total = document.getElementById("cartBottomTotal");
 
-  const isEmpty = cart.length === 0;
+  if (!bar || !count || !total) return;
 
-  bar.style.display = isEmpty ? "none" : "flex";
-  if (isEmpty) return;
+  if (cart.length === 0) {
+    bar.style.display = "none";
+    return;
+  }
 
-  const qtyTotal = cart.reduce((s, i) => s + i.qty, 0);
+  bar.style.display = "flex";
+
+  const qtyTotal   = cart.reduce((s, i) => s + i.qty, 0);
   const hargaTotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
   count.textContent = qtyTotal + " Menu";
-  total.textContent = hargaTotal.toLocaleString();
+  total.textContent = hargaTotal.toLocaleString("id-ID");
 }
 
+/* =========================
+   CLICK CART BOTTOM BAR — FINAL FIX
+========================= */
+document.addEventListener("click", function (e) {
+  const cartBar = e.target.closest(".cart-bottom-bar");
+  if (!cartBar) return;
 
-  /* KLIK BOTTOM BAR → MASUK HALAMAN PESANAN */
-  document.getElementById("cartBottomBar").addEventListener("click", () => {
-  document.getElementById("menuPage").style.display = "none";
-  document.getElementById("cartPage").style.display = "block";
+  // 🔥 JANGAN ganggu tombol checkout
+  if (e.target.closest("#checkoutBtn")) return;
+
+  // 🔥 JANGAN buka cart kalau sudah di halaman cart
+  const cartPage = document.getElementById("cart");
+  if (cartPage && cartPage.classList.contains("active")) return;
+
+  openCart();
 });
+
+
+
+
+function openCart() {
+  openPage("cart");
+
+  // 🔥 tunggu browser render halaman cart
+  requestAnimationFrame(() => {
+    renderCart();
+    updateCartBottomBar();
+  });
+}
 
 
 
@@ -792,122 +874,197 @@ function updateBottomBar() {
     if (kembaliEl) kembaliEl.textContent = kembali.toLocaleString();
   }
 
+
+
+
 /* =====================================================
-      CHECKOUT (VERSI FIX — SUDAH MENYIMPAN TRANSAKSI)
+   CHECKOUT — FINAL SAFE VERSION
 ===================================================== */
 function checkout() {
-  if (cart.length === 0) {
+
+
+  if (!Array.isArray(cart) || cart.length === 0) {
     alert("Keranjang kosong!");
     return;
   }
 
   const now = new Date();
 
-const record = {
-  id: Date.now(),
-  code: getTodayOrderNumber(),
-  name: document.getElementById("custName")?.value || "Leonesta",
-  gen: document.getElementById("custGen")?.value || "Gen Z",
-  items: JSON.parse(JSON.stringify(cart)),
+  // =========================
+  // HITUNG TOTAL SEKALI SAJA
+  // =========================
+  const totalBelanja = cart.reduce(
+    (sum, item) => sum + item.qty * item.price,
+    0
+  );
 
-  total: cart.reduce((a, b) => a + (b.qty * b.price), 0),
+  // =========================
+  // BUAT RECORD TRANSAKSI
+  // =========================
+  const record = {
+    id: Date.now(),
 
-  // ⭐ WAJIB DITAMBAHKAN
-  payMethod: "Tunai",            // default
-  payBayar: 0,                   // belum bayar
-  totalSetelahDiskon: cart.reduce((a, b) => a + (b.qty * b.price), 0),
+    // fallback aman jika function belum ada
+    code:
+      typeof getTodayOrderNumber === "function"
+        ? getTodayOrderNumber()
+        : "ORD-" + Date.now(),
 
-  date: now.toISOString(),
-  time: now.toLocaleTimeString("id-ID", {
-    hour: "2-digit",
-    minute: "2-digit"
-  })
-};
+    name: document.getElementById("custName")?.value || "Leonesta",
+    gen: document.getElementById("custGen")?.value || "Gen Z",
 
+    items: JSON.parse(JSON.stringify(cart)), // deep copy aman
 
-  // simpan ke storage
-  let sales = JSON.parse(localStorage.getItem("salesData")) || [];
+    total: totalBelanja,
+
+    // ⭐ FIELD WAJIB UNTUK DASHBOARD
+    payMethod: "Tunai",
+    payBayar: 0,
+    totalSetelahDiskon: totalBelanja,
+
+    date: now.toISOString(),
+    time: now.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit"
+    })
+  };
+
+  // =========================
+  // SIMPAN KE SALES DATA
+  // =========================
+  const sales = JSON.parse(localStorage.getItem("salesData")) || [];
   sales.push(record);
   localStorage.setItem("salesData", JSON.stringify(sales));
-  updateDashboard();
 
+  // =========================
+  // UPDATE DASHBOARD (SAFE)
+  // =========================
+  if (typeof updateDashboard === "function") {
+    updateDashboard();
+  }
 
-  // kosongkan cart
-  cart = [];
+  // =========================
+  // RESET CART TOTAL
+  // =========================
+  cart.length = 0; // lebih aman daripada cart = []
   localStorage.removeItem("cartSession");
-  renderCart();
 
-  // pindah ke halaman transaksi
+  renderCart();
+  updateCartBottomBar();
+
+  // =========================
+  // PINDAH KE TRANSAKSI
+  // =========================
   openPage("transaksi");
-  renderTransactionHistory();
+
+  if (typeof renderTransactionHistory === "function") {
+    renderTransactionHistory();
+  }
 }
 
-
-
-
-  /* =====================================================
-        INITIAL LOAD
-  ===================================================== */
-  document.addEventListener("DOMContentLoaded", () => {
-    renderPOSMenu();
-    renderCart();
-
-    const inputEl = document.getElementById("uangBayarInput");
-    const selectEl = document.getElementById("uangBayarSelect");
-
-    if (inputEl) inputEl.addEventListener("input", updateTotal);
-    if (selectEl) selectEl.addEventListener("change", updateTotal);
-
-    document.getElementById("checkoutBtn")?.addEventListener("click", checkout);
-
-    document.getElementById("clearCartBtn")?.addEventListener("click", () => {
-      if (confirm("Kosongkan keranjang?")) {
-        cart = [];
-        localStorage.removeItem("cartSession");
-        renderCart();
-      }
-    });
-
-    populateStaff();
-    renderTransactionHistory();
-
-  });
-
-document.getElementById("floatingBackBtn").addEventListener("click", function() {
-  // sembunyikan halaman Detail Pesanan
-  document.getElementById("cartPage").style.display = "none";
-
-  // tampilkan halaman Menu
-  document.getElementById("menuPage").style.display = "block";
-
-  // update floating cart jika ada
-  updateBottomBar();
+/* =========================
+   EVENT LISTENERS (FINAL)
+========================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", checkout);
+  }
 });
 
 
-  /* =====================================================
-        STAFF SELECT OPTION
-  ===================================================== */
-  function populateStaff() {
-    const sel = document.getElementById("posPetugas");
-    if (!sel) return;
 
-    const arr = JSON.parse(localStorage.getItem("staffList") || "[]");
-    sel.innerHTML = arr.map((n) => `<option value="${n}">${n}</option>`).join("");
-  }
+/* =====================================================
+   INITIAL LOAD — FINAL SAFE
+===================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  // POS
+  if (typeof renderPOSMenu === "function") renderPOSMenu();
+  renderCart();
 
-  const backBtn = document.getElementById("backToMenuBtn");
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-      const menuPage = document.getElementById("menuPage");
-      const cartPage = document.getElementById("cartPage");
+  // INPUT BAYAR
+  const inputEl  = document.getElementById("uangBayarInput");
+  const selectEl = document.getElementById("uangBayarSelect");
 
-      if (cartPage) cartPage.style.display = "none";
-      if (menuPage) menuPage.style.display = "block";
+  if (inputEl)  inputEl.addEventListener("input", updateTotal);
+  if (selectEl) selectEl.addEventListener("change", updateTotal);
 
-      updateBottomBar();
+  // CHECKOUT
+  document
+    .getElementById("checkoutBtn")
+    ?.addEventListener("click", checkout);
+
+  // CLEAR CART
+  document
+    .getElementById("clearCartBtn")
+    ?.addEventListener("click", () => {
+      if (!cart.length) return;
+
+      if (confirm("Kosongkan keranjang?")) {
+        cart.length = 0; // 🔥 lebih aman
+        localStorage.removeItem("cartSession");
+        renderCart();
+        updateCartBottomBar();
+      }
     });
+
+  // STAFF & TRANSAKSI
+  if (typeof populateStaff === "function") populateStaff();
+  if (typeof renderTransactionHistory === "function") {
+    renderTransactionHistory();
   }
+});
+
+/* =====================================================
+   FLOATING BACK BUTTON — SAFE
+===================================================== */
+document.addEventListener("click", function (e) {
+  const backBtn = e.target.closest("#floatingBackBtn");
+  if (!backBtn) return;
+
+  openPage("pointofsales");
+  updateCartBottomBar();
+});
+
+
+
+
+
+
+
+/* =====================================================
+   STAFF SELECT OPTION — FINAL
+===================================================== */
+function populateStaff() {
+  const sel = document.getElementById("posPetugas");
+  if (!sel) return;
+
+  const arr = JSON.parse(localStorage.getItem("staffList") || "[]");
+
+  // jika belum ada staff, beri placeholder
+  if (arr.length === 0) {
+    sel.innerHTML = `<option value="">-- Pilih Petugas --</option>`;
+    return;
+  }
+
+  sel.innerHTML = arr
+    .map(name => `<option value="${name}">${name}</option>`)
+    .join("");
+}
+
+/* =====================================================
+   BACK TO MENU BUTTON — FINAL (SPA FRIENDLY)
+===================================================== */
+document.addEventListener("click", function (e) {
+  const backBtn = e.target.closest("#backToMenuBtn");
+  if (!backBtn) return;
+
+  // kembali ke halaman POS / Menu
+  openPage("pointofsales");
+
+  // pastikan bottom cart tetap sinkron
+  updateCartBottomBar();
+});
 
 
 
@@ -1140,14 +1297,6 @@ function renderTransactionHistory() {
 
 
 
-
-function openPage(pageId) {
-  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
-  document.getElementById(pageId).style.display = "block";
-}
-
-
-
 function deleteTransaction(id) {
   const data = JSON.parse(localStorage.getItem("salesData")) || [];
   const filtered = data.filter(tx => tx.id !== id);
@@ -1158,6 +1307,43 @@ function deleteTransaction(id) {
 
   renderTransactionHistory();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function logout() {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("lastPage");
+  localStorage.removeItem("username");
+
+  const loginScreen = document.getElementById("login-screen");
+  const appWrapper  = document.getElementById("app-wrapper");
+  const appHeader   = document.getElementById("main-header");
+  const sidebar     = document.getElementById("sidebar");
+
+  loginScreen.classList.remove("hidden");
+  appWrapper.classList.add("hidden");
+  appHeader.classList.add("hidden");
+  sidebar.classList.add("hidden");
+
+  document.querySelectorAll(".page").forEach(p =>
+    p.classList.remove("active")
+  );
+
+  document.getElementById("beranda")?.classList.add("active");
+}
+
+
 
 
 
