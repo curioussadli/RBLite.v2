@@ -1443,7 +1443,7 @@ html, body {
     left: var(--content-padding);
   right: var(--content-padding);
 
-  width: 81.5%;
+  width: 90%;
   max-width: 390px;
   left: 50%;
   right: 12px;          /* 🔥 SAMA dengan padding menu */
@@ -2116,4 +2116,5 @@ html, body {
   background: #D92C22;
   transform: translateX(-50%) scale(1.03);
 }
+
 
