@@ -71,24 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  // =========================================================
-  // FORM STOK
-  // =========================================================
-  const stokForm = document.querySelector("#stok form");
-  if (stokForm) {
-    stokForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const nama = stokForm.querySelector('input[type="text"]').value || "";
-      const jumlah = Number(stokForm.querySelector('input[type="number"]').value) || 0;
-
-      let data = JSON.parse(localStorage.getItem("stokData") || "[]");
-      data.push({ nama, jumlah });
-
-      localStorage.setItem("stokData", JSON.stringify(data));
-      stokForm.reset();
-      updateDashboard();
-    });
-  }
 
   // =========================================================
   // FORM PERSIAPAN
@@ -122,145 +104,417 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================================================
-  // STOK — SIMPAN PILIHAN SELECT
-  // =========================================================
-  document.querySelectorAll(".stok-row select").forEach((select, index) => {
-    if (!select.dataset.default) {
-      select.dataset.default = select.value;
-    }
 
-    select.addEventListener("change", function () {
-      localStorage.setItem("stokSelect_" + index, this.value);
-      this.classList.add("used");
+
+
+/* ===============================
+   DATA MASTER ITEM STOK
+=============================== */
+const STOK_ITEMS = [
+  { id: "roti-balok", nama: "ROTI BALOK", satuan: "PCS", rata: 42, step: 1 },
+  
+  { id: "cokelat-cream", nama: "COKELAT CREAM", satuan: "BTL", rata: 4, step: 1 },
+  { id: "vanilla-cream", nama: "VANILLA CREAM", satuan: "BTL", rata: 4, step: 1 },
+  { id: "tiramisu-cream", nama: "TIRAMISU CREAM", satuan: "BTL", rata: 2, step: 1 },
+  { id: "greentea-cream", nama: "GREENTEA CREAM", satuan: "BTL", rata: 2, step: 1 },
+  { id: "strawberry-cream", nama: "STRAWBRRY CREAM", satuan: "BTL", rata: 1, step: 1 },
+  { id: "mocha-cream", nama: "MOCHA CREAM", satuan: "BTL", rata: 1, step: 1 },
+
+  { id: "choco-crunchy", nama: "CHOCO CRUNCHY", satuan: "TOP", rata: 2, step: 1 },
+
+  { id: "keju-cheddar", nama: "KEJU CHEDDAR", satuan: "PCS", rata: 8, step: 1 },
+
+  { id: "cookies-crumble", nama: "COOKIES CRUMB", satuan: "TOP", rata: 2, step: 1 },
+  { id: "caramel-crumble", nama: "CARAMEL CRUMB", satuan: "TOP", rata: 1, step: 1 },
+  { id: "red-velvet-crumble", nama: "RED VELVET CRUMB", satuan: "TOP", rata: 1, step: 1 },
+  { id: "matcha-crumble", nama: "MATCHA CRUMB", satuan: "TOP", rata: 1, step: 1 },
+  { id: "peanuts-crumbs", nama: "PEANUTS CRUMB", satuan: "TOP", rata: 1, step: 1 },
+
+  { id: "chocolate-powder", nama: "CHOCOLATE PWD", satuan: "PCS", rata: 10, step: 1 },
+  { id: "milo-powder", nama: "MILO POWDER", satuan: "PCS", rata: 10, step: 1 },
+  { id: "vanilla-latte-powder", nama: "VANILLA LTE PWD", satuan: "PCS", rata: 10, step: 1 },
+  { id: "taro-powder", nama: "TARO POWDER", satuan: "PCS", rata: 10, step: 1 },
+  { id: "red-velvet-powder", nama: "RED VELVET PWD", satuan: "PCS", rata: 10, step: 1 },
+  { id: "greentea-powder", nama: "GREENTEA PWD", satuan: "PCS", rata: 10, step: 1 },
+
+  { id: "lychee-tea-powder", nama: "LYCHEE TEA PWD", satuan: "PCS", rata: 5, step: 1 },
+  { id: "blackcurrant-powder", nama: "BLACKCRRT PWD", satuan: "PCS", rata: 5, step: 1 },
+  { id: "lemon-tea-powder", nama: "LEMON TEA PWD", satuan: "PCS", rata: 15, step: 1 },
+
+  { id: "kertas-cokelat", nama: "KERTAS COKELAT", satuan: "PCS", rata: 20, step: 1 },
+  { id: "kresek-roti", nama: "KRESEK ROTI", satuan: "PCS", rata: 3, step: 1 },
+  { id: "tisu-garpu", nama: "TISU GARPU", satuan: "PCS", rata: 1, step: 1 },
+  { id: "kresek-1-cup", nama: "KRESEK 1 CUP", satuan: "PCS", rata: 2, step: 1 },
+  { id: "kresek-2-cup", nama: "KRESEK 2 CUP", satuan: "PCS", rata: 1, step: 1 },
+  { id: "sedotan-es", nama: "SEDOTAN ES", satuan: "PCS", rata: 20, step: 1 },
+
+  { id: "kertas-struk", nama: "KERTAS STRUK", satuan: "ROL", rata: 5, step: 1 },
+  { id: "air-galon", nama: "AIR GALON", satuan: "VOL", rata: 50, step: 0.5 },
+  { id: "gas-lpg", nama: "GAS LPG", satuan: "TBG", rata: 1, step: 1 },
+  { id: "cup-ice", nama: "CUP ICE", satuan: "CUP", rata: 12, step: 1 },
+
+  { id: "minyak-crunchy", nama: "MINYAK CRUNCHY", satuan: "BTL", rata: 1, step: 1 },
+  { id: "minyak-kelapa", nama: "MINYAK KELAPA", satuan: "BTL", rata: 1, step: 1 }
+
+];
+
+
+/* ===============================
+   LOCAL STORAGE
+=============================== */
+const STORAGE_KEY = "rb_stok_data";
+const stokState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+STOK_ITEMS.forEach(item => {
+  if (!stokState[item.id]) {
+    stokState[item.id] = {
+      persediaan: 0,
+      stokBahanInt: 0,
+      stokBahanDec: 0
+    };
+  }
+});
+
+
+function saveStok() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(stokState));
+}
+
+/* ===============================
+   FORMAT ANGKA
+=============================== */
+function fmt(n) {
+  return Number(parseFloat(n).toFixed(2));
+}
+
+/* ===============================
+   RENDER CARD STOK
+=============================== */
+function renderStokCards() {
+  const c = document.getElementById("stokContainer");
+  c.innerHTML = "";
+
+  STOK_ITEMS.forEach(item => {
+    c.innerHTML += `
+      <div class="stok-card" data-id="${item.id}">
+        <div class="stok-header">
+          <div>
+            <div class="stok-nama">${item.nama}</div>
+            <div class="stok-satuan">${item.satuan}</div>
+          </div>
+          <div class="stok-total" id="total-${item.id}">0</div>
+        </div>
+
+        <div class="stok-detail">
+          <div class="stok-line">
+            <span>STOK MASUK</span>
+            <input type="number" step="${item.step}" id="masuk-${item.id}" value="0">
+          </div>
+
+          <div class="stok-line">
+            <span>STOK KELUAR</span>
+            <input type="number" step="${item.step}" id="keluar-${item.id}" value="0">
+          </div>
+
+          <div class="stok-line">
+            <span>PERSEDIAAN (GUDANG)</span>
+            <strong id="persediaan-${item.id}">0</strong>
+          </div>
+
+          <div class="stok-line is-bahan-int">
+            <span>STOK BAHAN</span>
+            <input type="number" step="1" id="bahan-int-${item.id}" value="0">
+          </div>
+
+          <div class="stok-line is-bahan-dec">
+            <span></span>
+            <input type="number" step="0.1" id="bahan-dec-${item.id}" value="0.0">
+          </div>
+
+
+          <div class="stok-line">
+            <span>STOK MINIMAL</span>
+            <strong>${item.rata}</strong>
+          </div>
+
+          <div class="stok-line request">
+            <span>REQUEST ?</span>
+            <strong id="request-${item.id}">0</strong>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+
+
+
+function initStokLogic() {
+  document.querySelectorAll(".stok-card").forEach(card => {
+    const id = card.dataset.id;
+    const item = STOK_ITEMS.find(x => x.id === id);
+
+    /* ===============================
+       EXPAND / COLLAPSE
+    =============================== */
+    card.querySelector(".stok-header").onclick = () => {
+    const isActive = card.classList.contains("active");
+
+    // tutup card lain
+    document.querySelectorAll(".stok-card.active").forEach(c => {
+      c.classList.remove("active");
     });
 
-    const savedValue = localStorage.getItem("stokSelect_" + index);
-    if (savedValue) {
-      select.value = savedValue;
-      select.classList.add("used");
+    if (!isActive) {
+      card.classList.add("active");
+
+      // scroll card ke atas layar
+      card.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  };
+
+
+    /* ===============================
+       STOK MASUK
+    =============================== */
+    const masuk = document.getElementById(`masuk-${id}`);
+    masuk.parentElement.appendChild(makeSaveBtn(() => {
+      stokState[id].persediaan = fmt(
+        stokState[id].persediaan + (parseFloat(masuk.value) || 0)
+      );
+      masuk.value = 0;
+      saveStok();
+      renderStok(id, item);
+    }));
+
+    /* ===============================
+       STOK KELUAR
+    =============================== */
+    const keluar = document.getElementById(`keluar-${id}`);
+    keluar.parentElement.appendChild(makeSaveBtn(() => {
+      stokState[id].persediaan = fmt(
+        stokState[id].persediaan - (parseFloat(keluar.value) || 0)
+      );
+      if (stokState[id].persediaan < 0) stokState[id].persediaan = 0;
+      keluar.value = 0;
+      saveStok();
+      renderStok(id, item);
+    }, true));
+
+    /* =================================================
+       STOK BAHAN INTEGER (− / +)
+    ================================================= */
+    const bahanInt = document.getElementById(`bahan-int-${id}`);
+    bahanInt.value = stokState[id].stokBahanInt;
+
+    const intRow = bahanInt.parentElement;
+
+    const btnIntMinus = document.createElement("button");
+    btnIntMinus.className = "stok-btn adjust";
+    btnIntMinus.textContent = "−";
+
+    const btnIntPlus = document.createElement("button");
+    btnIntPlus.className = "stok-btn adjust";
+    btnIntPlus.textContent = "+";
+
+    intRow.insertBefore(btnIntMinus, bahanInt);
+    intRow.appendChild(btnIntPlus);
+
+    btnIntMinus.onclick = () => {
+      stokState[id].stokBahanInt = Math.max(
+        0,
+        stokState[id].stokBahanInt - 1
+      );
+      bahanInt.value = stokState[id].stokBahanInt;
+      saveStok();
+      renderStok(id, item);
+    };
+
+    btnIntPlus.onclick = () => {
+      stokState[id].stokBahanInt += 1;
+      bahanInt.value = stokState[id].stokBahanInt;
+      saveStok();
+      renderStok(id, item);
+    };
+
+    bahanInt.oninput = () => {
+      stokState[id].stokBahanInt = parseInt(bahanInt.value) || 0;
+      saveStok();
+      renderStok(id, item);
+    };
+
+    /* =================================================
+       STOK BAHAN DESIMAL (− / +)
+    ================================================= */
+    const bahanDec = document.getElementById(`bahan-dec-${id}`);
+    bahanDec.value = stokState[id].stokBahanDec.toFixed(1);
+
+    const decRow = bahanDec.parentElement;
+
+    const btnDecMinus = document.createElement("button");
+    btnDecMinus.className = "stok-btn adjust";
+    btnDecMinus.textContent = "−";
+
+    const btnDecPlus = document.createElement("button");
+    btnDecPlus.className = "stok-btn adjust";
+    btnDecPlus.textContent = "+";
+
+    decRow.insertBefore(btnDecMinus, bahanDec);
+    decRow.appendChild(btnDecPlus);
+
+    btnDecMinus.onclick = () => {
+      stokState[id].stokBahanDec = Math.max(
+        0,
+        fmt(stokState[id].stokBahanDec - 0.1)
+      );
+      bahanDec.value = stokState[id].stokBahanDec.toFixed(1);
+      saveStok();
+      renderStok(id, item);
+    };
+
+    btnDecPlus.onclick = () => {
+      stokState[id].stokBahanDec = Math.min(
+        0.9,
+        fmt(stokState[id].stokBahanDec + 0.1)
+      );
+      bahanDec.value = stokState[id].stokBahanDec.toFixed(1);
+      saveStok();
+      renderStok(id, item);
+    };
+
+    bahanDec.oninput = () => {
+      let v = parseFloat(bahanDec.value) || 0;
+      v = Math.max(0, Math.min(0.9, v));
+      stokState[id].stokBahanDec = fmt(v);
+      bahanDec.value = stokState[id].stokBahanDec.toFixed(1);
+      saveStok();
+      renderStok(id, item);
+    };
+
+    /* ===============================
+       RENDER AWAL
+    =============================== */
+    renderStok(id, item);
+  });
+}
+
+
+
+
+
+/* ===============================
+   BUTTON SAVE
+=============================== */
+function makeSaveBtn(fn, danger = false) {
+  const b = document.createElement("button");
+  b.className = "stok-btn" + (danger ? " danger" : "");
+  b.textContent = "💾";
+  b.onclick = fn;
+  return b;
+}
+
+/* ===============================
+   RENDER PER ITEM
+=============================== */
+function renderStok(id, item) {
+  const p = stokState[id].persediaan;
+  const bInt = stokState[id].stokBahanInt;
+  const bDec = stokState[id].stokBahanDec;
+
+  const stokBahan = fmt(bInt + bDec);
+  const total = fmt(p + stokBahan);
+  const request = total < item.rata ? fmt(item.rata - total) : 0;
+
+  document.getElementById(`persediaan-${id}`).textContent = p;
+  document.getElementById(`total-${id}`).textContent = total;
+  document.getElementById(`request-${id}`).textContent = request;
+
+  document
+    .getElementById(`total-${id}`)
+    .classList.toggle("need-request", request > 0);
+}
+
+
+
+/* ===============================
+   START
+=============================== */
+renderStokCards();
+initStokLogic();
+
+
+/* ===============================
+   FORMAT TANGGAL INDONESIA
+=============================== */
+function getTanggalID() {
+  return new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+/* ===============================
+   COPY SEMUA STOK
+=============================== */
+document.getElementById("copyAllStock").onclick = () => {
+  let text = `📊 STOCK BAHAN\n🗓️ ${getTanggalID()}\n\n`;
+
+  STOK_ITEMS.forEach(item => {
+    const id = item.id;
+    const p = stokState[id].persediaan || 0;
+    const bi = stokState[id].stokBahanInt || 0;
+    const bd = stokState[id].stokBahanDec || 0;
+    const total = fmt(p + bi + bd);
+
+    text += `- ${item.nama} (${item.satuan}): ${total}\n`;
+  });
+
+  navigator.clipboard.writeText(text);
+  alert("✅ Semua stok berhasil dicopy");
+};
+
+/* ===============================
+   COPY REQUEST SAJA
+=============================== */
+document.getElementById("copyRequestStock").onclick = () => {
+  let text = `📊 REQUEST BAHAN\n🗓️ ${getTanggalID()}\n\n`;
+  let ada = false;
+
+  STOK_ITEMS.forEach(item => {
+    const id = item.id;
+    const p = stokState[id].persediaan || 0;
+    const bi = stokState[id].stokBahanInt || 0;
+    const bd = stokState[id].stokBahanDec || 0;
+    const total = fmt(p + bi + bd);
+
+    if (total < item.rata) {
+      const req = fmt(item.rata - total);
+      text += `- ${item.nama} (${item.satuan}): ${req}\n`;
+      ada = true;
     }
   });
 
-  // RESET STOK
-  const resetBtn = document.getElementById("reset-stok");
-  if (resetBtn) {
-    resetBtn.addEventListener("click", function () {
-      document.querySelectorAll(".stok-row select").forEach((select, index) => {
-        select.value = select.dataset.default || "";
-        select.classList.remove("used");
-        localStorage.removeItem("stokSelect_" + index);
-      });
-      alert("Stok berhasil di-reset ke default.");
-    });
+  if (!ada) {
+    text += "Semua stok aman ✅";
   }
 
-  // =========================================================
-  // COPY STOK
-  // =========================================================
-  const copyBtn = document.getElementById("copy-stok");
-  if (copyBtn) {
-    copyBtn.addEventListener("click", function () {
+  navigator.clipboard.writeText(text);
+  alert("🚨 Request stok berhasil dicopy");
+};
 
-          // -------------------------
-    // Buat tanggal otomatis
-    // -------------------------
-    const hariArray = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-    const bulanArray = [
-      "Januari","Februari","Maret","April","Mei","Juni",
-      "Juli","Agustus","September","Oktober","November","Desember"
-    ];
 
-    const now = new Date();
-    const hari = hariArray[now.getDay()];
-    const tanggal = now.getDate();
-    const bulan = bulanArray[now.getMonth()];
-    const tahun = now.getFullYear();
 
-    const tanggalLengkap = `${hari}, ${tanggal} ${bulan} ${tahun}`;
 
-    // -------------------------
-    // Judul laporan otomatis
-    // -------------------------
-    let laporan = `📊 STOCK BAHAN\n🗓️ ${tanggalLengkap}\n\n`;
-      
-      let ada = false;
 
-      document.querySelectorAll("#stok .stok-row").forEach(row => {
-        const nama   = row.querySelector(".stok-nama").innerText.trim();
-        const satuan = row.querySelector(".stok-satuan").innerText.trim();
-        const select = row.querySelector("select");
-        const nilai  = select.options[select.selectedIndex].text;
-        const defOpt = select.querySelector("option[selected]");
-        const defVal = defOpt ? defOpt.text : "";
 
-        if (nilai !== defVal) {
-          laporan += `- ${nama} (${satuan}): ${nilai}\n`;
-          ada = true;
-        }
-      });
 
-      if (!ada) return alert("Tidak ada perubahan stok.");
 
-      navigator.clipboard.writeText(laporan).then(() => {
-        alert("Laporan stok berhasil dicopy!");
-      });
-    });
-  }
-
-  // =========================================================
-  // COPY PERSEDIAAN
-  // =========================================================
-  const copyPersediaanBtn = document.getElementById("copy-persediaan");
-  if (copyPersediaanBtn) {
-    copyPersediaanBtn.addEventListener("click", function () {
-
-          // -------------------------
-    // Buat tanggal otomatis
-    // -------------------------
-    const hariArray = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-    const bulanArray = [
-      "Januari","Februari","Maret","April","Mei","Juni",
-      "Juli","Agustus","September","Oktober","November","Desember"
-    ];
-
-    const now = new Date();
-    const hari = hariArray[now.getDay()];
-    const tanggal = now.getDate();
-    const bulan = bulanArray[now.getMonth()];
-    const tahun = now.getFullYear();
-
-    const tanggalLengkap = `${hari}, ${tanggal} ${bulan} ${tahun}`;
-
-    // -------------------------
-    // Judul laporan otomatis
-    // -------------------------
-    let laporan = `📊 STOCK PERSEDIAAN\n🗓️ ${tanggalLengkap}\n\n`;
-      
-      let ada = false;
-
-      document.querySelectorAll("#storage .stok-row").forEach(row => {
-        const nama   = row.querySelector(".stok-nama").innerText.trim();
-        const satuan = row.querySelector(".stok-satuan").innerText.trim();
-        const select = row.querySelector("select");
-        const nilai  = select.options[select.selectedIndex].text;
-
-        const defOpt = select.querySelector("option[selected]");
-        const defVal = defOpt ? defOpt.text : "";
-
-        if (nilai !== defVal) {
-          laporan += `- ${nama} (${satuan}): ${nilai}\n`;
-          ada = true;
-        }
-      });
-
-      if (!ada) return alert("Tidak ada perubahan persediaan.");
-
-      navigator.clipboard.writeText(laporan).then(() => {
-        alert("Laporan persediaan berhasil dicopy!");
-      });
-    });
-  }
 
 
 
