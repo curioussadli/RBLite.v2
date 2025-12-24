@@ -17,7 +17,7 @@ async function loadPengeluaran() {
 //  APP SCRIPT FINAL — versi sudah dirapikan & tidak duplikat
 // ===========================================================
 document.addEventListener("DOMContentLoaded", () => {
-
+loadPengeluaran();
 
   // =========================================================
   // ELEMENT REFERENSI
@@ -1617,6 +1617,7 @@ function logout() {
 
 
 })();
+
 
 
 
