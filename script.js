@@ -1,3 +1,18 @@
+// ===============================
+// CONFIG BACKEND API
+// ===============================
+const API = "https://rblite-backend.up.railway.app";
+
+// ===============================
+// LOAD DATA DARI SERVER
+// ===============================
+async function loadPengeluaran() {
+  const res = await fetch(`${API}/api/pengeluaran`);
+  const data = await res.json();
+  console.log("DATA DARI SERVER:", data);
+}
+
+
 // ===========================================================
 //  APP SCRIPT FINAL — versi sudah dirapikan & tidak duplikat
 // ===========================================================
@@ -1602,6 +1617,7 @@ function logout() {
 
 
 })();
+
 
 
 
