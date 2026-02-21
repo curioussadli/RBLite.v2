@@ -1,23 +1,8 @@
-// ===============================
-// CONFIG BACKEND API
-// ===============================
-const API = "https://rblite-backend.up.railway.app";
-
-// ===============================
-// LOAD DATA DARI SERVER
-// ===============================
-async function loadPengeluaran() {
-  const res = await fetch(`${API}/api/pengeluaran`);
-  const data = await res.json();
-  console.log("DATA DARI SERVER:", data);
-}
-
-
 // ===========================================================
 //  APP SCRIPT FINAL — versi sudah dirapikan & tidak duplikat
 // ===========================================================
 document.addEventListener("DOMContentLoaded", () => {
-loadPengeluaran();
+
 
   // =========================================================
   // ELEMENT REFERENSI
@@ -126,35 +111,36 @@ loadPengeluaran();
    DATA MASTER ITEM STOK
 =============================== */
 const STOK_ITEMS = [
-  { id: "roti-balok", nama: "ROTI BALOK", satuan: "PCS", rata: 42, step: 1 },
+  { id: "roti-balok", nama: "ROTI BALOK", satuan: "PCS", rata: 28, step: 1 },
   
-  { id: "cokelat-cream", nama: "COKELAT", satuan: "BTL", rata: 4, step: 1 },
-  { id: "vanilla-cream", nama: "VANILLA", satuan: "BTL", rata: 4, step: 1 },
-  { id: "tiramisu-cream", nama: "TIRAMISU", satuan: "BTL", rata: 2, step: 1 },
-  { id: "greentea-cream", nama: "GREENTEA", satuan: "BTL", rata: 2, step: 1 },
-  { id: "strawberry-cream", nama: "STRAWBERRY", satuan: "BTL", rata: 1, step: 1 },
-  { id: "mocha-cream", nama: "MOCHA", satuan: "BTL", rata: 1, step: 1 },
+  { id: "cokelat-cream", nama: "COKELAT CREAM", satuan: "BTL", rata: 4, step: 1 },
+  { id: "vanilla-cream", nama: "VANILLA CREAM", satuan: "BTL", rata: 4, step: 1 },
+  { id: "tiramisu-cream", nama: "TIRAMISU CREAM", satuan: "BTL", rata: 2, step: 1 },
+  { id: "greentea-cream", nama: "GREENTEA CREAM", satuan: "BTL", rata: 2, step: 1 },
+  { id: "strawberry-cream", nama: "STRAWBRRY CREAM", satuan: "BTL", rata: 1, step: 1 },
+  { id: "mocha-cream", nama: "MOCHA CREAM", satuan: "BTL", rata: 1, step: 1 },
 
-  { id: "choco-crunchy", nama: "CRUNCHY", satuan: "TOP", rata: 2, step: 1 },
+  { id: "choco-crunchy", nama: "CHOCO CRUNCHY", satuan: "TOP", rata: 2, step: 1 },
 
-  { id: "keju-cheddar", nama: "KEJU", satuan: "PCS", rata: 8, step: 1 },
+  { id: "keju-cheddar", nama: "KEJU CHEDDAR", satuan: "PCS", rata: 8, step: 1 },
 
-  { id: "cookies-crumble", nama: "COOKIES", satuan: "TOP", rata: 2, step: 1 },
-  { id: "caramel-crumble", nama: "CARAMEL", satuan: "TOP", rata: 1, step: 1 },
-  { id: "red-velvet-crumble", nama: "RED VELVET", satuan: "TOP", rata: 1, step: 1 },
-  { id: "matcha-crumble", nama: "MATCHA", satuan: "TOP", rata: 1, step: 1 },
-  { id: "peanuts-crumbs", nama: "PEANUTS", satuan: "TOP", rata: 1, step: 1 },
+  { id: "cookies-crumble", nama: "COOKIES CRUMB", satuan: "TOP", rata: 2, step: 1 },
+  { id: "caramel-crumble", nama: "CARAMEL CRUMB", satuan: "TOP", rata: 1, step: 1 },
+  { id: "red-velvet-crumble", nama: "RED VELVET CRUMB", satuan: "TOP", rata: 1, step: 1 },
+  { id: "matcha-crumble", nama: "MATCHA CRUMB", satuan: "TOP", rata: 1, step: 1 },
+  { id: "peanuts-crumbs", nama: "PEANUTS CRUMB", satuan: "TOP", rata: 1, step: 1 },
 
-  { id: "chocolate-powder", nama: "CHOCOLATE", satuan: "PCS", rata: 10, step: 1 },
-  { id: "milo-powder", nama: "MILO", satuan: "PCS", rata: 10, step: 1 },
-  { id: "vanilla-latte-powder", nama: "VANILLA LTE", satuan: "PCS", rata: 10, step: 1 },
-  { id: "taro-powder", nama: "TARO ", satuan: "PCS", rata: 10, step: 1 },
-  { id: "red-velvet-powder", nama: "RED VELVET", satuan: "PCS", rata: 10, step: 1 },
-  { id: "greentea-powder", nama: "GREENTEA", satuan: "PCS", rata: 10, step: 1 },
+  { id: "chocolate-powder", nama: "CHOCOLATE PWD", satuan: "PCS", rata: 10, step: 1 },
+  { id: "milo-powder", nama: "MILO POWDER", satuan: "PCS", rata: 10, step: 1 },
+  { id: "vanilla-latte-powder", nama: "VANILLA LTE PWD", satuan: "PCS", rata: 10, step: 1 },
+  { id: "cappuccino-powder", nama: "CAPPUCNO PWD", satuan: "PCS", rata: 10, step: 1 },
+  { id: "taro-powder", nama: "TARO POWDER", satuan: "PCS", rata: 10, step: 1 },
+  { id: "red-velvet-powder", nama: "RED VELVET PWD", satuan: "PCS", rata: 10, step: 1 },
+  { id: "greentea-powder", nama: "GREENTEA PWD", satuan: "PCS", rata: 10, step: 1 },
 
-  { id: "lychee-tea-powder", nama: "LYCHEE TEA", satuan: "PCS", rata: 5, step: 1 },
-  { id: "blackcurrant-powder", nama: "BLACKCRRT", satuan: "PCS", rata: 5, step: 1 },
-  { id: "lemon-tea-powder", nama: "LEMON TEA", satuan: "PCS", rata: 15, step: 1 },
+  { id: "lychee-tea-powder", nama: "LYCHEE TEA PWD", satuan: "PCS", rata: 5, step: 1 },
+  { id: "blackcurrant-powder", nama: "BLACKCRRT PWD", satuan: "PCS", rata: 5, step: 1 },
+  { id: "lemon-tea-powder", nama: "LEMON TEA PWD", satuan: "PCS", rata: 15, step: 1 },
 
   { id: "kertas-cokelat", nama: "KERTAS COKELAT", satuan: "PCS", rata: 20, step: 1 },
   { id: "kresek-roti", nama: "KRESEK ROTI", satuan: "PCS", rata: 3, step: 1 },
@@ -164,9 +150,9 @@ const STOK_ITEMS = [
   { id: "sedotan-es", nama: "SEDOTAN ES", satuan: "PCS", rata: 20, step: 1 },
 
   { id: "kertas-struk", nama: "KERTAS STRUK", satuan: "ROL", rata: 5, step: 1 },
-  { id: "air-galon", nama: "AIR GALON", satuan: "VOL", rata: 50, step: 0.5 },
+  { id: "air-galon", nama: "AIR GALON", satuan: "VOL", rata: 1, step: 0.5 },
   { id: "gas-lpg", nama: "GAS LPG", satuan: "TBG", rata: 1, step: 1 },
-  { id: "cup-ice", nama: "CUP ICE", satuan: "CUP", rata: 12, step: 1 },
+  { id: "cup-ice", nama: "CUP ICE", satuan: "CUP", rata: 30, step: 1 },
 
   { id: "minyak-crunchy", nama: "MINYAK CRUNCHY", satuan: "BTL", rata: 1, step: 1 },
   { id: "minyak-kelapa", nama: "MINYAK KELAPA", satuan: "BTL", rata: 1, step: 1 }
@@ -891,13 +877,15 @@ if (copyDashboardBtn) {
     { id: 'r11', name: 'Ice Chocolate', price: 10000, img: 'img/icechocolate.jpeg' },
     { id: 'r12', name: 'Ice Milo', price: 10000, img: 'img/icemilo.jpeg' },
     { id: 'r13', name: 'Ice Vanilla Latte', price: 10000, img: 'img/icevanillalatte.jpeg' },
-    { id: 'r14', name: 'Ice Red Velvet', price: 10000, img: 'img/iceredvelvet.jpeg' },
-    { id: 'r15', name: 'Ice Taro', price: 10000, img: 'img/icetaro.jpeg' },
-    { id: 'r16', name: 'Ice Green Tea', price: 10000, img: 'img/icegreentea.jpeg' },
-    { id: 'r17', name: 'Ice Lychee Tea', price: 10000, img: 'img/icelycheetea.jpeg' },
-    { id: 'r18', name: 'Ice Blackcurrant', price: 10000, img: 'img/iceblackcurrant.jpeg' },
-    { id: 'r19', name: 'Ice Lemon Tea', price: 8000, img: 'img/icelemontea.jpeg' },
-    { id: 'r20', name: 'Ice Americano', price: 8000, img: 'img/iceamericano.jpeg' },
+    { id: 'r14', name: 'Ice Cappuccino', price: 10000, img: 'img/icevanillalatte.jpeg' },
+    { id: 'r15', name: 'Ice Red Velvet', price: 10000, img: 'img/iceredvelvet.jpeg' },
+    { id: 'r16', name: 'Ice Taro', price: 10000, img: 'img/icetaro.jpeg' },
+    { id: 'r17', name: 'Ice Green Tea', price: 10000, img: 'img/icegreentea.jpeg' },
+    { id: 'r18', name: 'Ice Lychee Tea', price: 9000, img: 'img/icelycheetea.jpeg' },
+    { id: 'r19', name: 'Ice Blackcurrant', price: 9000, img: 'img/iceblackcurrant.jpeg' },
+    { id: 'r20', name: 'Ice Lemon Tea', price: 8000, img: 'img/icelemontea.jpeg' },
+    { id: 'r21', name: 'Ice Americano', price: 8000, img: 'img/iceamericano.jpeg' },
+    { id: 'r22', name: '+ Toping Keju', price: 2000, img: 'img/-.jpg' },
   ];
 
   let menuData = defaultMenu;
@@ -1617,9 +1605,5 @@ function logout() {
 
 
 })();
-
-
-
-
 
 
