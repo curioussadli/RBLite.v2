@@ -113,16 +113,15 @@ document.addEventListener("DOMContentLoaded", () => {
 const STOK_ITEMS = [
   { id: "roti-balok", nama: "ROTI BALOK", satuan: "PCS", rata: 28, step: 1 },
   
-  { id: "cokelat-cream", nama: "COKELAT CREAM", satuan: "BTL", rata: 4, step: 1 },
-  { id: "vanilla-cream", nama: "VANILLA CREAM", satuan: "BTL", rata: 4, step: 1 },
-  { id: "tiramisu-cream", nama: "TIRAMISU CREAM", satuan: "BTL", rata: 2, step: 1 },
-  { id: "greentea-cream", nama: "GREENTEA CREAM", satuan: "BTL", rata: 2, step: 1 },
+  { id: "cokelat-cream", nama: "COKELAT CREAM", satuan: "BTL", rata: 3, step: 1 },
+  { id: "vanilla-cream", nama: "VANILLA CREAM", satuan: "BTL", rata: 3, step: 1 },
+  { id: "tiramisu-cream", nama: "TIRAMISU CREAM", satuan: "BTL", rata: 1, step: 1 },
+  { id: "greentea-cream", nama: "GREENTEA CREAM", satuan: "BTL", rata: 1, step: 1 },
   { id: "strawberry-cream", nama: "STRAWBRRY CREAM", satuan: "BTL", rata: 1, step: 1 },
-  { id: "mocha-cream", nama: "MOCHA CREAM", satuan: "BTL", rata: 1, step: 1 },
 
-  { id: "choco-crunchy", nama: "CHOCO CRUNCHY", satuan: "TOP", rata: 2, step: 1 },
+  { id: "choco-crunchy", nama: "CHOCO CRUNCHY", satuan: "TOP", rata: 1, step: 1 },
 
-  { id: "keju-cheddar", nama: "KEJU CHEDDAR", satuan: "PCS", rata: 8, step: 1 },
+  { id: "keju-cheddar", nama: "KEJU CHEDDAR", satuan: "PCS", rata: 4, step: 1 },
 
   { id: "cookies-crumble", nama: "COOKIES CRUMB", satuan: "TOP", rata: 2, step: 1 },
   { id: "caramel-crumble", nama: "CARAMEL CRUMB", satuan: "TOP", rata: 1, step: 1 },
@@ -134,25 +133,24 @@ const STOK_ITEMS = [
   { id: "milo-powder", nama: "MILO POWDER", satuan: "PCS", rata: 10, step: 1 },
   { id: "vanilla-latte-powder", nama: "VANILLA LTE PWD", satuan: "PCS", rata: 10, step: 1 },
   { id: "cappuccino-powder", nama: "CAPPUCNO PWD", satuan: "PCS", rata: 10, step: 1 },
-  { id: "taro-powder", nama: "TARO POWDER", satuan: "PCS", rata: 10, step: 1 },
-  { id: "red-velvet-powder", nama: "RED VELVET PWD", satuan: "PCS", rata: 10, step: 1 },
-  { id: "greentea-powder", nama: "GREENTEA PWD", satuan: "PCS", rata: 10, step: 1 },
+  
+  { id: "taro-powder", nama: "TARO POWDER", satuan: "PCS", rata: 6, step: 1 },
+  { id: "red-velvet-powder", nama: "RED VELVET PWD", satuan: "PCS", rata: 6, step: 1 },
+  { id: "greentea-powder", nama: "GREENTEA PWD", satuan: "PCS", rata: 6, step: 1 },
 
-  { id: "lychee-tea-powder", nama: "LYCHEE TEA PWD", satuan: "PCS", rata: 5, step: 1 },
-  { id: "blackcurrant-powder", nama: "BLACKCRRT PWD", satuan: "PCS", rata: 5, step: 1 },
-  { id: "lemon-tea-powder", nama: "LEMON TEA PWD", satuan: "PCS", rata: 15, step: 1 },
+  { id: "blackcurrant-powder", nama: "BLACKCRRT PWD", satuan: "PCS", rata: 3, step: 1 },
+  { id: "lemon-tea-powder", nama: "LEMON TEA PWD", satuan: "PCS", rata: 10, step: 1 },
 
-  { id: "kertas-cokelat", nama: "KERTAS COKELAT", satuan: "PCS", rata: 20, step: 1 },
+  { id: "kertas-cokelat", nama: "KERTAS COKELAT", satuan: "PCS", rata: 1, step: 1 },
   { id: "kresek-roti", nama: "KRESEK ROTI", satuan: "PCS", rata: 3, step: 1 },
   { id: "tisu-garpu", nama: "TISU GARPU", satuan: "PCS", rata: 1, step: 1 },
-  { id: "kresek-1-cup", nama: "KRESEK 1 CUP", satuan: "PCS", rata: 2, step: 1 },
-  { id: "kresek-2-cup", nama: "KRESEK 2 CUP", satuan: "PCS", rata: 1, step: 1 },
-  { id: "sedotan-es", nama: "SEDOTAN ES", satuan: "PCS", rata: 20, step: 1 },
+  { id: "kresek-1-cup", nama: "KRESEK 1 CUP", satuan: "PCS", rata: 1, step: 1 },
+  { id: "sedotan-es", nama: "SEDOTAN ES", satuan: "PCS", rata: 1, step: 1 },
 
-  { id: "kertas-struk", nama: "KERTAS STRUK", satuan: "ROL", rata: 5, step: 1 },
+  { id: "kertas-struk", nama: "KERTAS STRUK", satuan: "ROL", rata: 2, step: 1 },
   { id: "air-galon", nama: "AIR GALON", satuan: "VOL", rata: 1, step: 0.5 },
   { id: "gas-lpg", nama: "GAS LPG", satuan: "TBG", rata: 1, step: 1 },
-  { id: "cup-ice", nama: "CUP ICE", satuan: "CUP", rata: 30, step: 1 },
+  { id: "cup-ice", nama: "CUP ICE", satuan: "CUP", rata: 10, step: 1 },
 
   { id: "minyak-crunchy", nama: "MINYAK CRUNCHY", satuan: "BTL", rata: 1, step: 1 },
   { id: "minyak-kelapa", nama: "MINYAK KELAPA", satuan: "BTL", rata: 1, step: 1 }
@@ -881,10 +879,8 @@ if (copyDashboardBtn) {
     { id: 'r15', name: 'Ice Red Velvet', price: 10000, img: 'img/iceredvelvet.jpeg' },
     { id: 'r16', name: 'Ice Taro', price: 10000, img: 'img/icetaro.jpeg' },
     { id: 'r17', name: 'Ice Green Tea', price: 10000, img: 'img/icegreentea.jpeg' },
-    { id: 'r18', name: 'Ice Lychee Tea', price: 9000, img: 'img/icelycheetea.jpeg' },
     { id: 'r19', name: 'Ice Blackcurrant', price: 9000, img: 'img/iceblackcurrant.jpeg' },
     { id: 'r20', name: 'Ice Lemon Tea', price: 8000, img: 'img/icelemontea.jpeg' },
-    { id: 'r21', name: 'Ice Americano', price: 8000, img: 'img/iceamericano.jpeg' },
     { id: 'r22', name: '+ Toping Keju', price: 2000, img: 'img/-.jpg' },
   ];
 
