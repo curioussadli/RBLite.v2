@@ -562,19 +562,19 @@ button:hover {
 }
 
 .stok-nama {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   line-height: 1.1;
 }
 
 .stok-satuan {
-  font-size: 13px;
+  font-size: 12px;
   color: #777;
 }
 
 .stok-total {
-  font-size: 43px;
-  font-weight: 600;
+  font-size: 40px;
+  font-weight: 500;
   line-height: 1;
   transition: color 0.2s ease;
 }
@@ -637,8 +637,8 @@ textarea {
 
 /* ===== BUTTON ICON ===== */
 .stok-btn {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   padding: 0;
 
   display: flex;
@@ -1119,14 +1119,14 @@ html, body {
 /* Nama Menu */
 .pos-item .name {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   margin-top: 6px;
 }
 
 /* Harga Menu */
 .pos-item .price {
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 500;
   color: #d62828;
   margin-top: 2px; /* opsional */
 }
