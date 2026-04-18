@@ -73,7 +73,7 @@
 
 .stok-left-top h3 {
   margin: 0;
-  font-size: 22px;
+  font-size: 32px;
   font-weight: 600;
 
   white-space: nowrap;
@@ -82,7 +82,7 @@
 }
 
 .stok-right-top {
-  font-size: 22px;
+  font-size: 32px;
   font-weight: 600;
   text-align: right;
   min-width: 40px;
