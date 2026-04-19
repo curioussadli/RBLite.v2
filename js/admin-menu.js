@@ -1,63 +1,69 @@
-import { db, collection, addDoc } from "./firebase.js";
+import {
+  db,
+  collection,
+  onSnapshot,
+  doc,
+  updateDoc
+} from "./firebase.js";
 
-const nameInput = document.getElementById("name");
-const priceInput = document.getElementById("price");
-const imageInput = document.getElementById("image");
-const btnSave = document.getElementById("btnSave");
+const container = document.getElementById("menuAdminList");
 
-const CLOUD_NAME = "dpwdduls3";
-const UPLOAD_PRESET = "menu_upload";
+let menuData = [];
 
-btnSave.addEventListener("click", async () => {
+onSnapshot(collection(db, "menu"), (snapshot) => {
 
-  const name = nameInput.value;
-  const price = parseInt(priceInput.value);
-  const file = imageInput.files[0];
+  container.innerHTML = "";
+  menuData = [];
 
-  if (!name || !price || !file) {
-    alert("Lengkapi data!");
-    return;
-  }
-
-  try {
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", UPLOAD_PRESET);
-
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      {
-        method: "POST",
-        body: formData
-      }
-    );
-
-    const data = await res.json();
-
-    console.log("CLOUDINARY RESPONSE:", data);
-
-    if (!data.secure_url) {
-      throw new Error(data.error?.message || "Upload gagal Cloudinary");
-    }
-
-    const imageUrl = data.secure_url;
-
-    await addDoc(collection(db, "menu"), {
-      name,
-      price,
-      img: imageUrl
+  snapshot.forEach((docSnap) => {
+    menuData.push({
+      id: docSnap.id,
+      ...docSnap.data()
     });
+  });
 
-    alert("Upload berhasil!");
+  // 🔥 SORT BY ORDER
+  menuData.sort((a, b) => a.order - b.order);
 
-    nameInput.value = "";
-    priceInput.value = "";
-    imageInput.value = "";
+  // 🔥 RENDER
+  menuData.forEach((item) => {
 
-  } catch (err) {
-    console.error(err);
-    alert("Upload gagal: " + err.message);
-  }
+    const div = document.createElement("div");
+    div.classList.add("menu-admin-item");
+    div.dataset.id = item.id;
 
+    div.innerHTML = `
+      <span class="drag-handle">☰</span>
+      <img src="${item.img}" width="50">
+      <span>${item.name}</span>
+    `;
+
+    container.appendChild(div);
+  });
+
+  initDrag();
 });
+
+function initDrag() {
+
+  new Sortable(container, {
+    animation: 150,
+    handle: ".drag-handle",
+
+    onEnd: async () => {
+
+      const items = container.querySelectorAll(".menu-admin-item");
+
+      for (let i = 0; i < items.length; i++) {
+
+        const id = items[i].dataset.id;
+
+        await updateDoc(doc(db, "menu", id), {
+          order: i + 1
+        });
+      }
+
+      console.log("✅ Urutan update");
+    }
+  });
+}
