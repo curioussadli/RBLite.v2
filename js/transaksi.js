@@ -1,3 +1,6 @@
+/* =========================
+   🔥 IMPORT FIREBASE
+========================= */
 import { db } from "./firebase.js";
 import {
   collection,
@@ -10,64 +13,61 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-
-// =====================================================
-// 📦 STATE
-// =====================================================
+/* =========================
+   📦 STATE
+========================= */
 let transaksi = [];
 
-
-// =====================================================
-// 🔐 DOM
-// =====================================================
+/* =========================
+   🔐 DOM
+========================= */
 const listEl = document.getElementById("transaksiKeluar");
 const nominalInput = document.getElementById("saldoAwalInput");
 const keteranganInput = document.getElementById("keteranganInput");
 const saveBtn = document.getElementById("saveSaldoBtn");
-
 const inputTanggal = document.getElementById("filterTanggal");
 
-
-// =====================================================
-// 📅 TODAY
-// =====================================================
-const now = new Date();
-const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-  .toISOString()
-  .slice(0, 10);
-if (inputTanggal) {
-  inputTanggal.value = today;
+/* =========================
+   📅 SET DEFAULT TANGGAL
+========================= */
+function getToday() {
+  const now = new Date();
+  return new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 10);
 }
 
+if (inputTanggal) {
+  inputTanggal.value = getToday();
+}
 
-// =====================================================
-// ➕ TAMBAH TRANSAKSI
-// =====================================================
+/* =========================
+   ➕ TAMBAH TRANSAKSI
+========================= */
 async function tambahTransaksi(keterangan, nominal) {
+
+  const today = getToday(); // ✅ FIX (dinamis)
+
   await addDoc(collection(db, "transaksi"), {
     type: "keluar",
     keterangan,
     nominal: Number(nominal),
-
-    tanggal: today, // 🔥 PENTING UNTUK FILTER
-
+    tanggal: today,
     createdAt: serverTimestamp()
   });
 }
 
-
-// =====================================================
-// ❌ DELETE
-// =====================================================
+/* =========================
+   ❌ DELETE
+========================= */
 window.hapusTransaksi = async function (id) {
   if (!confirm("Yakin hapus transaksi ini?")) return;
   await deleteDoc(doc(db, "transaksi", id));
 };
 
-
-// =====================================================
-// 🔄 REALTIME FIRESTORE
-// =====================================================
+/* =========================
+   🔄 REALTIME FIRESTORE
+========================= */
 const q = query(
   collection(db, "transaksi"),
   orderBy("createdAt", "desc")
@@ -83,15 +83,14 @@ onSnapshot(q, (snapshot) => {
   renderTransaksi();
 });
 
-
-// =====================================================
-// 🧾 RENDER + FILTER
-// =====================================================
+/* =========================
+   🧾 RENDER + FILTER
+========================= */
 function renderTransaksi() {
 
   if (!listEl) return;
 
-  const selectedDate = inputTanggal?.value || today;
+  const selectedDate = inputTanggal?.value || getToday();
 
   listEl.innerHTML = "";
 
@@ -143,23 +142,20 @@ function renderTransaksi() {
   });
 }
 
-
-// =====================================================
-// 🎯 EVENT FILTER
-// =====================================================
+/* =========================
+   🎯 EVENT FILTER
+========================= */
 inputTanggal?.addEventListener("change", renderTransaksi);
 
-
-// =====================================================
-// 💾 SAVE BUTTON
-// =====================================================
+/* =========================
+   💾 SAVE BUTTON
+========================= */
 document.addEventListener("DOMContentLoaded", () => {
 
   saveBtn?.addEventListener("click", async () => {
 
-    const nominal = parseInt(
-      nominalInput?.value.replace(/\./g, "")
-    ) || 0;
+    const raw = nominalInput?.value || "";
+    const nominal = parseInt(raw.replace(/\./g, "")) || 0;
 
     const keterangan = keteranganInput?.value;
 
@@ -175,13 +171,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     await tambahTransaksi(keterangan, nominal);
 
+    // reset input
     nominalInput.value = "";
     keteranganInput.value = "";
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // 🔥 OPTIONAL (kalau mau scroll, kalau tidak hapus aja)
+    // window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
 });
-
-
-updateChart();
