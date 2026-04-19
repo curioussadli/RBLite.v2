@@ -592,3 +592,105 @@
 .toast-text {
   white-space: nowrap;
 }
+
+
+
+
+
+
+/* =========================
+   📜 RIWAYAT LAPORAN
+========================= */
+#riwayatLaporan {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* =========================
+   📦 CARD
+========================= */
+.laporan-card {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 5px;
+
+  transition: 0.2s;
+}
+
+.laporan-card:active {
+  transform: scale(0.98);
+}
+
+/* =========================
+   🕒 WAKTU
+========================= */
+.laporan-date {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+/* =========================
+   💰 ROW
+========================= */
+.laporan-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.laporan-label {
+  color: #666;
+}
+
+.laporan-value {
+  font-weight: 200;
+  color: #333;
+}
+
+/* =========================
+   🎨 VARIASI WARNA
+========================= */
+.laporan-awal .laporan-value {
+  color: #3498db;
+}
+
+.laporan-akhir .laporan-value {
+  color: #2ecc71;
+}
+
+/* =========================
+   🧱 EMPTY STATE
+========================= */
+.laporan-empty {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-size: 14px;
+}
+
+
+/* =========================
+   ⭐ HIGHLIGHT SALDO AKHIR
+========================= */
+.laporan-akhir {
+  background: #fff9c4; /* kuning soft */
+  padding: 6px 0px;
+  border-radius: 2px;
+}
+
+.laporan-akhir .laporan-value {
+  font-weight: 700;
+  color: #333;
+}
+
+
+
+.empty-card {
+  margin-top: 16px;
+}
