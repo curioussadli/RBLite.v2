@@ -1,0 +1,194 @@
+/* =========================
+   📄 PAGE WRAPPER
+========================= */
+.admin-menu-page {
+  padding-top: 60px; /* ruang topbar */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f9f9f9;
+}
+
+/* =========================
+   📱 MAIN CONTENT AREA
+========================= */
+.admin-menu-main {
+  flex: 1;
+  width: 100%;
+  padding: 12px 20px 100px;
+  margin-top: 12px;
+
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+
+  /* hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.admin-menu-main::-webkit-scrollbar {
+  display: none;
+}
+
+/* =========================
+   🌍 GLOBAL
+========================= */
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f6f9;
+}
+
+/* =========================
+   🔝 TOPBAR
+========================= */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+  z-index: 10;
+}
+
+.topbar-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* =========================
+   📦 FORM CONTAINER
+========================= */
+.container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto; /* center */
+
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 5px;
+
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+/* =========================
+   📝 INPUT
+========================= */
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: #4CAF50;
+}
+
+/* =========================
+   🔘 BUTTON
+========================= */
+button {
+  width: 100%;
+  padding: 12px;
+
+  border: none;
+  border-radius: 5px;
+  background: #4CAF50;
+  color: #fff;
+
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* =========================
+   📋 TITLE LIST
+========================= */
+.admin-menu-main h2 {
+  font-size: 16px;
+  margin: 20px 0 10px;
+  color: #333;
+}
+
+/* =========================
+   📋 LIST MENU ADMIN
+========================= */
+#menuAdminList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* =========================
+   🍞 ITEM
+========================= */
+.menu-admin-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 5px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: 0.2s;
+}
+
+.menu-admin-item:active {
+  transform: scale(0.98);
+}
+
+/* =========================
+   🔀 DRAG HANDLE
+========================= */
+.drag-handle {
+  cursor: grab;
+  font-size: 18px;
+  color: #999;
+}
+
+/* saat drag */
+.menu-admin-item.dragging {
+  opacity: 0.5;
+}
+
+/* posisi target */
+.menu-admin-item.over {
+  border: 2px dashed #4CAF50;
+}
+
+/* =========================
+   🖼️ IMAGE
+========================= */
+.menu-admin-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+}
