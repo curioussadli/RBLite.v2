@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/transaksi.css">
 
-  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,34 +21,32 @@
   <main class="phone-shell">
     <section class="app-screen">
 
+
       <!-- =========================
-           MAIN CONTENT
+      MAIN CONTENT
       ========================= -->
       <section class="transaksi-main">
 
-        <!-- =========================
-             HEADER
-        ========================= -->
+        <!-- HEADER -->
         <div class="transaksi-page">
-
-          <!-- TOPBAR -->
           <div class="topbar">
             <h2 class="topbar-title">Transaksi</h2>
-          </div>
 
-          <!-- FILTER -->
-          <div class="filter-wrapper">
-            <button id="filterBtn" class="filter-btn">
-              <img src="assets/icons/icon-filter.svg" alt="filter">
-            </button>
+        <div class="filter-wrapper">
 
-            <input type="date" id="filterTanggal" class="date-overlay">
-          </div>
+          <button id="filterBtn" class="filter-btn">
+            <img src="assets/icons/icon-filter.svg" alt="filter">
+          </button>
+
+          <input type="date" id="filterTanggal" class="date-overlay">
 
         </div>
 
+          </div>
+        </div>
+
         <!-- =========================
-             INPUT NOMINAL
+        INPUT
         ========================= -->
         <div class="input-group">
           <label class="input-label">Nominal (Rp)</label>
@@ -63,9 +60,6 @@
           </div>
         </div>
 
-        <!-- =========================
-             INPUT KETERANGAN
-        ========================= -->
         <div class="input-group">
           <label class="input-label">Keterangan</label>
           <div class="input-wrapper">
@@ -77,17 +71,16 @@
           </div>
         </div>
 
-        <!-- =========================
-             BUTTON
-        ========================= -->
+        <!-- BUTTON -->
         <button id="saveSaldoBtn" class="primary-btn">
           Simpan
         </button>
 
         <!-- =========================
-             LIST TRANSAKSI
+        LIST KELUAR
         ========================= -->
         <div class="rincian-wrapper">
+
           <div id="transaksiKeluar" class="rincian-list"></div>
         </div>
 
@@ -96,8 +89,9 @@
     </section>
   </main>
 
+
   <!-- JS -->
-  <script type="module" src="js/transaksi.js"></script>
+  <script src="js/transaksi.js" type="module"></script>
 
 </body>
 </html>
