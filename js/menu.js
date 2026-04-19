@@ -151,9 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
           addToCart(data.id, data.name, data.price);
 
           // 🔥 scroll hanya kalau sudah agak bawah
-          if (window.scrollY > 200) {
-            smoothScrollToTop(600); // bisa ubah 600 / 1000
-          }
+
         });
 
         container.appendChild(card);
