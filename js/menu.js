@@ -7,7 +7,6 @@ console.log("🔥 MENU JS LOADED");
 // =============================
 let cart = [];
 
-// ambil cart dari localStorage (biar tidak hilang)
 const saved = localStorage.getItem("cart");
 if (saved) {
   cart = JSON.parse(saved);
@@ -65,61 +64,110 @@ function updateCartUI() {
 }
 
 // =============================
-// 🚀 LOAD MENU FIREBASE (HANYA 1X)
+// 🔥 SMOOTH SCROLL (PELANN)
+// =============================
+function smoothScrollToTop(duration = 800) {
+  const start = window.scrollY;
+  const startTime = performance.now();
+
+  function scroll() {
+    const now = performance.now();
+    const time = Math.min(1, (now - startTime) / duration);
+
+    const ease = 1 - Math.pow(1 - time, 3);
+
+    window.scrollTo(0, start * (1 - ease));
+
+    if (time < 1) {
+      requestAnimationFrame(scroll);
+    }
+  }
+
+  requestAnimationFrame(scroll);
+}
+
+// =============================
+// 🚀 LOAD MENU FIREBASE
 // =============================
 document.addEventListener("DOMContentLoaded", () => {
 
-  const menuGrid = document.getElementById("posMenu");
+  const foodContainer = document.getElementById("foodList");
+  const drinkContainer = document.getElementById("drinkList");
 
-  if (!menuGrid) {
-    console.error("posMenu tidak ditemukan");
+  if (!foodContainer && !drinkContainer) {
+    console.error("Container menu tidak ditemukan");
     return;
   }
 
-  // =============================
-  // 🔥 FIREBASE MENU LISTENER (ONLY ONCE)
-  // =============================
   onSnapshot(collection(db, "menu"), (snapshot) => {
 
-    menuGrid.innerHTML = "";
+    const docs = [];
 
     snapshot.forEach((docSnap) => {
-
-      const data = docSnap.data();
-
-      const card = document.createElement("div");
-      card.classList.add("menu-card");
-
-      card.innerHTML = `
-        <div class="menu-img">
-          <img src="${data.img}">
-        </div>
-
-        <div class="menu-info">
-          <h3>${data.name}</h3>
-          <p>Rp ${Number(data.price).toLocaleString("id-ID")}</p>
-        </div>
-
-        <button class="btn-add">+ Tambah</button>
-      `;
-
-      // =============================
-      // 🍔 CLICK MENU → ADD CART ONLY
-      // =============================
-      const btn = card.querySelector(".btn-add");
-
-      btn.addEventListener("click", () => {
-        addToCart(docSnap.id, data.name, data.price);
+      docs.push({
+        id: docSnap.id,
+        ...docSnap.data()
       });
-
-      menuGrid.appendChild(card);
     });
+
+    // 🔥 SORT
+    docs.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    // 🔥 FILTER
+    const foods = docs.filter(i => !i.category || i.category === "food");
+    const drinks = docs.filter(i => i.category === "drink");
+
+    // reset UI
+    if (foodContainer) foodContainer.innerHTML = "";
+    if (drinkContainer) drinkContainer.innerHTML = "";
+
+    // =============================
+    // 🔥 RENDER
+    // =============================
+    function render(list, container) {
+
+      list.forEach((data) => {
+
+        const card = document.createElement("div");
+        card.classList.add("menu-card");
+
+        card.innerHTML = `
+          <div class="menu-img">
+            <img src="${data.img}">
+          </div>
+
+          <div class="menu-info">
+            <h3>${data.name}</h3>
+            <p>Rp ${Number(data.price).toLocaleString("id-ID")}</p>
+          </div>
+
+          <button class="btn-add">+ Tambah</button>
+        `;
+
+        const btn = card.querySelector(".btn-add");
+
+        // ✅ CLICK FIXED
+        btn.addEventListener("click", () => {
+          addToCart(data.id, data.name, data.price);
+
+          // 🔥 scroll hanya kalau sudah agak bawah
+          if (window.scrollY > 200) {
+            smoothScrollToTop(600); // bisa ubah 600 / 1000
+          }
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    if (foodContainer) render(foods, foodContainer);
+    if (drinkContainer) render(drinks, drinkContainer);
 
     updateCartUI();
   });
 
   // =============================
-  // 🛒 CLICK CART → PESANAN PAGE
+  // 🛒 CLICK CART
   // =============================
   const cartBar = document.getElementById("cartBottomBar");
 
