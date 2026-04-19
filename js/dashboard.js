@@ -441,3 +441,91 @@ window.addEventListener("load", () => {
     localStorage.removeItem("toastMessage");
   }
 });
+
+
+
+
+
+
+
+
+// =====================================================
+// 📜 RIWAYAT LAPORAN (REALTIME)
+// =====================================================
+const riwayatEl = document.getElementById("riwayatLaporan");
+
+const qLaporan = query(
+  collection(db, "laporan"),
+  orderBy("createdAt", "desc")
+);
+
+onSnapshot(qLaporan, (snapshot) => {
+
+  if (!riwayatEl) return;
+
+  riwayatEl.innerHTML = "";
+
+  snapshot.forEach((doc) => {
+
+    const data = doc.data();
+
+    const waktu = data.createdAt?.toDate
+      ? data.createdAt.toDate().toLocaleString("id-ID")
+      : "-";
+
+    const div = document.createElement("div");
+
+    div.classList.add("laporan-card");
+
+    div.innerHTML = `
+  <div class="laporan-date">${waktu}</div>
+
+  <div class="laporan-row laporan-akhir">
+    <span class="laporan-label">Saldo Akhir</span>
+    <span class="laporan-value">
+      Rp ${(data.saldoAkhir || 0).toLocaleString("id-ID")}
+    </span>
+  </div>
+
+  <div class="laporan-row laporan-awal">
+    <span class="laporan-label">Saldo Awal</span>
+    <span class="laporan-value">
+      Rp ${(data.saldoAwal || 0).toLocaleString("id-ID")}
+    </span>
+  </div>
+
+  <div class="laporan-divider"></div>
+
+  <div class="laporan-row">
+    <span class="laporan-label">Pemasukan</span>
+    <span class="laporan-value pemasukan">
+      + Rp ${(data.pemasukan || 0).toLocaleString("id-ID")}
+    </span>
+  </div>
+
+  <div class="laporan-row">
+    <span class="laporan-label">Pengeluaran</span>
+    <span class="laporan-value pengeluaran">
+      - Rp ${(data.pengeluaran || 0).toLocaleString("id-ID")}
+    </span>
+  </div>
+
+  <div class="laporan-row">
+    <span class="laporan-label">Pendapatan</span>
+    <span class="laporan-value">
+      Rp ${(data.pendapatan || 0).toLocaleString("id-ID")}
+    </span>
+  </div>
+
+  <div class="laporan-row">
+    <span class="laporan-label">Selisih</span>
+    <span class="laporan-value ${data.selisih >= 0 ? "plus" : "minus"}">
+      ${data.selisih >= 0 ? "+" : "-"} Rp ${Math.abs(data.selisih || 0).toLocaleString("id-ID")}
+    </span>
+  </div>
+`;
+
+    riwayatEl.appendChild(div);
+  });
+
+});
