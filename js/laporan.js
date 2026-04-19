@@ -45,3 +45,12 @@ document.querySelectorAll(".laporan-item").forEach(item => {
   });
 
 });
+
+
+
+
+window.addEventListener("pageshow", function (event) {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
