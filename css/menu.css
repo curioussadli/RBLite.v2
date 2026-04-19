@@ -4,7 +4,7 @@
    PAGE WRAPPER
 ========================= */
 .menu-page {
-  padding-top: 60px; /* space untuk topbar */
+  padding-top: 43px; /* space untuk topbar */
 }
 
 /* =========================
@@ -24,7 +24,30 @@
 
 
 
+/* ================= TITLE BOX FULL ================= */
+.menu-section-title {
+  display: block;
+  width: 100%; /* 🔥 full lebar */
+  
+  text-align: center;
 
+  background: #ffffff;
+  padding: 10px 0;
+  border-radius: 5px;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+
+  margin: 16px 0 10px;
+
+  border: 1px solid #eee;
+}
+
+
+.menu-section-title {
+  padding: 10px;
+}
 
 
 /* =========================
@@ -51,7 +74,6 @@
   background: white;
   border-radius: 5px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 
   display: flex;
   flex-direction: column;
@@ -166,7 +188,6 @@
   padding: 16px 14px; /* 🔥 lebih tinggi */
   border-radius: 5px;
 
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 
   display: flex;
   justify-content: space-between;
