@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Menu</title>
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/admin-menu.css">
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <main class="phone-shell">
+    <section class="app-screen admin-menu-page">
+
+      <!-- ================= TOPBAR ================= -->
+      <div class="topbar">
+
+        <h2 class="topbar-title">Admin Menu</h2>
+      </div>
+
+      <!-- ================= CONTENT ================= -->
+      <div class="admin-menu-main">
+
+        <!-- FORM -->
+        <div class="container">
+          <h2>Tambah Produk</h2>
+
+          <input type="text" id="name" placeholder="Nama produk">
+          <input type="number" id="price" placeholder="Harga">
+          <input type="file" id="image">
+
+          <select id="category">
+            <option value="food">Makanan</option>
+            <option value="drink">Minuman</option>
+          </select>
+
+          <button id="btnSave">Upload</button>
+        </div>
+
+        <!-- LIST -->
+        <h2 style="margin-top:24px;">Urutan Menu</h2>
+        <div id="menuAdminList"></div>
+
+      </div>
+
+    </section>
+  </main>
+
+  <!-- SORTABLE -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+  <!-- SCRIPT -->
+  <script type="module" src="js/admin-upload.js"></script>
+  <script type="module" src="js/admin-menu.js"></script>
+
+</body>
+</html>
