@@ -184,10 +184,16 @@ onSnapshot(collection(db, "transaksi"), (snapshot) => {
 // 💰 HITUNG
 // =====================================================
 function hitungPemasukan() {
-  const total = penjualan.reduce((sum, item) => sum + (item.total || 0), 0);
+
+  const total = penjualan
+    .filter(item => (item.metode || "").toLowerCase() === "tunai")
+    .reduce((sum, item) => sum + (item.total || 0), 0);
+
   pemasukanVal = total;
+
   document.getElementById("pemasukanValue").textContent =
     total.toLocaleString("id-ID");
+
   updateSummary();
 }
 
