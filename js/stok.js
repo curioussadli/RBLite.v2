@@ -559,3 +559,38 @@ window.toggleFilter = function () {
 
   renderAll();
 };
+
+
+
+
+
+
+const input = document.getElementById("searchInput");
+const clearIcon = document.querySelector(".clear-icon");
+
+if (input) {
+  input.addEventListener("input", () => {
+    const val = input.value.trim();
+
+    handleSearch(val);
+
+    if (clearIcon) {
+      clearIcon.classList.toggle("show", val.length > 0);
+    }
+  });
+}
+
+window.clearSearch = function () {
+  const input = document.getElementById("searchInput");
+
+  if (!input) return;
+
+  input.value = "";
+  handleSearch("");
+
+  if (clearIcon) {
+    clearIcon.classList.remove("show");
+  }
+
+  input.focus();
+};
