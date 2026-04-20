@@ -380,12 +380,10 @@
    SEARCH 
 ========================= */
 .stok-search {
-  position: fixed;
+  position: sticky;
+  top: 80px; /* sesuaikan tinggi topbar */
 
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-
+  margin: 10px auto 20px; /* 🔥 atas & bawah sekalian rapi */
   width: calc(100% - 32px);
   max-width: 420px;
 
@@ -395,19 +393,17 @@
 
   background: #ffffff;
 
-  padding: 12px 12px;
+  padding: 13px 14px;
   border-radius: 5px;
 
-  border: 2px solid #e0e0e0;
+  border: 1px solid rgba(0,0,0,0.08);
 
-  z-index: 1000;
-
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  z-index: 10;
 
   transition: all 0.2s ease;
 }
 
-/* 🔥 efek fokus lebih hidup */
+/* efek fokus */
 .stok-search:focus-within {
   border-color: rgba(0,0,0,0.18);
   box-shadow: 0 8px 22px rgba(0,0,0,0.10);
@@ -439,40 +435,17 @@
   transition: all 0.15s ease;
 }
 
-/* saat muncul */
+/* muncul */
 .clear-icon.show {
   opacity: 0.6;
   transform: scale(1);
 }
 
-/* hover X */
+/* hover */
 .clear-icon:hover {
   opacity: 1;
   transform: scale(1.1);
 }
-
-.clear-icon {
-  width: 16px;
-  cursor: pointer;
-
-  opacity: 0;
-  transform: scale(0.8);
-
-  transition: all 0.15s ease;
-}
-
-/* 🔥 TAMBAHAN WAJIB */
-.clear-icon.show {
-  opacity: 0.6;
-  transform: scale(1);
-}
-
-.stok-search {
-  margin-bottom: 50px; /* 🔥 jarak ke bawah */
-}
-
-
-
 
 
 /* =========================
