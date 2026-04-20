@@ -104,10 +104,15 @@
     type="text" 
     id="searchInput" 
     placeholder="Cari produk..."
-    oninput="handleSearch(this.value)"
+  >
+
+  <img 
+    src="assets/icons/icon-close.svg" 
+    class="clear-icon" 
+    onclick="clearSearch()"
   >
 </div>
-  
+
 
   <!-- LIST PRODUK -->
   <div id="stokContainer"></div>
