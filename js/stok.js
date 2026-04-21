@@ -594,3 +594,16 @@ window.clearSearch = function () {
 
   input.focus();
 };
+
+
+
+const input = document.getElementById("searchInput");
+
+input.addEventListener("focus", () => {
+  document.body.style.position = "fixed";
+  document.body.style.width = "100%";
+});
+
+input.addEventListener("blur", () => {
+  document.body.style.position = "";
+});
