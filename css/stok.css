@@ -9,19 +9,15 @@
    MAIN CONTENT
 ========================= */
 .stok-main {
+  flex: 1;
   width: 100%;
-  padding: 140px 16px 120px; /* 🔥 kasih ruang untuk search fixed */
+  padding: 70px 16px 120px;
+  overflow-y: auto;
   margin-top: 10px;
-
-  overflow: visible; /* 🔥 WAJIB */
 }
 
 .stok-main::-webkit-scrollbar {
   display: none;
-}
-
-body {
-  overscroll-behavior: contain;
 }
 
 /* =========================
