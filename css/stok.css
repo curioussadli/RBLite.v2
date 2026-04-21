@@ -582,3 +582,22 @@
   filter: invert(32%) sepia(98%) saturate(2000%) hue-rotate(340deg);
 }
 
+
+
+
+
+
+
+@media (max-width: 768px) {
+  .stok-search {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+  }
+
+  .stok-main {
+    padding-top: 140px; /* 🔥 biar konten gak ketutup */
+  }
+}
