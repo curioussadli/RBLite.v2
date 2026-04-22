@@ -321,3 +321,43 @@ input.addEventListener("focus", () => {
   input.blur();       // matiin keyboard asli
   input.focus();      // hidupin lagi buat cursor
 });
+
+
+
+
+
+// =========================
+// HANDLE BACK BUTTON (ANDROID)
+// =========================
+let keyboardOpen = false;
+
+// saat buka keyboard
+input.addEventListener("click", () => {
+  keyboard.style.display = "block";
+  keyboardOpen = true;
+
+  // 🔥 push state biar back nutup keyboard dulu
+  history.pushState({ keyboard: true }, "");
+
+  input.focus();
+  setCursorToEnd(input);
+});
+
+// saat klik luar (nutup keyboard manual)
+document.addEventListener("click", (e) => {
+  if (!keyboard.contains(e.target) && e.target !== input) {
+    keyboard.style.display = "none";
+    keyboardOpen = false;
+  }
+});
+
+// 🔥 DETECT BACK BUTTON
+window.addEventListener("popstate", (e) => {
+  if (keyboardOpen) {
+    keyboard.style.display = "none";
+    keyboardOpen = false;
+
+    // 🔥 cegah langsung keluar halaman
+    history.pushState(null, "");
+  }
+});
