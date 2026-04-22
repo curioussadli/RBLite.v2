@@ -314,3 +314,10 @@ input.addEventListener("click", () => {
   keyboard.style.display = "block";
   setCursorToEnd(input);
 });
+
+
+
+input.addEventListener("focus", () => {
+  input.blur();       // matiin keyboard asli
+  input.focus();      // hidupin lagi buat cursor
+});
