@@ -15,60 +15,43 @@
 
   <div id="toast"></div>
 
-
-
 <!-- =========================
      CALCULATOR
 ========================= -->
 <div id="calculator" class="calc-overlay">
-
   <div class="calc-box">
-
-    <!-- 🔥 CLOSE MELAYANG -->
     <button class="calc-close" onclick="toggleCalculator()">✕</button>
 
     <input type="text" id="calcDisplay" readonly>
 
     <div class="calc-buttons">
-
-      <!-- ROW 1 -->
       <button onclick="calcClear()">C</button>
       <button onclick="calcPercent()">%</button>
       <button onclick="calcDelete()">←</button>
       <button onclick="calcInput('/')">/</button>
 
-      <!-- ROW 2 -->
       <button onclick="calcInput('7')">7</button>
       <button onclick="calcInput('8')">8</button>
       <button onclick="calcInput('9')">9</button>
       <button onclick="calcInput('*')">×</button>
 
-      <!-- ROW 3 -->
       <button onclick="calcInput('4')">4</button>
       <button onclick="calcInput('5')">5</button>
       <button onclick="calcInput('6')">6</button>
       <button onclick="calcInput('-')">-</button>
 
-      <!-- ROW 4 -->
       <button onclick="calcInput('1')">1</button>
       <button onclick="calcInput('2')">2</button>
       <button onclick="calcInput('3')">3</button>
       <button onclick="calcInput('+')">+</button>
 
-      <!-- ROW 5 -->
       <button onclick="calcInput('00')">00</button>
       <button onclick="calcInput('0')">0</button>
       <button onclick="calcInput('.')">,</button>
       <button onclick="calcEqual()">=</button>
-
     </div>
-
   </div>
-
 </div>
-
-
-
 
 <!-- =========================
      TOPBAR
@@ -77,20 +60,20 @@
   <div class="topbar-title">Stok</div>
 
   <div class="topbar-action" onclick="toggleCalculator()">
-    <img src="assets/icons/icon-calculator.svg" alt="calc">
+    <img src="assets/icons/icon-calculator.svg" alt="calculator">
   </div>
 
-  <div class="topbar-action" onclick="toggleFilter(this)">
+  <!-- 🔥 FIX: hapus this -->
+  <div class="topbar-action" onclick="toggleFilter()">
     <img src="assets/icons/icon-list-x.svg" class="filter-icon" alt="filter">
   </div>
 </div>
 
-
 <!-- =========================
-     SEARCH (PINDAH KE SINI)
+     SEARCH
 ========================= -->
 <div class="stok-search">
-  <img src="assets/icons/icon-search.svg" class="search-icon">
+  <img src="assets/icons/icon-search.svg" class="search-icon" alt="search">
 
   <input 
     type="text" 
@@ -102,19 +85,17 @@
     src="assets/icons/icon-close.svg" 
     class="clear-icon" 
     onclick="clearSearch()"
+    alt="clear"
   >
 </div>
-
 
 <!-- =========================
      MAIN CONTENT
 ========================= -->
 <section class="stok-main">
 
-  <!-- LIST PRODUK -->
   <div id="stokContainer"></div>
 
-  <!-- BUTTON SIMPAN HARIAN -->
   <div class="stok-footer">
     <button onclick="window.simpanHarian()">
       Simpan Stok Harian
@@ -123,49 +104,82 @@
 
 </section>
 
+<!-- =========================
+     CUSTOM KEYBOARD
+========================= -->
+<div class="custom-keyboard" id="keyboard" style="display:none;">
+
+  <!-- ROW 1 -->
+  <div class="kb-row">
+    <button>q</button><button>w</button><button>e</button><button>r</button>
+    <button>t</button><button>y</button><button>u</button><button>i</button>
+    <button>o</button><button>p</button>
+  </div>
+
+  <!-- ROW 2 -->
+  <div class="kb-row mid">
+    <button>a</button><button>s</button><button>d</button><button>f</button>
+    <button>g</button><button>h</button><button>j</button><button>k</button>
+    <button>l</button>
+  </div>
+
+  <!-- ROW 3 -->
+  <div class="kb-row">
+    <button class="caps">Cap</button>
+    <button>z</button><button>x</button><button>c</button>
+    <button>v</button><button>b</button><button>n</button><button>m</button>
+    <button class="delete">Del</button>
+  </div>
+
+  <!-- ROW 4 -->
+  <div class="kb-row bottom">
+    <button>,</button>
+    <button class="space">SPACE</button>
+    <button>.</button>
+  </div>
+
+</div>
 
 
-  
 <!-- =========================
      BOTTOM NAV
 ========================= -->
-      <nav class="bottom-nav">
+<nav class="bottom-nav">
 
-        <a href="dashboard.html" class="nav-item">
-          <div class="nav-icon">
-            <img src="assets/icons/icon-saldo.svg">
-          </div>
-          <span>Saldo</span>
-        </a>
+  <a href="dashboard.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-saldo.svg">
+    </div>
+    <span>Saldo</span>
+  </a>
 
-        <a href="stok.html" class="nav-item active">
-          <div class="nav-icon">
-            <img src="assets/icons/icon-stok.svg">
-          </div>
-          <span>Stok</span>
-        </a>
+  <a href="stok.html" class="nav-item active">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-stok.svg">
+    </div>
+    <span>Stok</span>
+  </a>
 
-        <a href="menu.html" class="nav-item">
-          <div class="nav-icon">
-            <img src="assets/icons/icon-menu.svg">
-          </div>
-          <span>Menu</span>
-        </a>
+  <a href="menu.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-menu.svg">
+    </div>
+    <span>Menu</span>
+  </a>
 
-        <a href="riwayat-pesanan.html" class="nav-item">
-          <div class="nav-icon">
-            <img src="assets/icons/icon-pesanan.svg">
-          </div>
-          <span>Riwayat</span>
-        </a>
+  <a href="riwayat-pesanan.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-pesanan.svg">
+    </div>
+    <span>Riwayat</span>
+  </a>
 
-        <!-- 🔥 INI YANG DIUBAH -->
-        <a href="laporan.html" class="nav-item">
-          <div class="nav-icon">
-            <img src="assets/icons/icon-laporan.svg">
-          </div>
-          <span>Laporan</span>
-        </a>
+  <a href="laporan.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-laporan.svg">
+    </div>
+    <span>Laporan</span>
+  </a>
 
 </nav>
 
