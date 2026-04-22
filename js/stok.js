@@ -1,130 +1,67 @@
 const URUTAN_PRODUK = [
-  "Roti Balok",
-  "Cokelat Cream",
-  "Vanilla Cream",
-  "Tiramisu Cream",
-  "Greentea Cream",
-  "Strawberry Cream",
-  "Choco Crunchy",
-  "Keju Cheddar",
-  "Cookies Crumb",
-  "Caramel Crumb",
-  "Red Velvet Crumb",
-  "Matcha Crumb",
-  "Peanuts Crumb",
-  "Chocolate Powder",
-  "Milo Powder",
-  "Vanilla Latte Powder",
-  "Cappuccino Powder",
-  "Taro Powder",
-  "Red Velvet Powder",
-  "Greentea Powder",
-  "Blackcurrant Powder",
-  "Lemon Tea Powder",
-  "Kertas Cokelat",
-  "Kresek Roti",
-  "Tisu Garpu",
-  "Kresek 1 Cup",
-  "Kresek 2 Cup",
-  "Sedotan Es",
-  "Kertas Struk",
-  "Air Galon",
-  "Gas LPG",
-  "Cup Ice",
-  "Minyak Crunchy",
-  "Minyak Kelapa"
+  "Roti Balok","Cokelat Cream","Vanilla Cream","Tiramisu Cream","Greentea Cream",
+  "Strawberry Cream","Choco Crunchy","Keju Cheddar","Cookies Crumb","Caramel Crumb",
+  "Red Velvet Crumb","Matcha Crumb","Peanuts Crumb","Chocolate Powder","Milo Powder",
+  "Vanilla Latte Powder","Cappuccino Powder","Taro Powder","Red Velvet Powder",
+  "Greentea Powder","Blackcurrant Powder","Lemon Tea Powder","Kertas Cokelat",
+  "Kresek Roti","Tisu Garpu","Kresek 1 Cup","Kresek 2 Cup","Sedotan Es",
+  "Kertas Struk","Air Galon","Gas LPG","Cup Ice","Minyak Crunchy","Minyak Kelapa"
 ];
 
 import {
-  db,
-  collection,
-  doc,
-  onSnapshot,
-  setDoc,
-  getDocs
+  db, collection, doc, onSnapshot, setDoc
 } from "./firebase.js";
 
 const container = document.getElementById("stokContainer");
 
+// =========================
+// STATE
+// =========================
 let produkData = {};
 let draftData = {};
 let activeCardId = null;
-
-
-
-let unsubProduk = null;
-let unsubDraft = null;
+let searchKeyword = "";
+let filterMode = false;
 
 // =========================
-// LOAD PRODUK
+// LOAD DATA
 // =========================
-function loadProduk() {
-  if (unsubProduk) unsubProduk();
+onSnapshot(collection(db, "produk"), (snap) => {
+  produkData = {};
+  snap.forEach(d => produkData[d.id] = d.data());
+  renderAll();
+});
 
-  unsubProduk = onSnapshot(collection(db, "produk"), (snapshot) => {
-    produkData = {};
-
-    snapshot.forEach((d) => {
-      produkData[d.id] = d.data();
-    });
-
-    renderAll();
-  });
-}
+onSnapshot(collection(db, "stok_draft"), (snap) => {
+  draftData = {};
+  snap.forEach(d => draftData[d.id] = d.data());
+  renderAll();
+});
 
 // =========================
-// LOAD DRAFT
-// =========================
-function loadDraft() {
-  if (unsubDraft) unsubDraft();
-
-  unsubDraft = onSnapshot(collection(db, "stok_draft"), (snapshot) => {
-    draftData = {};
-
-    snapshot.forEach((d) => {
-      draftData[d.id] = d.data();
-    });
-
-    renderAll();
-  });
-}
-
-loadProduk();
-loadDraft();
-
-// =========================
-// RENDER ALL
+// RENDER
 // =========================
 function renderAll() {
   container.innerHTML = "";
 
   const sortedIds = Object.keys(produkData).sort((a, b) => {
-    const namaA = produkData[a].nama;
-    const namaB = produkData[b].nama;
-
-    const indexA = URUTAN_PRODUK.indexOf(namaA);
-    const indexB = URUTAN_PRODUK.indexOf(namaB);
-
-    const safeA = indexA === -1 ? 999 : indexA;
-    const safeB = indexB === -1 ? 999 : indexB;
-
-    return safeA - safeB;
+    const A = URUTAN_PRODUK.indexOf(produkData[a].nama);
+    const B = URUTAN_PRODUK.indexOf(produkData[b].nama);
+    return (A === -1 ? 999 : A) - (B === -1 ? 999 : B);
   });
 
-    sortedIds.forEach((id) => {
-      const p = produkData[id];
-      const d = draftData[id] ?? {};
-      const h = hitung(p, d);
+  sortedIds.forEach(id => {
+    const p = produkData[id];
+    const d = draftData[id] ?? {};
+    const h = hitung(p, d);
 
-      // 🔍 search filter
-    if (!p.nama.toLowerCase().includes((searchKeyword || "").toLowerCase())) return;
-      // 🔥 filter stok merah
-      const isLowStock =
-        (p.stokMinimal ?? 0) > 0 && h.total < p.stokMinimal;
+    if (!p.nama.toLowerCase().includes(searchKeyword)) return;
 
-      if (filterMode && !isLowStock) return;
-      renderCard(id, p);
-    });
+    const low = (p.stokMinimal ?? 0) > 0 && h.total < p.stokMinimal;
+    if (filterMode && !low) return;
+
+    renderCard(id, p);
+  });
 
   if (activeCardId) {
     const el = document.querySelector(`.stok-card[data-id="${activeCardId}"]`);
@@ -133,139 +70,91 @@ function renderAll() {
 }
 
 // =========================
-// HITUNG STOK + NILAI
+// HITUNG
 // =========================
 function hitung(p, d = {}) {
-  const outlet = (d.stokOutlet ?? p.stokOutlet ?? 0);
-  const koma   = (d.stokKoma ?? p.stokKoma ?? 0);
-  const gudang = (d.stokGudang ?? p.stokGudang ?? 0);
+  const outlet = d.stokOutlet ?? p.stokOutlet ?? 0;
+  const koma   = d.stokKoma ?? p.stokKoma ?? 0;
+  const gudang = d.stokGudang ?? p.stokGudang ?? 0;
 
   const total = outlet + koma + gudang;
   const request = Math.max(0, (p.stokMinimal ?? 0) - total);
 
-  const totalNilai = total * (p.harga ?? 0);
-
-  return { outlet, koma, gudang, total, request, totalNilai };
+  return {
+    outlet, koma, gudang,
+    total,
+    request,
+    totalNilai: total * (p.harga ?? 0)
+  };
 }
 
 // =========================
-// RENDER CARD
+// CARD
 // =========================
 function renderCard(id, p) {
-  const d = draftData[id] ?? {};
-  const h = hitung(p, d);
+  const h = hitung(p, draftData[id]);
 
-function formatAngka(n) {
-  return Number.isInteger(n)
-    ? n
-    : n.toLocaleString("id-ID", {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1
-      });
-}
+  const format = (n) =>
+    Number.isInteger(n) ? n : n.toLocaleString("id-ID", { minimumFractionDigits: 1 });
 
-  
   const card = document.createElement("div");
   card.className = "stok-card";
   card.dataset.id = id;
 
-card.innerHTML = `
+  card.innerHTML = `
   <div class="stok-header" onclick="toggleCard(this)">
-
-    <!-- BARIS 1 -->
     <div class="stok-top">
-      <div class="stok-left-top">
-        <h3>${p.nama}</h3>
+      <h3>${p.nama}</h3>
+      <div class="${(p.stokMinimal && h.total < p.stokMinimal) ? 'stok-warning' : ''}">
+        ${format(h.total)}
       </div>
-
-      <div class="stok-right-top ${
-        (p.stokMinimal ?? 0) > 0 && h.total < p.stokMinimal
-          ? 'stok-warning'
-          : ''
-      }">
-        ${formatAngka(h.total)} 
-        </div>
     </div>
 
-    <!-- BARIS 2 -->
     <div class="stok-mid">
       <div>${p.gramasi ?? "-"}</div>
       <div>${p.satuan ?? "-"}</div>
     </div>
 
-    <!-- BARIS 3 -->
     <div class="stok-price-row">
       <div>Rp ${(p.harga ?? 0).toLocaleString("id-ID")}</div>
       <div>Rp ${Math.round(h.totalNilai).toLocaleString("id-ID")}</div>
     </div>
-
   </div>
 
-    <!-- DETAIL (BISA BUKA / TUTUP) -->
-    <div class="stok-body" onclick="event.stopPropagation()">
+  <div class="stok-body" onclick="event.stopPropagation()">
+    ${row("Outlet", id, "stokOutlet", h.outlet, 1)}
+    ${row("Koma", id, "stokKoma", format(h.koma), 0.1)}
+    ${row("Gudang", id, "stokGudang", h.gudang, 1)}
 
-      <div class="stok-summary">
-        <span>Stok Outlet</span>
-        <div class="qty-control">
-          <button onclick="change('${id}','stokOutlet',-1)">-</button>
-          <input value="${h.outlet}" readonly>
-          <button onclick="change('${id}','stokOutlet',1)">+</button>
-        </div>
-      </div>
+    <hr/>
 
-      <div class="stok-summary">
-        <span>Stok Koma</span>
-        <div class="qty-control">
-          <button onclick="change('${id}','stokKoma',-0.1)">-</button>
-            <input value="${formatAngka(h.koma)}" readonly>
-          <button onclick="change('${id}','stokKoma',0.1)">+</button>
-        </div>
-      </div>
+    <div class="stok-summary"><span>Minimal</span><strong>${p.stokMinimal ?? 0}</strong></div>
+    <div class="stok-summary"><span>Request</span><strong>${format(h.request)}</strong></div>
+    <div class="stok-summary"><span>Nilai</span><strong>Rp ${Math.round(h.totalNilai).toLocaleString("id-ID")}</strong></div>
 
-      <div class="stok-summary">
-        <span>Stok Gudang</span>
-        <div class="qty-control">
-          <button onclick="change('${id}','stokGudang',-1)">-</button>
-          <input value="${h.gudang}" readonly>
-          <button onclick="change('${id}','stokGudang',1)">+</button>
-        </div>
-      </div>
-
-      <hr/>
-
-      <div class="stok-summary">
-        <span>Stok Minimal</span>
-        <strong>${p.stokMinimal ?? 0}</strong>
-      </div>
-
-      <div class="stok-summary">
-        <span>Stok Request</span>
-        <strong>${formatAngka(h.request)}</strong>
-      </div>
-
-      <div class="stok-summary">
-        <span>Total Nilai</span>
-        <strong>Rp ${Math.round(h.totalNilai).toLocaleString("id-ID")}</strong>
-      </div>
-
-      <button onclick="updateStok('${id}')" class="stok-save">
-        🔥 Update Stok
-      </button>
-
-    </div>
+    <button onclick="updateStok('${id}')" class="stok-save">🔥 Update</button>
+  </div>
   `;
 
   container.appendChild(card);
 }
 
-
-
-
+function row(label, id, field, val, step) {
+  return `
+  <div class="stok-summary">
+    <span>${label}</span>
+    <div class="qty-control">
+      <button onclick="change('${id}','${field}',-${step})">-</button>
+      <input value="${val}" readonly>
+      <button onclick="change('${id}','${field}',${step})">+</button>
+    </div>
+  </div>`;
+}
 
 // =========================
-// CHANGE STOK
+// UPDATE
 // =========================
-window.change = function (id, field, delta) {
+window.change = (id, field, delta) => {
   const p = produkData[id];
 
   if (!draftData[id]) {
@@ -276,58 +165,31 @@ window.change = function (id, field, delta) {
     };
   }
 
-  let current = draftData[id][field] ?? p[field] ?? 0;
-  let next = current + delta;
-
-  if (field === "stokKoma") {
-    next = Math.round(next * 10) / 10;
-  }
-
+  let next = (draftData[id][field] ?? 0) + delta;
+  if (field === "stokKoma") next = Math.round(next * 10) / 10;
   if (next < 0) next = 0;
 
   draftData[id][field] = next;
-
   activeCardId = id;
   renderAll();
 };
 
-// =========================
-// UPDATE STOK KE FIRESTORE
-// =========================
-window.updateStok = async function (id) {
+window.updateStok = async (id) => {
   const p = produkData[id];
   const d = draftData[id];
 
-  const updated = {
-    stokOutlet: d.stokOutlet ?? p.stokOutlet ?? 0,
-    stokKoma: d.stokKoma ?? p.stokKoma ?? 0,
-    stokGudang: d.stokGudang ?? p.stokGudang ?? 0,
-  };
+  await setDoc(doc(db, "produk", id), { ...p, ...d });
+  await setDoc(doc(db, "stok_draft", id), d);
 
-  await setDoc(doc(db, "produk", id), {
-    ...p,
-    ...updated
-  });
-
-  await setDoc(doc(db, "stok_draft", id), updated);
-
-  showToast("🔥 Stok berhasil diupdate");
-
-  // 🔥 TAMBAHAN INI (auto tutup card)
-  const card = document.querySelector(`.stok-card[data-id="${id}"]`);
-  if (card) {
-    card.classList.remove("active");
-  }
-
+  showToast("🔥 Berhasil update");
   activeCardId = null;
 };
 
 // =========================
-// TOGGLE CARD
+// UI
 // =========================
-window.toggleCard = function (el) {
+window.toggleCard = (el) => {
   const card = el.parentElement;
-  const id = card.dataset.id;
 
   if (card.classList.contains("active")) {
     card.classList.remove("active");
@@ -335,262 +197,120 @@ window.toggleCard = function (el) {
   } else {
     document.querySelectorAll(".stok-card").forEach(c => c.classList.remove("active"));
     card.classList.add("active");
-    activeCardId = id;
+    activeCardId = card.dataset.id;
   }
 };
 
-// =========================
-// SIMPAN HARIAN
-// =========================
-window.simpanHarian = async function () {
-  const snap = await getDocs(collection(db, "produk"));
-
-  const today = new Date().toISOString().slice(0, 10);
-  const batch = [];
-
-  snap.forEach((docSnap) => {
-    const data = docSnap.data();
-
-    const total = (data.stokOutlet ?? 0) + (data.stokKoma ?? 0) + (data.stokGudang ?? 0);
-
-    batch.push(
-      setDoc(doc(db, "stok_harian", today, "items", docSnap.id), {
-        nama: data.nama ?? "",
-        harga: data.harga ?? 0,
-        satuan: data.satuan ?? "",
-        stokOutlet: data.stokOutlet ?? 0,
-        stokKoma: data.stokKoma ?? 0,
-        stokGudang: data.stokGudang ?? 0,
-        stokMinimal: data.stokMinimal ?? 0,
-        total,
-        totalNilai: total * (data.harga ?? 0),
-        timestamp: new Date().toISOString()
-      })
-    );
-  });
-
-  await Promise.all(batch);
-
-  showToast(`Stok Tersimpan: ${today}`);
+window.toggleFilter = () => {
+  filterMode = !filterMode;
+  document.querySelector(".filter-icon").classList.toggle("active");
+  renderAll();
 };
 
-
-
-
-function showToast(msg) {
-  const toast = document.getElementById("toast");
-  toast.innerText = msg;
-
-  toast.classList.add("show");
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2000);
-}
-
-
-
-
-
-
-window.importCSV = async function (file) {
-  if (!file) {
-    alert("Pilih file dulu");
-    return;
-  }
-
-  const text = await file.text();
-  const rows = text.split("\n").slice(1);
-
-  const batch = [];
-
-  rows.forEach((row) => {
-    if (!row.trim()) return;
-
-    const cols = row.split(/[,;]+/).map(v => v.trim());
-    const [id, nama, satuan, gramasi, harga, stokMinimal] = cols;
-
-    console.log("ROW:", cols);
-
-    batch.push(
-      setDoc(doc(db, "produk", id), {
-        nama,
-        satuan,
-        gramasi,
-        harga: Number(harga) || 0,
-
-        stokOutlet: 0,
-        stokKoma: 0,
-        stokGudang: 0,
-
-        stokMinimal: Number(stokMinimal) || 0,
-        stokRequest: 0
-      })
-    );
-  });
-
-  await Promise.all(batch);
-
-  alert("✅ Import CSV berhasil");
-};
-
-
-
-
-
-
-let searchKeyword = "";
-
-window.handleSearch = function (val) {
+window.handleSearch = (val) => {
   searchKeyword = val.toLowerCase();
   renderAll();
 };
 
-
-
-
-
-
 // =========================
-// TOGGLE
+// TOAST
 // =========================
-window.toggleCalculator = function () {
-  const el = document.getElementById("calculator");
-  el.classList.toggle("show");
-};
-
-// =========================
-// CALC LOGIC
-// =========================
-let calcValue = "";
-
-// =========================
-// UPDATE DISPLAY (FORMAT ID)
-// =========================
-function updateDisplay() {
-  const display = document.getElementById("calcDisplay");
-
-  if (!calcValue) {
-    display.value = "";
-    return;
-  }
-
-  // kalau ada koma di belakang (contoh: "8.")
-  if (calcValue.endsWith(".")) {
-    const numberPart = calcValue.slice(0, -1);
-
-    if (!isNaN(numberPart)) {
-      display.value = Number(numberPart).toLocaleString("id-ID") + ",";
-    } else {
-      display.value = calcValue.replace(".", ",");
-    }
-
-    return;
-  }
-
-  let number = Number(calcValue);
-
-  if (!isNaN(number)) {
-    display.value = number.toLocaleString("id-ID");
-  } else {
-    display.value = calcValue.replace(/\./g, ",");
-  }
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2000);
 }
 
 
+// =========================
+// KEYBOARD FINAL
+// =========================
+const input = document.getElementById("searchInput");
+const clearIcon = document.querySelector(".clear-icon");
+const keyboard = document.getElementById("keyboard");
+
+input.addEventListener("click", () => {
+  keyboard.style.display = "block";
+  input.focus();
+});
+
+// close keyboard kalau klik luar
+document.addEventListener("click", (e) => {
+  if (!keyboard.contains(e.target) && e.target !== input) {
+    keyboard.style.display = "none";
+  }
+});
+
+// =========================
+// CAPS
+// =========================
+let isCaps = false;
+
+document.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("caps")) return;
+
+  isCaps = !isCaps;
+  e.target.classList.toggle("active");
+
+  document.querySelectorAll(".custom-keyboard button").forEach(btn => {
+    const key = btn.textContent;
+
+    // 🔥 update disini
+    if (["Cap","Del","SPACE",",","."].includes(key)) return;
+
+    btn.textContent = isCaps
+      ? key.toUpperCase()
+      : key.toLowerCase();
+  });
+});
 
 // =========================
 // INPUT
 // =========================
-window.calcInput = function (val) {
-  if (val === ",") val = ".";
-  calcValue += val;
-  updateDisplay();
-};
+keyboard.addEventListener("click", (e) => {
+  if (e.target.tagName !== "BUTTON") return;
+
+  const key = e.target.textContent;
+
+  if (key === "Del") {
+    input.value = input.value.slice(0, -1);
+  } else if (key === "SPACE") {
+    input.value += " ";
+  } else if (key === "Cap") {
+    return;
+  } else {
+    input.value += key;
+  }
+
+  handleSearch(input.value);
+  clearIcon.classList.toggle("show", input.value.length > 0);
+
+  // cursor tetap nyala di belakang
+  setCursorToEnd(input);
+});
 
 // =========================
 // CLEAR
 // =========================
-window.calcClear = function () {
-  calcValue = "";
-  updateDisplay();
-};
-
-// =========================
-// DELETE
-// =========================
-window.calcDelete = function () {
-  calcValue = calcValue.slice(0, -1);
-  updateDisplay();
-};
-
-// =========================
-// EQUAL
-// =========================
-window.calcEqual = function () {
-  try {
-    calcValue = eval(calcValue).toString();
-    updateDisplay();
-  } catch {
-    document.getElementById("calcDisplay").value = "Error";
-  }
-};
-
-// =========================
-// PERCENT
-// =========================
-window.calcPercent = function () {
-  try {
-    calcValue = (eval(calcValue) / 100).toString();
-    updateDisplay();
-  } catch {
-    document.getElementById("calcDisplay").value = "Error";
-  }
-};
-
-
-let filterMode = false; // false = normal, true = hanya stok merah
-
-window.toggleFilter = function () {
-  filterMode = !filterMode;
-
-  const icon = document.querySelector(".filter-icon");
-  icon.classList.toggle("active");
-
-  renderAll();
-};
-
-
-
-
-
-
-const input = document.getElementById("searchInput");
-const clearIcon = document.querySelector(".clear-icon");
-
-if (input) {
-  input.addEventListener("input", () => {
-    const val = input.value.trim();
-
-    handleSearch(val);
-
-    if (clearIcon) {
-      clearIcon.classList.toggle("show", val.length > 0);
-    }
-  });
-}
-
-window.clearSearch = function () {
-  const input = document.getElementById("searchInput");
-
-  if (!input) return;
-
+window.clearSearch = () => {
   input.value = "";
   handleSearch("");
-
-  if (clearIcon) {
-    clearIcon.classList.remove("show");
-  }
-
+  clearIcon.classList.remove("show");
   input.focus();
 };
+
+// =========================
+// CURSOR FIX
+// =========================
+function setCursorToEnd(el) {
+  el.focus();
+  const length = el.value.length;
+  el.setSelectionRange(length, length);
+}
+
+// biar klik input langsung aktif + cursor hidup
+input.addEventListener("click", () => {
+  keyboard.style.display = "block";
+  setCursorToEnd(input);
+});
