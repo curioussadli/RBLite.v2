@@ -15,179 +15,141 @@
 
   <div id="toast"></div>
 
-<!-- =========================
-     CALCULATOR
-========================= -->
-<div id="calculator" class="calc-overlay">
-  <div class="calc-box">
-    <button class="calc-close" onclick="toggleCalculator()">✕</button>
+  <!-- =========================
+       CALCULATOR
+  ========================= -->
+  <div id="calculator" class="calc-overlay">
+    <div class="calc-box">
+      <button class="calc-close" onclick="toggleCalculator()">✕</button>
 
-    <input type="text" id="calcDisplay" readonly>
+      <input type="text" id="calcDisplay" readonly>
 
-    <div class="calc-buttons">
-      <button onclick="calcClear()">C</button>
-      <button onclick="calcPercent()">%</button>
-      <button onclick="calcDelete()">←</button>
-      <button onclick="calcInput('/')">/</button>
+      <div class="calc-buttons">
+        <button onclick="calcClear()">C</button>
+        <button onclick="calcPercent()">%</button>
+        <button onclick="calcDelete()">←</button>
+        <button onclick="calcInput('/')">/</button>
 
-      <button onclick="calcInput('7')">7</button>
-      <button onclick="calcInput('8')">8</button>
-      <button onclick="calcInput('9')">9</button>
-      <button onclick="calcInput('*')">×</button>
+        <button onclick="calcInput('7')">7</button>
+        <button onclick="calcInput('8')">8</button>
+        <button onclick="calcInput('9')">9</button>
+        <button onclick="calcInput('*')">×</button>
 
-      <button onclick="calcInput('4')">4</button>
-      <button onclick="calcInput('5')">5</button>
-      <button onclick="calcInput('6')">6</button>
-      <button onclick="calcInput('-')">-</button>
+        <button onclick="calcInput('4')">4</button>
+        <button onclick="calcInput('5')">5</button>
+        <button onclick="calcInput('6')">6</button>
+        <button onclick="calcInput('-')">-</button>
 
-      <button onclick="calcInput('1')">1</button>
-      <button onclick="calcInput('2')">2</button>
-      <button onclick="calcInput('3')">3</button>
-      <button onclick="calcInput('+')">+</button>
+        <button onclick="calcInput('1')">1</button>
+        <button onclick="calcInput('2')">2</button>
+        <button onclick="calcInput('3')">3</button>
+        <button onclick="calcInput('+')">+</button>
 
-      <button onclick="calcInput('00')">00</button>
-      <button onclick="calcInput('0')">0</button>
-      <button onclick="calcInput('.')">,</button>
-      <button onclick="calcEqual()">=</button>
+        <button onclick="calcInput('00')">00</button>
+        <button onclick="calcInput('0')">0</button>
+        <button onclick="calcInput('.')">,</button>
+        <button onclick="calcEqual()">=</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- =========================
-     TOPBAR
-========================= -->
-<div class="topbar">
-  <div class="topbar-title">Stok</div>
+  <!-- =========================
+       TOPBAR
+  ========================= -->
+  <div class="topbar">
+    <div class="topbar-title">Stok</div>
 
-  <div class="topbar-action" onclick="toggleCalculator()">
-    <img src="assets/icons/icon-calculator.svg" alt="calculator">
-  </div>
-
-  <!-- 🔥 FIX: hapus this -->
-  <div class="topbar-action" onclick="toggleFilter()">
-    <img src="assets/icons/icon-list-x.svg" class="filter-icon" alt="filter">
-  </div>
-</div>
-
-<!-- =========================
-     SEARCH
-========================= -->
-<div class="stok-search">
-  <img src="assets/icons/icon-search.svg" class="search-icon" alt="search">
-  
-  <input 
-    id="searchInput"
-    type="text"
-    placeholder="Cari produk..."
-    inputmode="none"
-  />
-
-  <img 
-    src="assets/icons/icon-close.svg" 
-    class="clear-icon" 
-    onclick="clearSearch()"
-    alt="clear"
-  >
-</div>
-
-<!-- =========================
-     MAIN CONTENT
-========================= -->
-<section class="stok-main">
-
-  <div id="stokContainer"></div>
-
-  <div class="stok-footer">
-    <button onclick="window.simpanHarian()">
-      Simpan Stok Harian
-    </button>
-  </div>
-
-</section>
-
-<!-- =========================
-     CUSTOM KEYBOARD
-========================= -->
-<div class="custom-keyboard" id="keyboard" style="display:none;">
-
-  <!-- ROW 1 -->
-  <div class="kb-row">
-    <button>q</button><button>w</button><button>e</button><button>r</button>
-    <button>t</button><button>y</button><button>u</button><button>i</button>
-    <button>o</button><button>p</button>
-  </div>
-
-  <!-- ROW 2 -->
-  <div class="kb-row mid">
-    <button>a</button><button>s</button><button>d</button><button>f</button>
-    <button>g</button><button>h</button><button>j</button><button>k</button>
-    <button>l</button>
-  </div>
-
-  <!-- ROW 3 -->
-  <div class="kb-row">
-    <button class="caps">Cap</button>
-    <button>z</button><button>x</button><button>c</button>
-    <button>v</button><button>b</button><button>n</button><button>m</button>
-    <button class="delete">Del</button>
-  </div>
-
-  <!-- ROW 4 -->
-  <div class="kb-row bottom">
-    <button>,</button>
-    <button class="space">SPACE</button>
-    <button>.</button>
-  </div>
-
-</div>
-
-
-<!-- =========================
-     BOTTOM NAV
-========================= -->
-<nav class="bottom-nav">
-
-  <a href="dashboard.html" class="nav-item">
-    <div class="nav-icon">
-      <img src="assets/icons/icon-saldo.svg">
+    <div class="topbar-action" onclick="toggleCalculator()">
+      <img src="assets/icons/icon-calculator.svg" alt="calculator">
     </div>
-    <span>Saldo</span>
-  </a>
 
-  <a href="stok.html" class="nav-item active">
-    <div class="nav-icon">
-      <img src="assets/icons/icon-stok.svg">
+    <div class="topbar-action" onclick="toggleFilter()">
+      <img src="assets/icons/icon-list-x.svg" class="filter-icon" alt="filter">
     </div>
-    <span>Stok</span>
-  </a>
+  </div>
 
-  <a href="menu.html" class="nav-item">
-    <div class="nav-icon">
-      <img src="assets/icons/icon-menu.svg">
+  <!-- =========================
+       SEARCH (PAKAI KEYBOARD HP BAWAAN)
+  ========================= -->
+  <div class="stok-search">
+    <img src="assets/icons/icon-search.svg" class="search-icon" alt="search">
+
+    <input 
+      id="searchInput"
+      type="text"
+      placeholder="Cari produk..."
+      autocomplete="off"
+    />
+
+    <img 
+      src="assets/icons/icon-close.svg" 
+      class="clear-icon" 
+      onclick="clearSearch()"
+      alt="clear"
+    >
+  </div>
+
+  <!-- =========================
+       MAIN CONTENT
+  ========================= -->
+  <section class="stok-main">
+
+    <div id="stokContainer"></div>
+
+    <div class="stok-footer">
+      <button onclick="window.simpanHarian()">
+        Simpan Stok Harian
+      </button>
     </div>
-    <span>Menu</span>
-  </a>
 
-  <a href="riwayat-pesanan.html" class="nav-item">
-    <div class="nav-icon">
-      <img src="assets/icons/icon-pesanan.svg">
-    </div>
-    <span>Riwayat</span>
-  </a>
+  </section>
 
-  <a href="laporan.html" class="nav-item">
-    <div class="nav-icon">
-      <img src="assets/icons/icon-laporan.svg">
-    </div>
-    <span>Laporan</span>
-  </a>
+  <!-- =========================
+       BOTTOM NAV
+  ========================= -->
+  <nav class="bottom-nav">
 
-</nav>
+    <a href="dashboard.html" class="nav-item">
+      <div class="nav-icon">
+        <img src="assets/icons/icon-saldo.svg">
+      </div>
+      <span>Saldo</span>
+    </a>
 
-<!-- =========================
-     JS
-========================= -->
-<script type="module" src="js/stok.js"></script>
+    <a href="stok.html" class="nav-item active">
+      <div class="nav-icon">
+        <img src="assets/icons/icon-stok.svg">
+      </div>
+      <span>Stok</span>
+    </a>
+
+    <a href="menu.html" class="nav-item">
+      <div class="nav-icon">
+        <img src="assets/icons/icon-menu.svg">
+      </div>
+      <span>Menu</span>
+    </a>
+
+    <a href="riwayat-pesanan.html" class="nav-item">
+      <div class="nav-icon">
+        <img src="assets/icons/icon-pesanan.svg">
+      </div>
+      <span>Riwayat</span>
+    </a>
+
+    <a href="laporan.html" class="nav-item">
+      <div class="nav-icon">
+        <img src="assets/icons/icon-laporan.svg">
+      </div>
+      <span>Laporan</span>
+    </a>
+
+  </nav>
+
+  <!-- =========================
+       JS
+  ========================= -->
+  <script type="module" src="js/stok.js"></script>
 
 </body>
 </html>
