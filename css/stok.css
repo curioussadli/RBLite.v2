@@ -71,6 +71,11 @@
   gap: 10px;
 }
 
+.stok-top div {
+  font-weight: 700;
+  font-size: 18px;
+}
+
 .stok-left-top h3 {
   margin: 0;
   font-size: 18px;
@@ -82,8 +87,8 @@
 }
 
 .stok-right-top {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   text-align: right;
   min-width: 40px;
 }
@@ -600,4 +605,103 @@
   .stok-main {
     padding-top: 140px; /* 🔥 biar konten gak ketutup */
   }
+}
+
+
+
+
+
+
+/* =========================
+   KEYBOARD FINAL FIX (PRESISI)
+========================= */
+.custom-keyboard {
+  position: fixed;
+  bottom: 70px; /* 🔥 naik biar ga nutup navbar */
+  left: 0;
+  width: 100%;
+
+  background: #f8f9fa;
+  padding: 10px 8px 14px;
+
+  border-top: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.08);
+
+  z-index: 2000;
+}
+
+/* =========================
+   ROW
+========================= */
+.kb-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+/* row tengah agak masuk */
+.kb-row:nth-child(2) {
+  padding: 0 16px;
+}
+
+/* =========================
+   BUTTON BASE
+========================= */
+.custom-keyboard button {
+  flex: 1; /* 🔥 semua sama rata */
+  height: 44px;
+
+  border: none;
+  border-radius: 2px;
+
+  background: #ffffff;
+  color: #222;
+
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.custom-keyboard button:active {
+  transform: scale(0.95);
+  background: #eaeaea;
+}
+
+/* =========================
+   CAPS & DELETE SAJA YANG LEBAR
+========================= */
+.kb-row:nth-child(3) .caps {
+  flex: 1.8; /* 🔥 lebih lebar */
+  background: #e5e7eb;
+}
+
+.kb-row:nth-child(3) .delete {
+  flex: 1.8; /* 🔥 lebih lebar */
+  background: #e5e7eb;
+}
+
+.caps.active {
+  background: #d1d5db;
+}
+
+/* =========================
+   ROW BAWAH
+========================= */
+.space {
+  flex: 5; /* panjang */
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+/* koma & titik tetap normal */
+.kb-row:last-child button {
+  flex: 1;
+}
+
+.kb-row:last-child .space {
+  flex: 5;
 }
