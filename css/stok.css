@@ -5,6 +5,10 @@
   padding-top: 60px;
 }
 
+.stok-search {
+  display: none;
+}
+
 /* =========================
    MAIN CONTENT
 ========================= */
