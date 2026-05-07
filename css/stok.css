@@ -5,10 +5,6 @@
   padding-top: 60px;
 }
 
-.stok-search {
-  display: none;
-}
-
 /* =========================
    MAIN CONTENT
 ========================= */
@@ -41,7 +37,7 @@
 
   margin: 0 auto;
   padding-top: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 120px;
 }
 
 #stokContainer::-webkit-scrollbar {
@@ -262,6 +258,7 @@
 }
 
 
+
 /* =========================
    FIXED BUTTON BELOW TOPBAR
 ========================= */
@@ -296,13 +293,6 @@
 
   box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
-
-
-
-
-
-
-
 
 
 
@@ -620,7 +610,7 @@
   }
 
   .stok-main {
-    padding-top: 140px; /* 🔥 biar konten gak ketutup */
+    padding-top: 100px; /* 🔥 biar konten gak ketutup */
   }
 }
 
@@ -721,4 +711,12 @@
 
 .kb-row:last-child .space {
   flex: 5;
+}
+
+#searchInput:focus {
+  outline: none;
+}
+
+#searchInput {
+  user-select: none; /* biar gak bisa select teks */
 }
