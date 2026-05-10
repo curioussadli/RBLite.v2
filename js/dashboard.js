@@ -450,11 +450,6 @@ window.addEventListener("load", () => {
 
 
 
-
-
-
-
-
 // =====================================================
 // 📜 RIWAYAT LAPORAN (REALTIME)
 // =====================================================
@@ -535,3 +530,324 @@ onSnapshot(qLaporan, (snapshot) => {
   });
 
 });
+
+
+
+
+// =====================================================
+// 📈 RIWAYAT PENJUALAN
+// =====================================================
+
+const riwayatPenjualanList =
+  document.getElementById("riwayatPenjualanList");
+
+const filterBtn =
+  document.getElementById("filterBtn");
+
+const filterDropdown =
+  document.getElementById("filterDropdown");
+
+const filterRange =
+  document.getElementById("filterRange");
+
+const filterText =
+  document.querySelector(".filter-text");
+
+let semuaLaporanLaba = [];
+
+
+/* =========================
+   FORMAT TANGGAL
+========================= */
+function formatTanggal(tanggal) {
+
+  const d = new Date(tanggal);
+
+  const day =
+    String(d.getDate()).padStart(2, "0");
+
+  const month =
+    String(d.getMonth() + 1).padStart(2, "0");
+
+  const year =
+    d.getFullYear();
+
+  return `${day}.${month}.${year}`;
+
+}
+
+
+/* =========================
+   RENDER LIST
+========================= */
+function renderRiwayatPenjualan(data) {
+
+  if (!riwayatPenjualanList) return;
+
+  riwayatPenjualanList.innerHTML = "";
+
+  if (!data.length) {
+
+    riwayatPenjualanList.innerHTML = `
+      <div class="empty-riwayat">
+        Tidak ada data
+      </div>
+    `;
+
+    // 🔥 reset rata rata
+    updateRataRata([]);
+
+    return;
+
+  }
+
+  data.forEach(item => {
+
+    riwayatPenjualanList.innerHTML += `
+
+      <div class="riwayat-item">
+
+        <span class="tanggal">
+          ${formatTanggal(item.tanggal)}
+        </span>
+
+        <strong class="nominal">
+          Rp ${item.total.toLocaleString("id-ID")}
+        </strong>
+
+      </div>
+
+    `;
+
+  });
+
+  // 🔥 UPDATE RATA RATA
+  updateRataRata(data);
+
+}
+
+
+/* =========================
+   REALTIME FIREBASE
+========================= */
+
+onSnapshot(
+  collection(db, "laporanLaba"),
+  (snapshot) => {
+
+    semuaLaporanLaba = [];
+
+    snapshot.forEach(doc => {
+
+      const data = doc.data();
+
+      semuaLaporanLaba.push({
+
+        tanggal: doc.id,
+        total: data.total || 0
+
+      });
+
+    });
+
+    // 🔥 terbaru di atas
+    semuaLaporanLaba.sort((a, b) =>
+      new Date(b.tanggal) -
+      new Date(a.tanggal)
+    );
+
+    // 🔥 default tampil 7 data terbaru
+    const tujuhHariTerbaru =
+      semuaLaporanLaba.slice(0, 7);
+
+    renderRiwayatPenjualan(
+      tujuhHariTerbaru
+    );
+
+  }
+);
+
+
+/* =========================
+   OPEN / CLOSE DROPDOWN
+========================= */
+
+filterBtn?.addEventListener(
+  "click",
+  (e) => {
+
+    e.stopPropagation();
+
+    filterDropdown?.classList.toggle(
+      "show"
+    );
+
+  }
+);
+
+
+/* =========================
+   CLOSE CLICK OUTSIDE
+========================= */
+
+document.addEventListener(
+  "click",
+  (e) => {
+
+    if (
+      filterBtn &&
+      filterDropdown &&
+      !filterBtn.contains(e.target) &&
+      !filterDropdown.contains(e.target)
+    ) {
+
+      filterDropdown.classList.remove(
+        "show"
+      );
+
+    }
+
+  }
+);
+
+/* =========================
+   RANGE CALENDAR
+========================= */
+
+flatpickr(filterRange, {
+
+  mode: "range",
+
+  dateFormat: "Y-m-d",
+
+  onChange: function(selectedDates) {
+
+// =========================
+// RESET FILTER
+// =========================
+if (selectedDates.length === 0) {
+
+  // 🔥 kembali ke 7 data terbaru
+  const tujuhHariTerbaru =
+    semuaLaporanLaba.slice(0, 7);
+
+  renderRiwayatPenjualan(
+    tujuhHariTerbaru
+  );
+
+  if (filterText) {
+
+    filterText.textContent =
+      "Filter";
+
+  }
+
+  return;
+
+}
+
+    // =========================
+    // RANGE TERPILIH
+    // =========================
+    if (selectedDates.length === 2) {
+
+      // 🔥 FORMAT LOCAL TANPA TIMEZONE
+      function formatLocalDate(date) {
+
+        const year =
+          date.getFullYear();
+
+        const month =
+          String(date.getMonth() + 1)
+            .padStart(2, "0");
+
+        const day =
+          String(date.getDate())
+            .padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+
+      }
+
+      // 🔥 FIX TIMEZONE
+      const start =
+        formatLocalDate(selectedDates[0]);
+
+      const end =
+        formatLocalDate(selectedDates[1]);
+
+      // FILTER DATA
+      const hasil =
+        semuaLaporanLaba.filter(item => {
+
+          return (
+            item.tanggal >= start &&
+            item.tanggal <= end
+          );
+
+        });
+
+      renderRiwayatPenjualan(
+        hasil
+      );
+
+      // UPDATE TEXT
+      if (filterText) {
+
+        filterText.textContent =
+          `${formatTanggal(start)} - ${formatTanggal(end)}`;
+
+      }
+
+      // TUTUP DROPDOWN
+      filterDropdown?.classList.remove(
+        "show"
+      );
+
+    }
+
+  }
+
+});
+
+
+
+
+
+/* =========================
+   HITUNG RATA RATA
+========================= */
+function updateRataRata(data) {
+
+  const rataRataEl =
+    document.getElementById(
+      "rataRataPenjualan"
+    );
+
+  if (!rataRataEl) return;
+
+  // kosong
+  if (!data.length) {
+
+    rataRataEl.textContent =
+      "Rp 0";
+
+    return;
+  }
+
+  // total semua
+  const total = data.reduce(
+    (sum, item) =>
+      sum + (item.total || 0),
+    0
+  );
+
+  // rata rata
+  const rata =
+    Math.round(total / data.length);
+
+  rataRataEl.textContent =
+    "Rp " +
+    rata.toLocaleString("id-ID");
+
+}
