@@ -46,11 +46,22 @@ document.querySelectorAll(".laporan-item").forEach(item => {
 
 });
 
-
-
-
 window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
     window.location.reload();
   }
+});
+
+document.querySelectorAll(".laporan-item").forEach(item => {
+
+  item.addEventListener("click", () => {
+
+    const link = item.dataset.link;
+
+    if (link) {
+      window.location.href = link;
+    }
+
+  });
+
 });
