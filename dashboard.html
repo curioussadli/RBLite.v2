@@ -18,8 +18,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
@@ -132,6 +130,86 @@
 
     </div>
 
+
+
+<!-- ================= RIWAYAT PENJUALAN ================= -->
+<div class="riwayat-section">
+
+  <div class="riwayat-header">
+
+    <h3>Riwayat Penjualan</h3>
+
+    <!-- FILTER -->
+    <div class="filter-wrapper">
+
+      <!-- BUTTON -->
+      <button id="filterBtn"
+              class="filter-btn">
+
+        <img src="assets/icons/icon-filter.svg"
+             alt="filter">
+
+        <span class="filter-text">
+          Filter
+        </span>
+
+        <!-- PANAH -->
+        <span class="filter-arrow">
+          ▼
+        </span>
+
+      </button>
+
+      <!-- DROPDOWN -->
+      <div class="filter-dropdown"
+           id="filterDropdown">
+
+        <!-- RANGE DATE -->
+        <div class="custom-date-wrapper">
+
+          <input type="text"
+                 id="filterRange"
+                 placeholder="Pilih rentang tanggal"
+                 autocomplete="off">
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- AUTO DARI FIREBASE -->
+  <div id="riwayatPenjualanList"
+       class="riwayat-list">
+  </div>
+
+</div>
+
+
+
+<div id="riwayatPenjualanList"
+     class="riwayat-list">
+</div>
+
+<!-- RATA RATA -->
+<div class="rata-rata-wrapper">
+
+  <span class="rata-rata-label">
+    Rata-rata Penjualan
+  </span>
+
+  <strong id="rataRataPenjualan"
+          class="rata-rata-value">
+    Rp 0
+  </strong>
+
+</div>
+
+
+
+
     <!-- INFO -->
     <div class="empty-card">
       <h3>Keterangan</h3>
@@ -173,7 +251,7 @@
 
 
     <h3 style="margin-top:20px;"></h3>
-    <div id="riwayatLaporan"></div>
+<div id="riwayatLaporan"></div>
 
     <!-- INFO -->
     <div class="empty-card">
@@ -234,10 +312,18 @@
   </section>
 </main>
 
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <!-- JS -->
 <script type="module" src="js/dashboard.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 </body>
 </html>
