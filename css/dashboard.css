@@ -421,7 +421,7 @@
 ========================= */
 .laporan-item {
   background: #fff;
-  border-radius: 8px;
+  border-radius: 5px;
   padding: 14px 14px 12px;
 }
 
@@ -595,7 +595,16 @@
 
 
 
-
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 
 /* =========================
@@ -687,6 +696,321 @@
 .laporan-akhir .laporan-value {
   font-weight: 700;
   color: #333;
+}
+
+
+
+
+/* =========================================
+   RIWAYAT PENJUALAN
+========================================= */
+
+.riwayat-section {
+  margin-top: 18px;
+  background: #fff;
+  border-radius: 5px;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+.riwayat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.riwayat-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-group input {
+  border: 1px solid #E5E7EB;
+  border-radius: 5px;
+  padding: 6px 8px;
+  font-size: 12px;
+  background: #F9FAFB;
+}
+
+.riwayat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.riwayat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.riwayat-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.tanggal {
+  font-size: 14px;
+  color: #6B7280;
+}
+
+.nominal {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+
+/* =========================
+   FILTER
+========================= */
+
+.filter-wrapper {
+  position: relative;
+}
+
+/* BUTTON */
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  background: #f8f8f8;
+  border: 1px solid #ececec;
+  border-radius: 5px;
+
+  height: 36px;
+  padding: 0 10px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.filter-btn:hover {
+  background: #f2f2f2;
+}
+
+/* ICON */
+.filter-btn img {
+  width: 16px;
+  height: 16px;
+
+  opacity: 0.7;
+}
+
+/* TEXT */
+.filter-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+
+  white-space: nowrap;
+}
+
+/* ARROW */
+.filter-arrow {
+  font-size: 9px;
+  color: #999;
+  margin-top: 1px;
+}
+
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.filter-dropdown {
+
+  position: absolute;
+
+  top: 44px;
+  right: 0;
+
+  width: 260px;
+
+  background: #fff;
+
+  border: 1px solid #efefef;
+  border-radius: 5px;
+
+  padding: 10px;
+
+  display: none;
+
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.08);
+
+  z-index: 100;
+}
+
+.filter-dropdown.show {
+  display: block;
+
+  animation: fadeDropdown 0.15s ease;
+}
+
+
+/* =========================
+   DATE INPUT
+========================= */
+
+.custom-date-wrapper {
+  width: 100%;
+}
+
+.custom-date-wrapper input {
+
+  width: 100%;
+  height: 40px;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+
+  padding: 0 12px;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  background: #fafafa;
+
+  outline: none;
+
+  transition: 0.2s ease;
+}
+
+.custom-date-wrapper input:focus {
+  border-color: #ffc400;
+  background: #fff;
+}
+
+/* PLACEHOLDER */
+.custom-date-wrapper input::placeholder {
+  color: #999;
+}
+
+
+/* =========================
+   FLATPICKR CUSTOM
+========================= */
+
+.flatpickr-calendar {
+  border: none !important;
+
+  border-radius: 5px !important;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.08) !important;
+
+  overflow: hidden;
+}
+
+.flatpickr-months {
+  padding-top: 6px;
+}
+
+.flatpickr-current-month {
+  font-size: 14px !important;
+}
+
+.flatpickr-weekday {
+  font-size: 11px !important;
+  color: #888 !important;
+}
+
+.flatpickr-day {
+  border-radius: 5px !important;
+  font-size: 12px;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background: #ffc400 !important;
+  border-color: #ffc400 !important;
+  color: #111 !important;
+}
+
+.flatpickr-day.inRange {
+  background: rgba(255,196,0,0.15) !important;
+  border-color: transparent !important;
+}
+
+.flatpickr-day:hover {
+  background: #f3f3f3 !important;
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes fadeDropdown {
+
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+
+
+/* =========================
+   RATA RATA PENJUALAN
+========================= */
+
+.rata-rata-wrapper {
+
+  margin-top: 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+
+  padding: 14px 16px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+.rata-rata-label {
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #777;
+
+}
+
+.rata-rata-value {
+
+  font-size: 15px;
+  font-weight: 700;
+
+  color: #111827;
+
 }
 
 
