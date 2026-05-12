@@ -161,22 +161,6 @@ onSnapshot(qTodayTransaksi, (snapshot) => {
   hitungPengeluaran();
 });
 
-let semuaPenjualan = [];
-let semuaTransaksi = [];
-
-onSnapshot(collection(db, "penjualan"), (snapshot) => {
-  semuaPenjualan = snapshot.docs.map(doc => doc.data());
-  updateChart();
-  hitungRekap();
-});
-
-onSnapshot(collection(db, "transaksi"), (snapshot) => {
-  semuaTransaksi = snapshot.docs.map(doc => doc.data());
-  updateChart();
-  hitungRekap();
-});
-
-
 
 
 
@@ -252,201 +236,116 @@ document.getElementById("kirimLaporanBtn")?.addEventListener("click", async () =
 });
 
 
-// =====================================================
-// 📅 RANGE (MINGGU & BULAN)
-// =====================================================
-const dateObj = new Date(today);
-
-const startOfWeek = new Date(dateObj);
-const day = startOfWeek.getDay();
-const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
-startOfWeek.setDate(diff);
-
-const startWeekStr = startOfWeek.toISOString().slice(0, 10);
-
-const startMonth = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1);
-const startMonthStr = startMonth.toISOString().slice(0, 10);
-
 
 // =====================================================
-// 📊 REKAP
-// =====================================================
-function getDiffHari(tglString) {
-  const today = new Date();
-  const tgl = new Date(tglString);
-
-  // 🔥 reset jam
-  today.setHours(0,0,0,0);
-  tgl.setHours(0,0,0,0);
-
-  return (today - tgl) / (1000 * 60 * 60 * 24);
-}
-
-function hitungRekap() {
-
-  const now = new Date();
-
-  let mingguMasuk = 0;
-  let mingguKeluar = 0;
-
-  let bulanMasuk = 0;
-  let bulanKeluar = 0;
-
-  semuaPenjualan.forEach(item => {
-    let tgl = item.tanggal;
-
-    if (!tgl && item.createdAt?.toDate) {
-      tgl = item.createdAt.toDate().toISOString().slice(0, 10);
-    }
-
-    if (!tgl) return; // 🔥 biar aman
-
-    const date = new Date(tgl);
-    const diffHari = getDiffHari(tgl);
-
-    if (diffHari >= 0 && diffHari <= 7) {
-      mingguMasuk += item.total || 0;
-    }
-
-    if (
-      date.getMonth() === now.getMonth() &&
-      date.getFullYear() === now.getFullYear()
-    ) {
-      bulanMasuk += item.total || 0;
-    }
-  });
-
-  semuaTransaksi.forEach(item => {
-    let tgl = item.tanggal;
-
-    if (!tgl && item.createdAt?.toDate) {
-      tgl = item.createdAt.toDate().toISOString().slice(0, 10);
-    }
-
-    const date = new Date(tgl);
-    const diffHari = getDiffHari(tgl);
-    if (diffHari >= 0 && diffHari <= 7) {
-      mingguKeluar += item.nominal || 0;
-    }
-
-    if (
-      date.getMonth() === now.getMonth() &&
-      date.getFullYear() === now.getFullYear()
-    ) {
-      bulanKeluar += item.nominal || 0;
-    }
-  });
-
-  document.getElementById("mingguMasuk").textContent =
-    mingguMasuk.toLocaleString("id-ID");
-
-  document.getElementById("mingguKeluar").textContent =
-    mingguKeluar.toLocaleString("id-ID");
-
-  document.getElementById("bulanMasuk").textContent =
-    bulanMasuk.toLocaleString("id-ID");
-
-  document.getElementById("bulanKeluar").textContent =
-    bulanKeluar.toLocaleString("id-ID");
-}
-
-
-// =====================================================
-// 📊 CHART
+// 📊 CHART RIWAYAT PENJUALAN
 // =====================================================
 let chart;
 
-Chart.defaults.font.family = "Roboto, sans-serif";
+Chart.defaults.font.family =
+  "Roboto, sans-serif";
+
 Chart.defaults.color = "#333";
 
 function updateChart() {
 
-  const map = {};
+  // 🔥 ambil 7 hari terbaru
+  const dataChart =
+    [...semuaLaporanLaba]
+      .sort((a, b) =>
+        new Date(a.tanggal) -
+        new Date(b.tanggal)
+      )
+      .slice(-7);
 
-  penjualan.forEach(item => {
-    const tgl = item.tanggal;
-    if (!map[tgl]) map[tgl] = { masuk: 0, keluar: 0 };
-    map[tgl].masuk += item.total || 0;
-  });
+  const labels =
+    dataChart.map(item => {
 
-  transaksi.forEach(item => {
-    const tgl = item.tanggal;
-    if (!map[tgl]) map[tgl] = { masuk: 0, keluar: 0 };
-    map[tgl].keluar += item.nominal || 0;
-  });
+      const d =
+        new Date(item.tanggal);
 
-  const labels = Object.keys(map).sort();
+return String(d.getDate()).padStart(2, "0");
 
-  const dataMasuk = labels.map(t => map[t].masuk);
-  const dataKeluar = labels.map(t => map[t].keluar);
+    });
 
-  const ctx = document.getElementById("chartKeuangan");
+  const values =
+    dataChart.map(item =>
+      item.total || 0
+    );
+
+  const ctx =
+    document.getElementById(
+      "chartKeuangan"
+    );
+
   if (!ctx) return;
 
   if (chart) chart.destroy();
 
   chart = new Chart(ctx, {
+
     type: "bar",
+
     data: {
+
       labels,
+
       datasets: [
+
         {
-          data: dataMasuk,
-          backgroundColor: "rgba(46, 204, 113, 0.7)"
-        },
-        {
-          data: dataKeluar,
-          backgroundColor: "rgba(231, 76, 60, 0.7)"
+
+          data: values,
+
+          backgroundColor:
+            "rgba(46, 204, 113, 0.7)",
+
+          borderRadius: 2
+
         }
+
       ]
+
     },
+
     options: {
-      plugins: { legend: { display: false } },
+
+      responsive: true,
+
+      plugins: {
+
+        legend: {
+          display: false
+        }
+
+      },
+
       scales: {
-        x: { grid: { display: false } },
-        y: { grid: { display: false } }
+
+        x: {
+
+          grid: {
+            display: false
+          }
+
+        },
+
+        y: {
+
+          beginAtZero: true,
+
+          grid: {
+            display: false
+          }
+
+        }
+
       }
+
     }
+
   });
+
 }
-
-
-function showToast(msg = "Berhasil") {
-  const toast = document.getElementById("toast");
-
-  if (!toast) return;
-
-  toast.innerHTML = `
-    <div class="toast-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="10" fill="#22c55e"/>
-        <path d="M7 12.5L10 15.5L17 8.5"
-              stroke="white"
-              stroke-width="2.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <span class="toast-text">${msg}</span>
-  `;
-
-  toast.classList.add("show");
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 1500);
-}
-
-
-
-window.addEventListener("load", () => {
-  const msg = localStorage.getItem("toastMessage");
-
-  if (msg) {
-    showToast(msg);
-    localStorage.removeItem("toastMessage");
-  }
-});
 
 
 
@@ -664,6 +563,8 @@ onSnapshot(
       tujuhHariTerbaru
     );
 
+    updateChart();
+
   }
 );
 
@@ -851,3 +752,5 @@ function updateRataRata(data) {
     rata.toLocaleString("id-ID");
 
 }
+
+
