@@ -1,28 +1,22 @@
 /* =========================
-   📄 PAGE WRAPPER
+   PAGE WRAPPER
 ========================= */
 .admin-menu-page {
-  padding-top: 60px; /* ruang topbar */
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #f9f9f9;
+  padding-top: 60px;
 }
 
 /* =========================
-   📱 MAIN CONTENT AREA
+   MAIN CONTENT
 ========================= */
 .admin-menu-main {
   flex: 1;
   width: 100%;
-  padding: 12px 20px 100px;
+
+  padding: 8px 22px 120px;
   margin-top: 12px;
 
   overflow-y: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
 
-  /* hide scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -32,111 +26,136 @@
 }
 
 /* =========================
-   🌍 GLOBAL
-========================= */
-* {
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
-}
-
-body {
-  margin: 0;
-  background: #f4f6f9;
-}
-
-/* =========================
-   🔝 TOPBAR
+   TOPBAR
 ========================= */
 .topbar {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
 
+  width: 100%;
   height: 60px;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: #ffffff;
-  border-bottom: 1px solid #eee;
-  z-index: 10;
+  background: #fff;
+  z-index: 20;
 }
 
 .topbar-title {
-  margin: 0;
   font-size: 26px;
   font-weight: 600;
   color: #222;
+  margin: 0;
 }
 
 /* =========================
-   📦 FORM CONTAINER
+   INPUT
 ========================= */
-.container {
-  width: 100%;
-  max-width: 420px;
-  margin: 0 auto; /* center */
-
-  background: #ffffff;
-  padding: 18px;
-  border-radius: 5px;
-
-  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+.input-group {
+  margin-bottom: 18px;
 }
 
-/* =========================
-   📝 INPUT
-========================= */
-input,
-select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-
-  border-radius: 5px;
-  border: 1px solid #ddd;
+.input-label {
+  display: block;
   font-size: 14px;
-  outline: none;
+  color: #7d7d7d;
+  margin-bottom: 6px;
+  font-weight: 500;
 }
 
-input:focus,
-select:focus {
-  border-color: #4CAF50;
+.input-wrapper {
+  display: flex;
+  align-items: center;
+
+  background: rgba(255,255,255,0.94);
+
+  border-radius: 5px;
+
+  padding: 14px 16px;
+}
+
+.input-wrapper input,
+.input-wrapper select {
+  width: 100%;
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  font-size: 16px;
+  font-weight: 500;
+  color: #202020;
+}
+
+.input-wrapper input::placeholder {
+  color: #bbb;
+}
+
+.input-wrapper:focus-within {
+  border: 1px solid #525252;
 }
 
 /* =========================
-   🔘 BUTTON
+   FILE UPLOAD
 ========================= */
-button {
+.upload-box {
+  background: rgba(255,255,255,0.94);
+
+  border-radius: 5px;
+  padding: 14px 16px;
+}
+
+.upload-box input {
   width: 100%;
-  padding: 12px;
+}
+
+/* =========================
+   BUTTON
+========================= */
+.primary-btn {
+  width: 100%;
+  height: 48px;
 
   border: none;
   border-radius: 5px;
-  background: #4CAF50;
+
+  background: #cdcccc;
   color: #fff;
 
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:active {
-  transform: scale(0.97);
-}
-
-/* =========================
-   📋 TITLE LIST
-========================= */
-.admin-menu-main h2 {
   font-size: 16px;
-  margin: 20px 0 10px;
-  color: #333;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  margin-bottom: 24px;
+}
+
+.primary-btn:hover {
+  background: #ffc400;
+}
+
+.primary-btn:active {
+  transform: scale(0.98);
 }
 
 /* =========================
-   📋 LIST MENU ADMIN
+   SECTION TITLE
+========================= */
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+
+  margin-bottom: 14px;
+}
+
+/* =========================
+   MENU LIST
 ========================= */
 #menuAdminList {
   display: flex;
@@ -145,50 +164,203 @@ button:active {
 }
 
 /* =========================
-   🍞 ITEM
+   MENU CARD
 ========================= */
 .menu-admin-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 
-  padding: 10px;
-  background: #ffffff;
+  background: #fff;
+
   border-radius: 5px;
 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  transition: 0.2s;
-}
-
-.menu-admin-item:active {
-  transform: scale(0.98);
+  padding: 12px;
 }
 
 /* =========================
-   🔀 DRAG HANDLE
+   IMAGE
 ========================= */
-.drag-handle {
-  cursor: grab;
-  font-size: 18px;
-  color: #999;
+.menu-admin-item img {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 5px;
+  object-fit: cover;
 }
 
-/* saat drag */
+/* =========================
+   INFO
+========================= */
+.menu-info {
+  flex: 1;
+}
+
+.menu-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+}
+
+.menu-price {
+  font-size: 13px;
+  color: #888;
+
+  margin-top: 4px;
+}
+
+/* =========================
+   DRAG HANDLE
+========================= */
+.drag-handle {
+  font-size: 20px;
+  color: #999;
+
+  cursor: grab;
+}
+
+/* =========================
+   DRAGGING
+========================= */
 .menu-admin-item.dragging {
   opacity: 0.5;
 }
 
-/* posisi target */
-.menu-admin-item.over {
-  border: 2px dashed #4CAF50;
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 390px) {
+  .admin-menu-main {
+    padding: 8px 22px 120px;
+  }
 }
 
+
 /* =========================
-   🖼️ IMAGE
+   ACTION BUTTONS
 ========================= */
-.menu-admin-item img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
+.menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* EDIT */
+.edit-btn {
+  border: none;
   border-radius: 5px;
+
+  padding: 6px 10px;
+
+  background: #ffc400;
+  color: #222;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+/* DELETE */
+.delete-btn {
+  border: none;
+  border-radius: 5px;
+
+  padding: 6px 10px;
+
+  background: #ff4d4f;
+  color: white;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+/* ACTIVE */
+.edit-btn:active,
+.delete-btn:active {
+  transform: scale(0.96);
+}
+
+
+.edit-modal {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,.45);
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 9999;
+}
+
+.edit-modal.show {
+  display: flex;
+}
+
+.edit-box {
+  width: 100%;
+  max-width: 360px;
+
+  background: #fff;
+
+  border-radius: 20px;
+
+  padding: 20px;
+}
+
+.edit-box h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.edit-box input,
+.edit-box select {
+  width: 100%;
+  height: 48px;
+
+  border: 1px solid #ddd;
+  border-radius: 12px;
+
+  padding: 0 14px;
+
+  margin-bottom: 12px;
+
+  font-size: 14px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.edit-actions button {
+  flex: 1;
+
+  height: 46px;
+
+  border: none;
+  border-radius: 12px;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#cancelEdit {
+  background: #eee;
+}
+
+#saveEdit {
+  background: #111;
+  color: white;
 }
