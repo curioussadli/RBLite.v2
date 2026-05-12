@@ -508,48 +508,6 @@
 
 
 
-.rekap-wrapper {
-  display: flex;
-  gap: 12px;
-  margin-top: 16px;
-  margin-bottom: 20px; /* 🔥 tambahin ini */
-}
-
-.rekap-card {
-  flex: 1;
-  background: white;
-  padding: 12px;
-  border-radius: 5px;
-}
-
-.rekap-card h3 {
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
-.rekap-card p {
-  display: flex;
-  justify-content: space-between; /* kiri & kanan */
-  align-items: center;
-  font-size: 13px;
-  margin: 4px 0;
-}
-
-.rekap-card span {
-  font-weight: 600;
-  text-align: right;
-}
-
-#mingguMasuk,
-#bulanMasuk {
-  color: #2ea44f; /* hijau */
-}
-
-#mingguKeluar,
-#bulanKeluar {
-  color: #e74c3c; /* merah */
-}
-
 
 
 #toast {
