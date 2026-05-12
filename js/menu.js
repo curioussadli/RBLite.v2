@@ -8,6 +8,7 @@ console.log("🔥 MENU JS LOADED");
 let cart = [];
 
 const saved = localStorage.getItem("cart");
+
 if (saved) {
   cart = JSON.parse(saved);
 }
@@ -46,8 +47,11 @@ function addToCart(id, name, price) {
 // =============================
 function updateCartUI() {
 
-  const cartCount = document.getElementById("cartCount");
-  const cartTotal = document.getElementById("cartBottomTotal");
+  const cartCount =
+    document.getElementById("cartCount");
+
+  const cartTotal =
+    document.getElementById("cartBottomTotal");
 
   if (!cartCount || !cartTotal) return;
 
@@ -55,124 +59,257 @@ function updateCartUI() {
   let totalHarga = 0;
 
   cart.forEach(item => {
+
     totalItem += item.qty;
-    totalHarga += item.qty * item.price;
+
+    totalHarga +=
+      item.qty * item.price;
+
   });
 
-  cartCount.textContent = `${totalItem} item`;
-  cartTotal.textContent = "Rp " + totalHarga.toLocaleString("id-ID");
+  cartCount.textContent =
+    `${totalItem} item`;
+
+  cartTotal.textContent =
+    "Rp " +
+    totalHarga.toLocaleString("id-ID");
+
 }
 
 // =============================
-// 🔥 SMOOTH SCROLL (PELANN)
+// 🔥 SMOOTH SCROLL
 // =============================
 function smoothScrollToTop(duration = 800) {
-  const start = window.scrollY;
-  const startTime = performance.now();
+
+  const start =
+    window.scrollY;
+
+  const startTime =
+    performance.now();
 
   function scroll() {
-    const now = performance.now();
-    const time = Math.min(1, (now - startTime) / duration);
 
-    const ease = 1 - Math.pow(1 - time, 3);
+    const now =
+      performance.now();
 
-    window.scrollTo(0, start * (1 - ease));
+    const time =
+      Math.min(
+        1,
+        (now - startTime) / duration
+      );
+
+    const ease =
+      1 - Math.pow(1 - time, 3);
+
+    window.scrollTo(
+      0,
+      start * (1 - ease)
+    );
 
     if (time < 1) {
       requestAnimationFrame(scroll);
     }
+
   }
 
   requestAnimationFrame(scroll);
+
 }
 
 // =============================
 // 🚀 LOAD MENU FIREBASE
 // =============================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-  const foodContainer = document.getElementById("foodList");
-  const drinkContainer = document.getElementById("drinkList");
+    const foodContainer =
+      document.getElementById("foodList");
 
-  if (!foodContainer && !drinkContainer) {
-    console.error("Container menu tidak ditemukan");
-    return;
-  }
+    const drinkContainer =
+      document.getElementById("drinkList");
 
-  onSnapshot(collection(db, "menu"), (snapshot) => {
+    const otherContainer =
+      document.getElementById("otherList");
 
-    const docs = [];
+    if (
+      !foodContainer &&
+      !drinkContainer &&
+      !otherContainer
+    ) {
+      console.error(
+        "Container menu tidak ditemukan"
+      );
+      return;
+    }
 
-    snapshot.forEach((docSnap) => {
-      docs.push({
-        id: docSnap.id,
-        ...docSnap.data()
-      });
-    });
+    onSnapshot(
+      collection(db, "menu"),
+      (snapshot) => {
 
-    // 🔥 SORT
-    docs.sort((a, b) => (a.order || 0) - (b.order || 0));
+        const docs = [];
 
-    // 🔥 FILTER
-    const foods = docs.filter(i => !i.category || i.category === "food");
-    const drinks = docs.filter(i => i.category === "drink");
+        snapshot.forEach((docSnap) => {
 
-    // reset UI
-    if (foodContainer) foodContainer.innerHTML = "";
-    if (drinkContainer) drinkContainer.innerHTML = "";
+          docs.push({
 
-    // =============================
-    // 🔥 RENDER
-    // =============================
-    function render(list, container) {
+            id: docSnap.id,
+            ...docSnap.data()
 
-      list.forEach((data) => {
-
-        const card = document.createElement("div");
-        card.classList.add("menu-card");
-
-        card.innerHTML = `
-          <div class="menu-img">
-            <img src="${data.img}">
-          </div>
-
-          <div class="menu-info">
-            <h3>${data.name}</h3>
-            <p>Rp ${Number(data.price).toLocaleString("id-ID")}</p>
-          </div>
-
-          <button class="btn-add">+ Tambah</button>
-        `;
-
-        const btn = card.querySelector(".btn-add");
-
-        // ✅ CLICK FIXED
-        btn.addEventListener("click", () => {
-          addToCart(data.id, data.name, data.price);
-
-          // 🔥 scroll hanya kalau sudah agak bawah
+          });
 
         });
 
-        container.appendChild(card);
-      });
+        // =============================
+        // 🔥 SORT
+        // =============================
+        docs.sort(
+          (a, b) =>
+            (a.order || 0) -
+            (b.order || 0)
+        );
+
+        // =============================
+        // 🔥 FILTER
+        // =============================
+        const foods =
+          docs.filter(item =>
+            item.category === "food"
+          );
+
+        const drinks =
+          docs.filter(item =>
+            item.category === "drink"
+          );
+
+        const others =
+          docs.filter(item =>
+            item.category !== "food" &&
+            item.category !== "drink"
+          );
+
+        // =============================
+        // 🔥 RESET UI
+        // =============================
+        if (foodContainer) {
+          foodContainer.innerHTML = "";
+        }
+
+        if (drinkContainer) {
+          drinkContainer.innerHTML = "";
+        }
+
+        if (otherContainer) {
+          otherContainer.innerHTML = "";
+        }
+
+        // =============================
+        // 🔥 RENDER
+        // =============================
+        function render(
+          list,
+          container
+        ) {
+
+          list.forEach((data) => {
+
+            const card =
+              document.createElement("div");
+
+            card.classList.add(
+              "menu-card"
+            );
+
+            card.innerHTML = `
+
+              <div class="menu-img">
+                <img src="${data.img}">
+              </div>
+
+              <div class="menu-info">
+                <h3>${data.name}</h3>
+
+                <p>
+                  Rp ${Number(data.price)
+                    .toLocaleString("id-ID")}
+                </p>
+              </div>
+
+              <button class="btn-add">
+                + Tambah
+              </button>
+
+            `;
+
+            const btn =
+              card.querySelector(".btn-add");
+
+            btn.addEventListener(
+              "click",
+              () => {
+
+                addToCart(
+                  data.id,
+                  data.name,
+                  data.price
+                );
+
+                if (
+                  window.scrollY > 200
+                ) {
+                  smoothScrollToTop(600);
+                }
+
+              }
+            );
+
+            container.appendChild(card);
+
+          });
+
+        }
+
+        // =============================
+        // 🔥 LOAD SECTION
+        // =============================
+        if (foodContainer) {
+          render(foods, foodContainer);
+        }
+
+        if (drinkContainer) {
+          render(drinks, drinkContainer);
+        }
+
+        if (otherContainer) {
+          render(others, otherContainer);
+        }
+
+        updateCartUI();
+
+      }
+    );
+
+    // =============================
+    // 🛒 CLICK CART
+    // =============================
+    const cartBar =
+      document.getElementById(
+        "cartBottomBar"
+      );
+
+    if (cartBar) {
+
+      cartBar.addEventListener(
+        "click",
+        () => {
+
+          window.location.href =
+            "pesanan.html";
+
+        }
+      );
+
     }
 
-    if (foodContainer) render(foods, foodContainer);
-    if (drinkContainer) render(drinks, drinkContainer);
-
-    updateCartUI();
-  });
-
-  // =============================
-  // 🛒 CLICK CART
-  // =============================
-  const cartBar = document.getElementById("cartBottomBar");
-
-  if (cartBar) {
-    cartBar.addEventListener("click", () => {
-      window.location.href = "pesanan.html";
-    });
   }
-
-});
+);
