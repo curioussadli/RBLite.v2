@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
+
   <title>Admin Menu</title>
 
   <link rel="stylesheet" href="css/main.css">
@@ -17,41 +22,149 @@
 <body>
 
   <main class="phone-shell">
-    <section class="app-screen admin-menu-page">
+    <section class="app-screen">
 
-      <!-- ================= TOPBAR ================= -->
-      <div class="topbar">
+      <!-- =========================
+      MAIN CONTENT
+      ========================= -->
+      <section class="admin-menu-main">
 
-        <h2 class="topbar-title">Admin Menu</h2>
-      </div>
-
-      <!-- ================= CONTENT ================= -->
-      <div class="admin-menu-main">
-
-        <!-- FORM -->
-        <div class="container">
-          <h2>Tambah Produk</h2>
-
-          <input type="text" id="name" placeholder="Nama produk">
-          <input type="number" id="price" placeholder="Harga">
-          <input type="file" id="image">
-
-          <select id="category">
-            <option value="food">Makanan</option>
-            <option value="drink">Minuman</option>
-          </select>
-
-          <button id="btnSave">Upload</button>
+        <!-- HEADER -->
+        <div class="admin-menu-page">
+          <div class="topbar">
+            <h2 class="topbar-title">Admin Menu</h2>
+          </div>
         </div>
 
-        <!-- LIST -->
-        <h2 style="margin-top:24px;">Urutan Menu</h2>
+        <!-- =========================
+        FORM
+        ========================= -->
+
+        <!-- Nama -->
+        <div class="input-group">
+          <label class="input-label">Nama Produk</label>
+
+          <div class="input-wrapper">
+            <input
+              type="text"
+              id="name"
+              placeholder="Contoh: Choco Crunch"
+            />
+          </div>
+        </div>
+
+        <!-- Harga -->
+        <div class="input-group">
+          <label class="input-label">Harga</label>
+
+          <div class="input-wrapper">
+            <input
+              type="number"
+              id="price"
+              placeholder="Contoh: 15000"
+            />
+          </div>
+        </div>
+
+        <!-- Gambar -->
+        <div class="input-group">
+          <label class="input-label">Foto Produk</label>
+
+          <div class="upload-box">
+            <input type="file" id="image">
+          </div>
+        </div>
+
+        <!-- Kategori -->
+        <div class="input-group">
+          <label class="input-label">Kategori</label>
+
+          <div class="input-wrapper">
+            <select id="category">
+              <option value="food">Makanan</option>
+              <option value="drink">Minuman</option>
+              <option value="other">Lainnya</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Button -->
+        <button id="btnSave" class="primary-btn">
+          Upload Produk
+        </button>
+
+        <!-- =========================
+        LIST MENU
+        ========================= -->
+
+        <div class="section-title">
+          Urutan Menu
+        </div>
+
         <div id="menuAdminList"></div>
 
-      </div>
+      </section>
 
     </section>
   </main>
+
+
+  <!-- ================= EDIT MODAL ================= -->
+<div id="editModal" class="edit-modal">
+
+  <div class="edit-box">
+
+    <h3>Edit Menu</h3>
+
+    <input
+      type="text"
+      id="editName"
+      placeholder="Nama menu"
+    >
+
+    <input
+      type="number"
+      id="editPrice"
+      placeholder="Harga"
+    >
+
+    <input
+      type="text"
+      id="editImg"
+      placeholder="URL gambar"
+    >
+
+    <select id="editCategory">
+
+      <option value="food">
+        Food
+      </option>
+
+      <option value="drink">
+        Drink
+      </option>
+
+      <option value="other">
+        Other
+      </option>
+
+    </select>
+
+    <div class="edit-actions">
+
+      <button id="cancelEdit">
+        Batal
+      </button>
+
+      <button id="saveEdit">
+        Simpan
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
   <!-- SORTABLE -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
