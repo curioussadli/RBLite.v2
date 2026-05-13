@@ -15,58 +15,18 @@
 
   <div id="toast"></div>
 
-  <!-- =========================
-       CALCULATOR
-  ========================= -->
-  <div id="calculator" class="calc-overlay">
-    <div class="calc-box">
-      <button class="calc-close" onclick="toggleCalculator()">✕</button>
 
-      <input type="text" id="calcDisplay" readonly>
+<!-- =========================
+     TOPBAR
+========================= -->
+<div class="topbar">
+  <div class="topbar-title">Stok</div>
 
-      <div class="calc-buttons">
-        <button onclick="calcClear()">C</button>
-        <button onclick="calcPercent()">%</button>
-        <button onclick="calcDelete()">←</button>
-        <button onclick="calcInput('/')">/</button>
-
-        <button onclick="calcInput('7')">7</button>
-        <button onclick="calcInput('8')">8</button>
-        <button onclick="calcInput('9')">9</button>
-        <button onclick="calcInput('*')">×</button>
-
-        <button onclick="calcInput('4')">4</button>
-        <button onclick="calcInput('5')">5</button>
-        <button onclick="calcInput('6')">6</button>
-        <button onclick="calcInput('-')">-</button>
-
-        <button onclick="calcInput('1')">1</button>
-        <button onclick="calcInput('2')">2</button>
-        <button onclick="calcInput('3')">3</button>
-        <button onclick="calcInput('+')">+</button>
-
-        <button onclick="calcInput('00')">00</button>
-        <button onclick="calcInput('0')">0</button>
-        <button onclick="calcInput('.')">,</button>
-        <button onclick="calcEqual()">=</button>
-      </div>
-    </div>
+  <!-- 🔥 FIX: hapus this -->
+  <div class="topbar-action" onclick="toggleFilter()">
+    <img src="assets/icons/icon-list-x.svg" class="filter-icon" alt="filter">
   </div>
-
-  <!-- =========================
-       TOPBAR
-  ========================= -->
-  <div class="topbar">
-    <div class="topbar-title">Stok</div>
-
-    <div class="topbar-action" onclick="toggleCalculator()">
-      <img src="assets/icons/icon-calculator.svg" alt="calculator">
-    </div>
-
-    <div class="topbar-action" onclick="toggleFilter()">
-      <img src="assets/icons/icon-list-x.svg" class="filter-icon" alt="filter">
-    </div>
-  </div>
+</div>
 
 <!-- =========================
      SEARCH (PAKAI KEYBOARD HP BAWAAN)
@@ -89,69 +49,65 @@
     alt="clear"
   >
 </div>
--->
 
-  <!-- =========================
-       MAIN CONTENT
-  ========================= -->
-  <section class="stok-main">
 
-    <div class="stok-footer">
-      <button onclick="window.simpanHarian()">
-        Simpan Stok Harian
-      </button>
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+<section class="stok-main">
+
+  <div id="stokContainer"></div>
+
+</section>
+
+
+
+<!-- =========================
+     BOTTOM NAV
+========================= -->
+<nav class="bottom-nav">
+
+  <a href="dashboard.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-saldo.svg">
     </div>
+    <span>Saldo</span>
+  </a>
 
-    <div id="stokContainer"></div>
+  <a href="stok.html" class="nav-item active">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-stok.svg">
+    </div>
+    <span>Stok</span>
+  </a>
 
-  </section>
+  <a href="menu.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-menu.svg">
+    </div>
+    <span>Menu</span>
+  </a>
 
-  <!-- =========================
-       BOTTOM NAV
-  ========================= -->
-  <nav class="bottom-nav">
+  <a href="riwayat-pesanan.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-pesanan.svg">
+    </div>
+    <span>Riwayat</span>
+  </a>
 
-    <a href="dashboard.html" class="nav-item">
-      <div class="nav-icon">
-        <img src="assets/icons/icon-saldo.svg">
-      </div>
-      <span>Saldo</span>
-    </a>
+  <a href="laporan.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-laporan.svg">
+    </div>
+    <span>Laporan</span>
+  </a>
 
-    <a href="stok.html" class="nav-item active">
-      <div class="nav-icon">
-        <img src="assets/icons/icon-stok.svg">
-      </div>
-      <span>Stok</span>
-    </a>
+</nav>
 
-    <a href="menu.html" class="nav-item">
-      <div class="nav-icon">
-        <img src="assets/icons/icon-menu.svg">
-      </div>
-      <span>Menu</span>
-    </a>
-
-    <a href="riwayat-pesanan.html" class="nav-item">
-      <div class="nav-icon">
-        <img src="assets/icons/icon-pesanan.svg">
-      </div>
-      <span>Riwayat</span>
-    </a>
-
-    <a href="laporan.html" class="nav-item">
-      <div class="nav-icon">
-        <img src="assets/icons/icon-laporan.svg">
-      </div>
-      <span>Laporan</span>
-    </a>
-
-  </nav>
-
-  <!-- =========================
-       JS
-  ========================= -->
-  <script type="module" src="js/stok.js"></script>
+<!-- =========================
+     JS
+========================= -->
+<script type="module" src="js/stok.js"></script>
 
 </body>
 </html>
