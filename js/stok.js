@@ -1,12 +1,4 @@
-const URUTAN_PRODUK = [
-  "Roti Balok","Cokelat Cream","Vanilla Cream","Tiramisu Cream","Greentea Cream",
-  "Strawberry Cream","Choco Crunchy","Keju Cheddar","Cookies Crumb","Caramel Crumb",
-  "Red Velvet Crumb","Matcha Crumb","Peanuts Crumb","Chocolate Powder","Milo Powder",
-  "Vanilla Latte Powder","Cappuccino Powder","Taro Powder","Red Velvet Powder",
-  "Greentea Powder","Blackcurrant Powder","Lemon Tea Powder","Kertas Cokelat",
-  "Kresek Roti","Tisu Garpu","Kresek 1 Cup","Kresek 2 Cup","Sedotan Es",
-  "Kertas Struk","Air Galon","Gas LPG","Cup Ice","Minyak Crunchy","Minyak Kelapa"
-];
+console.log("🔥 STOK JS LOADED");
 
 import {
   db, collection, doc, onSnapshot, setDoc
@@ -44,11 +36,16 @@ onSnapshot(collection(db, "stok_draft"), (snap) => {
 function renderAll() {
   container.innerHTML = "";
 
-  const sortedIds = Object.keys(produkData).sort((a, b) => {
-    const A = URUTAN_PRODUK.indexOf(produkData[a].nama);
-    const B = URUTAN_PRODUK.indexOf(produkData[b].nama);
-    return (A === -1 ? 999 : A) - (B === -1 ? 999 : B);
-  });
+  const sortedIds = Object.keys(produkData)
+.sort((a, b) => {
+
+  return (
+    (produkData[a].order || 0)
+    -
+    (produkData[b].order || 0)
+  );
+
+});
 
   sortedIds.forEach(id => {
     const p = produkData[id];
@@ -315,49 +312,99 @@ input.addEventListener("click", () => {
   setCursorToEnd(input);
 });
 
-
-
 input.addEventListener("focus", () => {
-  input.blur();       // matiin keyboard asli
-  input.focus();      // hidupin lagi buat cursor
+  // 🔥 langsung matiin keyboard asli
+  setTimeout(() => {
+    input.blur();
+  }, 10);
 });
 
-
-
-
-
-// =========================
-// HANDLE BACK BUTTON (ANDROID)
-// =========================
-let keyboardOpen = false;
-
-// saat buka keyboard
 input.addEventListener("click", () => {
   keyboard.style.display = "block";
-  keyboardOpen = true;
-
-  // 🔥 push state biar back nutup keyboard dulu
-  history.pushState({ keyboard: true }, "");
 
   input.focus();
   setCursorToEnd(input);
 });
 
-// saat klik luar (nutup keyboard manual)
-document.addEventListener("click", (e) => {
-  if (!keyboard.contains(e.target) && e.target !== input) {
-    keyboard.style.display = "none";
-    keyboardOpen = false;
-  }
-});
 
-// 🔥 DETECT BACK BUTTON
-window.addEventListener("popstate", (e) => {
-  if (keyboardOpen) {
-    keyboard.style.display = "none";
-    keyboardOpen = false;
+// =========================
+// SIMPAN STOK HARIAN
+// =========================
+window.simpanHarian = async () => {
 
-    // 🔥 cegah langsung keluar halaman
-    history.pushState(null, "");
+  try {
+
+    const promises = [];
+
+    Object.keys(produkData).forEach((id) => {
+
+      const p = produkData[id];
+      const d = draftData[id] || {};
+
+      promises.push(
+        setDoc(
+          doc(db, "produk", id),
+          {
+            ...p,
+            ...d
+          }
+        )
+      );
+
+      promises.push(
+        setDoc(
+          doc(db, "stok_draft", id),
+          d
+        )
+      );
+
+    });
+
+    await Promise.all(promises);
+
+    showToast("🔥 Semua stok berhasil disimpan");
+
+  } catch (err) {
+
+    console.error(err);
+
+    showToast("❌ Gagal simpan stok");
+
   }
-});
+
+};
+
+
+async function simpanHarian() {
+  try {
+
+    const batch = writeBatch(db);
+
+    Object.keys(produkData).forEach((id) => {
+
+      const p = produkData[id];
+      const d = draftData[id] || {};
+
+      batch.set(doc(db, "produk", id), {
+        ...p,
+        ...d
+      });
+
+      batch.set(doc(db, "stok_draft", id), d);
+
+    });
+
+    await batch.commit();
+
+    showToast("🔥 Semua stok berhasil disimpan");
+
+  } catch (err) {
+
+    console.error(err);
+    showToast("❌ Gagal simpan stok");
+
+  }
+}
+
+// 🔥 INI WAJIB
+window.simpanHarian = simpanHarian;
