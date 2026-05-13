@@ -1,0 +1,201 @@
+/* =========================
+   MAIN
+========================= */
+.admin-stok-main {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 80px 16px 120px;
+}
+
+/* =========================
+   LIST
+========================= */
+#stokAdminList {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  width: 100%;
+  max-width: 420px;
+
+  margin: 0 auto;
+}
+
+/* =========================
+   CARD
+========================= */
+.stok-admin-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: #fff;
+
+  padding: 14px;
+
+  border-radius: 5px;
+}
+
+/* =========================
+   HANDLE
+========================= */
+.drag-handle {
+  font-size: 20px;
+  cursor: grab;
+
+  color: #777;
+}
+
+/* =========================
+   INFO
+========================= */
+.stok-admin-info {
+  flex: 1;
+}
+
+.stok-admin-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #222;
+}
+
+.stok-admin-meta {
+  font-size: 12px;
+  color: #777;
+
+  margin-top: 3px;
+}
+
+.stok-admin-price {
+  margin-top: 6px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #16a34a;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+.stok-admin-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stok-admin-actions button {
+  border: none;
+
+  padding: 8px 10px;
+
+  border-radius: 5px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #ffe46b;
+  color: #444;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* =========================
+   MODAL
+========================= */
+.edit-modal {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,0.45);
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.edit-modal.show {
+  display: flex;
+}
+
+/* =========================
+   BOX
+========================= */
+.edit-box {
+  width: calc(100% - 32px);
+  max-width: 420px;
+
+  background: #fff;
+
+  border-radius: 5px;
+
+  padding: 20px;
+}
+
+.edit-box h3 {
+  margin-top: 0;
+  margin-bottom: 18px;
+
+  font-size: 18px;
+}
+
+/* =========================
+   INPUT
+========================= */
+.edit-box input {
+  width: 100%;
+
+  border: 1px solid rgba(0,0,0,0.1);
+
+  border-radius: 5px;
+
+  padding: 12px;
+
+  margin-bottom: 12px;
+
+  font-size: 14px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.edit-actions {
+  display: flex;
+  gap: 10px;
+
+  margin-top: 8px;
+}
+
+.edit-actions button {
+  flex: 1;
+
+  border: none;
+
+  padding: 12px;
+
+  border-radius: 5px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+#cancelEdit {
+  background: #eee;
+}
+
+#saveEdit {
+  background: #111;
+  color: #fff;
+}
