@@ -13,20 +13,88 @@ let produkData = {};
 let draftData = {};
 let searchKeyword = "";
 let filterMode = false;
+let firstLoad = true;
 
 // =========================
 // LOAD DATA
 // =========================
 onSnapshot(collection(db, "produk"), (snap) => {
-  produkData = {};
-  snap.forEach(d => produkData[d.id] = d.data());
-  renderAll();
+
+  snap.docChanges().forEach((change) => {
+
+    const id = change.doc.id;
+    const data = change.doc.data();
+
+    // tambah / update
+    if (
+      change.type === "added" ||
+      change.type === "modified"
+    ) {
+
+      produkData[id] = data;
+
+      // realtime setelah load awal
+      if (!firstLoad) {
+        updateCard(id);
+      }
+
+    }
+
+    // hapus
+    if (change.type === "removed") {
+
+      delete produkData[id];
+
+      const oldCard =
+        document.querySelector(
+          `.stok-card[data-id="${id}"]`
+        );
+
+      if (oldCard) {
+        oldCard.remove();
+      }
+
+    }
+
+  });
+
+  // render pertama sekali
+  if (firstLoad) {
+
+    renderAll();
+
+    firstLoad = false;
+
+  }
+
 });
 
 onSnapshot(collection(db, "stok_draft"), (snap) => {
-  draftData = {};
-  snap.forEach(d => draftData[d.id] = d.data());
-  renderAll();
+
+  snap.docChanges().forEach((change) => {
+
+    const id = change.doc.id;
+    const data = change.doc.data();
+
+    if (
+      change.type === "added" ||
+      change.type === "modified"
+    ) {
+
+      draftData[id] = data;
+
+      updateCard(id);
+
+    }
+
+    if (change.type === "removed") {
+
+      delete draftData[id];
+
+    }
+
+  });
+
 });
 
 // =========================
@@ -84,20 +152,43 @@ function hitung(p, d = {}) {
 // CARD
 // =========================
 function renderCard(id, p) {
+
   const h = hitung(p, draftData[id]);
 
   const format = (n) =>
-    Number.isInteger(n) ? n : n.toLocaleString("id-ID", { minimumFractionDigits: 1 });
+    Number.isInteger(n)
+      ? n
+      : n.toLocaleString("id-ID", {
+          minimumFractionDigits: 1
+        });
+
+  const oldCard =
+    document.querySelector(`.stok-card[data-id="${id}"]`);
+
+  const isActive =
+    oldCard?.classList.contains("active");
 
   const card = document.createElement("div");
+
   card.className = "stok-card";
+
+  if (isActive) {
+    card.classList.add("active");
+  }
+
   card.dataset.id = id;
 
   card.innerHTML = `
   <div class="stok-header" onclick="toggleCard(this)">
+
     <div class="stok-top">
       <h3>${p.nama}</h3>
-      <div class="${(p.stokMinimal && h.total < p.stokMinimal) ? 'stok-warning' : ''}">
+
+      <div class="${
+        (p.stokMinimal && h.total < p.stokMinimal)
+          ? 'stok-warning'
+          : ''
+      }">
         ${format(h.total)}
       </div>
     </div>
@@ -108,28 +199,123 @@ function renderCard(id, p) {
     </div>
 
     <div class="stok-price-row">
-      <div>Rp ${(p.harga ?? 0).toLocaleString("id-ID")}</div>
-      <div>Rp ${Math.round(h.totalNilai).toLocaleString("id-ID")}</div>
+      <div>
+        Rp ${(p.harga ?? 0)
+          .toLocaleString("id-ID")}
+      </div>
+
+      <div>
+        Rp ${Math.round(h.totalNilai)
+          .toLocaleString("id-ID")}
+      </div>
     </div>
+
   </div>
 
   <div class="stok-body" onclick="event.stopPropagation()">
-    ${row("Outlet", id, "stokOutlet", h.outlet, 1)}
-    ${row("Koma", id, "stokKoma", format(h.koma), 0.1)}
-    ${row("Gudang", id, "stokGudang", h.gudang, 1)}
+
+    ${row(
+      "Outlet",
+      id,
+      "stokOutlet",
+      h.outlet,
+      1
+    )}
+
+    ${row(
+      "Koma",
+      id,
+      "stokKoma",
+      format(h.koma),
+      0.1
+    )}
+
+    ${row(
+      "Gudang",
+      id,
+      "stokGudang",
+      h.gudang,
+      1
+    )}
 
     <hr/>
 
-    <div class="stok-summary"><span>Minimal</span><strong>${p.stokMinimal ?? 0}</strong></div>
-    <div class="stok-summary"><span>Request</span><strong>${format(h.request)}</strong></div>
-    <div class="stok-summary"><span>Nilai</span><strong>Rp ${Math.round(h.totalNilai).toLocaleString("id-ID")}</strong></div>
+    <div class="stok-summary">
+      <span>Minimal</span>
+      <strong>${p.stokMinimal ?? 0}</strong>
+    </div>
 
-    <button onclick="updateStok('${id}')" class="stok-save">🔥 Update</button>
+    <div class="stok-summary">
+      <span>Request</span>
+      <strong>${format(h.request)}</strong>
+    </div>
+
+    <div class="stok-summary">
+      <span>Nilai</span>
+
+      <strong>
+        Rp ${Math.round(h.totalNilai)
+          .toLocaleString("id-ID")}
+      </strong>
+    </div>
+
+    <button
+      onclick="updateStok('${id}')"
+      class="stok-save"
+    >
+      🔥 Update
+    </button>
+
   </div>
   `;
 
-  container.appendChild(card);
+  // replace card lama
+  if (oldCard) {
+
+    oldCard.replaceWith(card);
+
+  } else {
+
+    container.appendChild(card);
+
+  }
 }
+
+// =========================
+// UPDATE 1 CARD
+// =========================
+function updateCard(id) {
+
+  const p = produkData[id];
+
+  if (!p) return;
+
+  const d = draftData[id] ?? {};
+  const h = hitung(p, d);
+
+  // search filter
+  if (
+    !p.nama
+      .toLowerCase()
+      .includes(searchKeyword)
+  ) {
+    return;
+  }
+
+  // stok minimal filter
+  const low =
+    (p.stokMinimal ?? 0) > 0 &&
+    h.total < p.stokMinimal;
+
+  if (filterMode && !low) {
+    return;
+  }
+
+  renderCard(id, p);
+
+}
+
+
 
 function row(label, id, field, val, step) {
   return `
@@ -147,6 +333,7 @@ function row(label, id, field, val, step) {
 // UPDATE
 // =========================
 window.change = (id, field, delta) => {
+
   const p = produkData[id];
 
   if (!draftData[id]) {
@@ -157,25 +344,41 @@ window.change = (id, field, delta) => {
     };
   }
 
-  let next = (draftData[id][field] ?? 0) + delta;
+  let next =
+    (draftData[id][field] ?? 0) + delta;
 
+  // koma 0.1
   if (field === "stokKoma") {
     next = Math.round(next * 10) / 10;
   }
 
-  if (next < 0) next = 0;
+  // minimal 0
+  if (next < 0) {
+    next = 0;
+  }
 
+  // simpan draft
   draftData[id][field] = next;
 
-  const scrollY = window.scrollY;
+  // update 1 card saja
+  updateCard(id);
 
-  renderAll();
+  // aktifkan ulang
+  requestAnimationFrame(() => {
 
-  window.scrollTo(0, scrollY);
+    const card = document.querySelector(
+      `.stok-card[data-id="${id}"]`
+    );
 
-  const card = document.querySelector(`.stok-card[data-id="${id}"]`);
-  if (card) card.classList.add("active");
+    if (card) {
+      card.classList.add("active");
+    }
+
+  });
+
 };
+
+
 
 window.updateStok = async (id) => {
 
@@ -212,14 +415,46 @@ window.updateStok = async (id) => {
 // UI
 // =========================
 window.toggleCard = (el) => {
+
   const card = el.parentElement;
 
+  // tutup card lain
+  document.querySelectorAll(".stok-card").forEach(c => {
+    if (c !== card) {
+      c.classList.remove("active");
+    }
+  });
+
+  // toggle
+  card.classList.toggle("active");
+
+  // kalau dibuka
   if (card.classList.contains("active")) {
-    card.classList.remove("active");
-  } else {
-    document.querySelectorAll(".stok-card").forEach(c => c.classList.remove("active"));
-    card.classList.add("active");
+
+    setTimeout(() => {
+
+      // tinggi topbar + jarak bawahnya
+      const offset = 85;
+
+      // posisi REAL card di layar
+      const rect =
+        card.getBoundingClientRect();
+
+      // hitung target scroll
+      const targetY =
+        window.scrollY
+        + rect.top
+        - offset;
+
+      window.scrollTo({
+        top: targetY,
+        behavior: "smooth"
+      });
+
+    }, 250);
+
   }
+
 };
 
 window.toggleFilter = () => {
