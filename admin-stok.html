@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
+
+  <title>Admin Stok</title>
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/admin-stok.css">
+
+  <!-- FONT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+</head>
+
+<body>
+
+  <main class="phone-shell">
+
+    <section class="app-screen">
+
+      <section class="admin-stok-main">
+
+        <!-- HEADER -->
+        <div class="admin-stok-page">
+
+          <div class="topbar">
+            <h2 class="topbar-title">
+              Admin Stok
+            </h2>
+          </div>
+
+        </div>
+
+        <!-- LIST -->
+        <div id="stokAdminList"></div>
+
+      </section>
+
+    </section>
+
+  </main>
+
+  <!-- ================= EDIT MODAL ================= -->
+  <div id="editModal" class="edit-modal">
+
+    <div class="edit-box">
+
+      <h3>Edit Produk</h3>
+
+      <input
+        type="text"
+        id="editNama"
+        placeholder="Nama Produk"
+      >
+
+      <input
+        type="number"
+        id="editHarga"
+        placeholder="Harga"
+      >
+
+      <input
+        type="text"
+        id="editGramasi"
+        placeholder="Gramasi"
+      >
+
+      <input
+        type="text"
+        id="editSatuan"
+        placeholder="Satuan"
+      >
+
+      <input
+        type="number"
+        id="editMinimal"
+        placeholder="Stok Minimal"
+      >
+
+      <input
+        type="number"
+        id="editOutlet"
+        placeholder="Stok Outlet"
+      >
+
+      <input
+        type="number"
+        step="0.1"
+        id="editKoma"
+        placeholder="Stok Koma"
+      >
+
+      <input
+        type="number"
+        id="editGudang"
+        placeholder="Stok Gudang"
+      >
+
+      <div class="edit-actions">
+
+        <button id="cancelEdit">
+          Batal
+        </button>
+
+        <button id="saveEdit">
+          Simpan
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SORTABLE -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+  <!-- JS -->
+  <script type="module" src="js/admin-stok.js"></script>
+
+</body>
+</html>
