@@ -57,48 +57,89 @@
 
   </main>
 
-  <!-- ================= EDIT MODAL ================= -->
-  <div id="editModal" class="edit-modal">
+<!-- ================= EDIT MODAL ================= -->
+<div id="editModal" class="edit-modal">
 
-    <div class="edit-box">
+  <div class="edit-box">
 
-      <h3>Edit Produk</h3>
+    <h3>Edit Produk</h3>
+
+    <!-- NAMA -->
+    <div class="field-group">
+      <label>nama</label>
+      <small>(string)</small>
 
       <input
         type="text"
         id="editNama"
         placeholder="Nama Produk"
       >
+    </div>
+
+    <!-- HARGA -->
+    <div class="field-group">
+      <label>harga</label>
+      <small>(int64)</small>
 
       <input
         type="number"
         id="editHarga"
         placeholder="Harga"
       >
+    </div>
+
+    <!-- GRAMASI -->
+    <div class="field-group">
+      <label>gramasi</label>
+      <small>(string)</small>
 
       <input
         type="text"
         id="editGramasi"
         placeholder="Gramasi"
       >
+    </div>
+
+    <!-- SATUAN -->
+    <div class="field-group">
+      <label>satuan</label>
+      <small>(string)</small>
 
       <input
         type="text"
         id="editSatuan"
         placeholder="Satuan"
       >
+    </div>
+
+    <!-- MINIMAL -->
+    <div class="field-group">
+      <label>stokMinimal</label>
+      <small>(int64)</small>
 
       <input
         type="number"
         id="editMinimal"
         placeholder="Stok Minimal"
       >
+    </div>
+
+    <!-- OUTLET -->
+    <div class="field-group">
+      <label>stokOutlet</label>
+      <small>(int64)</small>
 
       <input
         type="number"
         id="editOutlet"
         placeholder="Stok Outlet"
       >
+    </div>
+
+    <!-- KOMA -->
+    <div class="field-group">
+      <label>stokKoma</label>
+      <small>(double)</small>
 
       <input
         type="number"
@@ -106,28 +147,35 @@
         id="editKoma"
         placeholder="Stok Koma"
       >
+    </div>
+
+    <!-- GUDANG -->
+    <div class="field-group">
+      <label>stokGudang</label>
+      <small>(int64)</small>
 
       <input
         type="number"
         id="editGudang"
         placeholder="Stok Gudang"
       >
+    </div>
 
-      <div class="edit-actions">
+    <div class="edit-actions">
 
-        <button id="cancelEdit">
-          Batal
-        </button>
+      <button id="cancelEdit">
+        Batal
+      </button>
 
-        <button id="saveEdit">
-          Simpan
-        </button>
-
-      </div>
+      <button id="saveEdit">
+        Simpan
+      </button>
 
     </div>
 
   </div>
+
+</div>
 
   <!-- SORTABLE -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
