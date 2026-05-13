@@ -42,11 +42,16 @@
   background: #ffffff;
   border-radius: 5px;
   overflow: hidden;
-  transition: 0.2s ease;
+
+  transition: transform 0.2s ease;
+  will-change: transform;
 }
 
-.stok-card:hover {
-  transform: translateY(-2px);
+/* hover hanya desktop */
+@media (hover: hover) {
+  .stok-card:hover {
+    transform: translateY(-2px);
+  }
 }
 
 /* =========================
@@ -123,7 +128,11 @@
   opacity: 0;
 
   padding: 0 14px;
-  transition: all 0.3s ease;
+
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease,
+    padding 0.2s ease;
 }
 
 .stok-card.active .stok-body {
@@ -298,3 +307,21 @@
 
 
 
+/* =========================
+   ACTIVE CARD FOCUS
+========================= */
+.stok-card.active {
+  transform: scale(1.01);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* redupin card lain */
+.stok-main.focus-mode .stok-card:not(.active) {
+  opacity: 0.45;
+  transform: scale(0.98);
+}
+
+html {
+  scroll-padding-top: 90px;
+}
