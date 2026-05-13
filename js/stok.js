@@ -11,7 +11,6 @@ const container = document.getElementById("stokContainer");
 // =========================
 let produkData = {};
 let draftData = {};
-let activeCardId = null;
 let searchKeyword = "";
 let filterMode = false;
 
@@ -60,10 +59,6 @@ function renderAll() {
     renderCard(id, p);
   });
 
-  if (activeCardId) {
-    const el = document.querySelector(`.stok-card[data-id="${activeCardId}"]`);
-    if (el) el.classList.add("active");
-  }
 }
 
 // =========================
@@ -163,23 +158,54 @@ window.change = (id, field, delta) => {
   }
 
   let next = (draftData[id][field] ?? 0) + delta;
-  if (field === "stokKoma") next = Math.round(next * 10) / 10;
+
+  if (field === "stokKoma") {
+    next = Math.round(next * 10) / 10;
+  }
+
   if (next < 0) next = 0;
 
   draftData[id][field] = next;
-  activeCardId = id;
+
+  const scrollY = window.scrollY;
+
   renderAll();
+
+  window.scrollTo(0, scrollY);
+
+  const card = document.querySelector(`.stok-card[data-id="${id}"]`);
+  if (card) card.classList.add("active");
 };
 
 window.updateStok = async (id) => {
+
   const p = produkData[id];
-  const d = draftData[id];
+  const d = draftData[id] ?? {};
 
-  await setDoc(doc(db, "produk", id), { ...p, ...d });
-  await setDoc(doc(db, "stok_draft", id), d);
+  // 🔥 toast langsung muncul
+  showToast("⏳ Menyimpan...");
 
-  showToast("🔥 Berhasil update");
-  activeCardId = null;
+  try {
+
+    await setDoc(doc(db, "produk", id), {
+      ...p,
+      ...d
+    });
+
+    await setDoc(doc(db, "stok_draft", id), d);
+
+    showToast("🔥 Berhasil update");
+
+    document.querySelectorAll(".stok-card").forEach(card => {
+      card.classList.remove("active");
+    });
+
+  } catch (err) {
+
+    console.error(err);
+    showToast("❌ Gagal update");
+
+  }
 };
 
 // =========================
@@ -190,11 +216,9 @@ window.toggleCard = (el) => {
 
   if (card.classList.contains("active")) {
     card.classList.remove("active");
-    activeCardId = null;
   } else {
     document.querySelectorAll(".stok-card").forEach(c => c.classList.remove("active"));
     card.classList.add("active");
-    activeCardId = card.dataset.id;
   }
 };
 
@@ -218,193 +242,3 @@ function showToast(msg) {
   t.classList.add("show");
   setTimeout(() => t.classList.remove("show"), 2000);
 }
-
-
-// =========================
-// KEYBOARD FINAL
-// =========================
-const input = document.getElementById("searchInput");
-const clearIcon = document.querySelector(".clear-icon");
-const keyboard = document.getElementById("keyboard");
-
-input.addEventListener("click", () => {
-  keyboard.style.display = "block";
-  input.focus();
-});
-
-// close keyboard kalau klik luar
-document.addEventListener("click", (e) => {
-  if (!keyboard.contains(e.target) && e.target !== input) {
-    keyboard.style.display = "none";
-  }
-});
-
-// =========================
-// CAPS
-// =========================
-let isCaps = false;
-
-document.addEventListener("click", (e) => {
-  if (!e.target.classList.contains("caps")) return;
-
-  isCaps = !isCaps;
-  e.target.classList.toggle("active");
-
-  document.querySelectorAll(".custom-keyboard button").forEach(btn => {
-    const key = btn.textContent;
-
-    // 🔥 update disini
-    if (["Cap","Del","SPACE",",","."].includes(key)) return;
-
-    btn.textContent = isCaps
-      ? key.toUpperCase()
-      : key.toLowerCase();
-  });
-});
-
-// =========================
-// INPUT
-// =========================
-keyboard.addEventListener("click", (e) => {
-  if (e.target.tagName !== "BUTTON") return;
-
-  const key = e.target.textContent;
-
-  if (key === "Del") {
-    input.value = input.value.slice(0, -1);
-  } else if (key === "SPACE") {
-    input.value += " ";
-  } else if (key === "Cap") {
-    return;
-  } else {
-    input.value += key;
-  }
-
-  handleSearch(input.value);
-  clearIcon.classList.toggle("show", input.value.length > 0);
-
-  // cursor tetap nyala di belakang
-  setCursorToEnd(input);
-});
-
-// =========================
-// CLEAR
-// =========================
-window.clearSearch = () => {
-  input.value = "";
-  handleSearch("");
-  clearIcon.classList.remove("show");
-  input.focus();
-};
-
-// =========================
-// CURSOR FIX
-// =========================
-function setCursorToEnd(el) {
-  el.focus();
-  const length = el.value.length;
-  el.setSelectionRange(length, length);
-}
-
-// biar klik input langsung aktif + cursor hidup
-input.addEventListener("click", () => {
-  keyboard.style.display = "block";
-  setCursorToEnd(input);
-});
-
-input.addEventListener("focus", () => {
-  // 🔥 langsung matiin keyboard asli
-  setTimeout(() => {
-    input.blur();
-  }, 10);
-});
-
-input.addEventListener("click", () => {
-  keyboard.style.display = "block";
-
-  input.focus();
-  setCursorToEnd(input);
-});
-
-
-// =========================
-// SIMPAN STOK HARIAN
-// =========================
-window.simpanHarian = async () => {
-
-  try {
-
-    const promises = [];
-
-    Object.keys(produkData).forEach((id) => {
-
-      const p = produkData[id];
-      const d = draftData[id] || {};
-
-      promises.push(
-        setDoc(
-          doc(db, "produk", id),
-          {
-            ...p,
-            ...d
-          }
-        )
-      );
-
-      promises.push(
-        setDoc(
-          doc(db, "stok_draft", id),
-          d
-        )
-      );
-
-    });
-
-    await Promise.all(promises);
-
-    showToast("🔥 Semua stok berhasil disimpan");
-
-  } catch (err) {
-
-    console.error(err);
-
-    showToast("❌ Gagal simpan stok");
-
-  }
-
-};
-
-
-async function simpanHarian() {
-  try {
-
-    const batch = writeBatch(db);
-
-    Object.keys(produkData).forEach((id) => {
-
-      const p = produkData[id];
-      const d = draftData[id] || {};
-
-      batch.set(doc(db, "produk", id), {
-        ...p,
-        ...d
-      });
-
-      batch.set(doc(db, "stok_draft", id), d);
-
-    });
-
-    await batch.commit();
-
-    showToast("🔥 Semua stok berhasil disimpan");
-
-  } catch (err) {
-
-    console.error(err);
-    showToast("❌ Gagal simpan stok");
-
-  }
-}
-
-// 🔥 INI WAJIB
-window.simpanHarian = simpanHarian;
