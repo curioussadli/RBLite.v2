@@ -931,7 +931,6 @@
 
 
 
-
 /* =========================
    RATA RATA PENJUALAN
 ========================= */
@@ -948,18 +947,26 @@
   padding: 14px 16px;
 
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
 }
 
 .rata-rata-label {
 
-  font-size: 15px;
-  font-weight: 500;
+  width: 92px;
+  flex-shrink: 0;
 
-  color: #777;
+  font-size: 16px;
+  font-weight: 600;
 
+  color: #111827;
+
+}
+
+.rata-rata-value {
+  margin-left: auto;
+
+  text-align: right;
 }
 
 .rata-rata-value {
@@ -1018,4 +1025,20 @@
 .hari-sabtu {
   color: #ff9800;
   font-weight: 700;
+}
+
+.rata-rata-box {
+
+  width: 78px;
+  flex-shrink: 0;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #666;
+
+  margin-left: 8px;
+
+  text-align: left;
+
 }
