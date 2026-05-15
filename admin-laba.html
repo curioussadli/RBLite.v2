@@ -8,7 +8,7 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
   />
 
-  <title>Edit Laba</title>
+  <title>Edit Riwayat</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/main.css">
@@ -38,7 +38,7 @@
       <div class="topbar">
 
         <h2 class="topbar-title">
-          Edit Laba
+          Edit Riwayat
         </h2>
 
         <!-- FILTER TANGGAL -->
@@ -229,6 +229,108 @@
       Simpan Laporan
 
     </button>
+
+
+    <!-- =========================
+         MAKANAN TERJUAL
+    ========================= -->
+    <div class="input-group">
+
+      <label class="input-label">
+        Makanan terjual
+      </label>
+
+      <div class="input-wrapper">
+
+        <input
+          type="number"
+          id="makananTerjualInput"
+          placeholder="Contoh: 25"
+          inputmode="numeric"
+          autocomplete="off"
+        />
+
+      </div>
+
+    </div>
+
+    <!-- =========================
+         MINUMAN TERJUAL
+    ========================= -->
+    <div class="input-group">
+
+      <label class="input-label">
+        Minuman terjual
+      </label>
+
+      <div class="input-wrapper">
+
+        <input
+          type="number"
+          id="minumanTerjualInput"
+          placeholder="Contoh: 10"
+          inputmode="numeric"
+          autocomplete="off"
+        />
+
+      </div>
+
+    </div>
+
+    <!-- =========================
+         TOTAL TERJUAL
+    ========================= -->
+    <div class="total-card">
+
+      <span class="total-label">
+        Total Terjual
+      </span>
+
+      <strong
+        id="totalTerjual"
+        class="total-value"
+      >
+
+        0
+
+      </strong>
+
+    </div>
+
+
+
+        <!-- =========================
+         RATA-RATA PER BOX
+    ========================= -->
+    <div class="total-card">
+
+      <span class="total-label">
+        Rata-rata per box
+      </span>
+
+      <strong
+        id="rataRataPerBox"
+        class="total-value"
+      >
+
+        Rp 0
+
+      </strong>
+
+    </div>
+
+        <!-- BUTTON SIMPAN TERJUAL -->
+    <button
+      id="saveTerjualBtn"
+      class="primary-btn"
+      type="button"
+    >
+
+      Simpan Laporan Terjual
+
+    </button>
+
+    
 
   </section>
 
