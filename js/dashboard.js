@@ -722,6 +722,7 @@ if (selectedDates.length === 0) {
 
 
 
+
 /* =========================
    HITUNG RATA RATA
 ========================= */
@@ -732,7 +733,12 @@ function updateRataRata(data) {
       "rataRataPenjualan"
     );
 
-  if (!rataRataEl) return;
+  const rataRataBoxEl =
+    document.getElementById(
+      "rataRataBox"
+    );
+
+  if (!rataRataEl || !rataRataBoxEl) return;
 
   // kosong
   if (!data.length) {
@@ -740,25 +746,50 @@ function updateRataRata(data) {
     rataRataEl.textContent =
       "Rp 0";
 
+    rataRataBoxEl.textContent =
+      "Rp 0";
+
     return;
   }
 
-  // total semua
-  const total = data.reduce(
+  // =========================
+  // RATA RATA PENJUALAN
+  // =========================
+  const totalPenjualan = data.reduce(
     (sum, item) =>
       sum + (item.total || 0),
     0
   );
 
-  // rata rata
-  const rata =
-    Math.round(total / data.length);
+  const rataPenjualan =
+    Math.round(
+      totalPenjualan / data.length
+    );
 
   rataRataEl.textContent =
     "Rp " +
-    rata.toLocaleString("id-ID");
+    rataPenjualan.toLocaleString("id-ID");
+
+  // =========================
+  // RATA RATA BOX
+  // =========================
+  const totalBox = data.reduce(
+    (sum, item) =>
+      sum + (item.rataRataPerBox || 0),
+    0
+  );
+
+  const rataBox =
+    Math.round(
+      totalBox / data.length
+    );
+
+  rataRataBoxEl.textContent =
+    "Rp " +
+    rataBox.toLocaleString("id-ID");
 
 }
+
 
 
 
