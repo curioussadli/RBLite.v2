@@ -986,12 +986,12 @@
 }
 
 .tanggal {
-  width: 85px;
+  width: 92px;
   flex-shrink: 0;
 }
 
 .average-box {
-  width: 85px;
+  width: 78px;
   flex-shrink: 0;
 
   font-size: 14px;
