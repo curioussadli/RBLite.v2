@@ -976,3 +976,46 @@
 .empty-card {
   margin-top: 16px;
 }
+
+
+
+
+.riwayat-item {
+  display: flex;
+  align-items: center;
+}
+
+.tanggal {
+  width: 78px;
+  flex-shrink: 0;
+}
+
+.average-box {
+  width: 78px;
+  flex-shrink: 0;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+
+  margin-left: 8px;
+
+  text-align: left;
+}
+
+.nominal {
+  margin-left: auto;
+
+  text-align: right;
+}
+
+
+.hari-merah {
+  color: #e53935;
+  font-weight: 700;
+}
+
+.hari-sabtu {
+  color: #ff9800;
+  font-weight: 700;
+}
