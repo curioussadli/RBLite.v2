@@ -208,6 +208,19 @@ async function loadDataByTanggal(tanggal) {
       ? formatAngka(data.cash)
       : "";
 
+  // =========================
+  // LOAD TERJUAL
+  // =========================
+  makananInput.value =
+    data.makananTerjual || "";
+
+  minumanInput.value =
+    data.minumanTerjual || "";
+
+  hitungTotal();
+
+  updateTotalTerjual();
+
   hitungTotal();
 
 }
@@ -357,3 +370,121 @@ onSnapshot(q, (snapshot) => {
 loadDataByTanggal(today);
 
 hitungTotal();
+
+
+
+
+
+// =========================
+// TOTAL TERJUAL
+// =========================
+const makananInput = document.getElementById("makananTerjualInput");
+const minumanInput = document.getElementById("minumanTerjualInput");
+const totalTerjualEl = document.getElementById("totalTerjual");
+const rataRataPerBoxEl = document.getElementById("rataRataPerBox");
+
+// ambil total penjualan
+const totalPenjualanEl = document.getElementById("totalPenjualan");
+
+function ambilAngkaRupiah(text) {
+  return Number(text.replace(/[^\d]/g, "")) || 0;
+}
+
+function formatRupiah(angka) {
+  return "Rp " + angka.toLocaleString("id-ID");
+}
+
+function updateTotalTerjual() {
+  const makanan = parseInt(makananInput.value) || 0;
+  const minuman = parseInt(minumanInput.value) || 0;
+
+  const totalTerjual = makanan + minuman;
+
+  // tampilkan total terjual
+  totalTerjualEl.textContent = totalTerjual;
+
+  // ambil total penjualan
+  const totalPenjualan = ambilAngkaRupiah(
+    totalPenjualanEl.textContent
+  );
+
+  // hitung rata-rata per box
+  const rataRata =
+    totalTerjual > 0
+      ? Math.round(totalPenjualan / totalTerjual)
+      : 0;
+
+  // tampilkan
+  rataRataPerBoxEl.textContent =
+    formatRupiah(rataRata);
+}
+
+makananInput.addEventListener("input", updateTotalTerjual);
+minumanInput.addEventListener("input", updateTotalTerjual);
+
+
+
+// =========================
+// SIMPAN LAPORAN TERJUAL
+// =========================
+const saveTerjualBtn =
+  document.getElementById("saveTerjualBtn");
+
+saveTerjualBtn.addEventListener("click", async () => {
+
+  try {
+
+    const tanggal = tanggalInput.value;
+
+    const makanan =
+      parseInt(makananInput.value) || 0;
+
+    const minuman =
+      parseInt(minumanInput.value) || 0;
+
+    const totalTerjual =
+      makanan + minuman;
+
+    const totalPenjualan =
+      ambilAngkaRupiah(
+        totalPenjualanEl.textContent
+      );
+
+    const rataRata =
+      totalTerjual > 0
+        ? Math.round(
+            totalPenjualan / totalTerjual
+          )
+        : 0;
+
+    // simpan ke firestore
+    await setDoc(
+      doc(db, "laporanLaba", tanggal),
+      {
+
+        tanggal,
+
+        total: totalPenjualan,
+
+        makananTerjual: makanan,
+
+        minumanTerjual: minuman,
+
+        totalTerjual: totalTerjual,
+
+        rataRataPerBox: rataRata
+
+      },
+      { merge: true }
+    );
+
+    alert("Laporan terjual berhasil disimpan");
+
+  } catch (err) {
+
+    console.error(err);
+    alert("Gagal menyimpan laporan");
+
+  }
+
+});
