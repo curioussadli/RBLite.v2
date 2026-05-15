@@ -504,17 +504,22 @@ function renderRiwayatPenjualan(data) {
 
     riwayatPenjualanList.innerHTML += `
 
-      <div class="riwayat-item">
+    <div class="riwayat-item">
 
-        <span class="tanggal">
-          ${formatTanggal(item.tanggal)}
-        </span>
+      <span class="tanggal ${getHariClass(item.tanggal)}">
+        ${formatTanggal(item.tanggal)}
+      </span>
 
-        <strong class="nominal">
-          Rp ${item.total.toLocaleString("id-ID")}
-        </strong>
+      <span class="average-box">
+        Rp ${(item.rataRataPerBox || 0)
+          .toLocaleString("id-ID")}
+      </span>
 
-      </div>
+      <strong class="nominal">
+        Rp ${item.total.toLocaleString("id-ID")}
+      </strong>
+
+    </div>
 
     `;
 
@@ -540,12 +545,14 @@ onSnapshot(
 
       const data = doc.data();
 
-      semuaLaporanLaba.push({
+    semuaLaporanLaba.push({
 
-        tanggal: doc.id,
-        total: data.total || 0
+      tanggal: doc.id,
+      total: data.total || 0,
+      rataRataPerBox:
+        data.rataRataPerBox || 0
 
-      });
+    });
 
     });
 
@@ -754,3 +761,48 @@ function updateRataRata(data) {
 }
 
 
+
+
+
+/* =========================
+   WARNA HARI
+========================= */
+
+function getHariClass(tanggal) {
+
+  const d = new Date(tanggal);
+
+  const hari = d.getDay();
+
+  // =========================
+  // LIBUR NASIONAL
+  // =========================
+  const hariLibur = [
+
+    "2026-05-14", // Kenaikan Isa Almasih
+    "2026-03-19", // nyepi contoh
+    "2026-03-20", // idul fitri contoh
+    "2026-03-21",
+
+    "2026-12-25" // natal
+
+  ];
+
+  // hari raya
+  if (hariLibur.includes(tanggal)) {
+    return "hari-merah";
+  }
+
+  // minggu
+  if (hari === 0) {
+    return "hari-merah";
+  }
+
+  // sabtu
+  if (hari === 6) {
+    return "hari-sabtu";
+  }
+
+  return "";
+
+}
